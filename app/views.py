@@ -26,10 +26,11 @@ def after_login():
     login_user(user, remember = remember_me)
 
     posts = []
-    return render_template("index.html",
-                           title='Home',
-                           user=user,
-                           posts=posts)
+    return app.send_static_file('temp.html')
+        #render_template("index.html",
+         #                  title='Home',
+          #                 user=user,
+           #                posts=posts)
         #redirect(url_for('index'))
 
 @app.route('/')
