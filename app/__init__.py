@@ -1,11 +1,12 @@
-__author__ = 'fdrozdowski'
-
 from flask import Flask
-#import sqlalchemy
-#import flask.ext.sqlalchemy
+import flask.ext.sqlalchemy
+from flask_cas import CAS
+
 
 app = Flask(__name__)
 app.config.from_object('config')
-#db = SQLAlchemy(app)
+
+db = flask.ext.sqlalchemy.SQLAlchemy(app)
+CAS(app)
 
 from app import views, models
