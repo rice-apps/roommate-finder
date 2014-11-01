@@ -24,23 +24,14 @@ def after_login():
         remember_me = session['remember_me']
         session.pop('remember_me', None)
     login_user(user, remember = remember_me)
-
-    posts = []
-    return app.send_static_file('temp.html')
-        #render_template("index.html",
-         #                  title='Home',
-          #                 user=user,
-           #                posts=posts)
-        #redirect(url_for('index'))
+    return app.send_static_file('intro.html') #temporarily redirecting user to intro page, TODO: figure out logic post-login
 
 @app.route('/')
 @app.route('/index')
 def index():
     login = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
-    user = {'nickname': login}  # fake user
-    return render_template("index.html",
-                           title='Home',
-                           user=user,)
+    user = {'nickname': login}
+	return app.send_static_file('intro.html')
 
 
 
