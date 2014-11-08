@@ -27,28 +27,10 @@ def after_login():
     return app.send_static_file('intro.html') #temporarily redirecting user to intro page, TODO: figure out logic post-login
 
 @app.route('/')
-@app.route('/index')
 def index():
     login = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
     user = {'nickname': login}
-	return app.send_static_file('intro.html')
-
-
-
-"""
-@app.route('/login', methods=['GET', 'POST'])
-
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        flash('Login requested for OpenID="%s", remember_me=%s' %
-              (form.openid.data, str(form.remember_me.data)))
-        return redirect('/index')
-    return render_template('login.html',
-                           title='Sign In',
-                           form=form,
-                           providers=app.config['OPENID_PROVIDERS'])
-"""
+    return app.send_static_file('intro.html')
 
 @lm.user_loader
 def load_user(id):
