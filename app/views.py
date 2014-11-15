@@ -32,10 +32,6 @@ def index():
     user = {'nickname': login}
     return app.send_static_file('intro.html')
 
-@app.route('/about')
-def about():
-    return app.send_static_file('about.html')
-	
 @lm.user_loader
 def load_user(id):
     return User.query.get(int(id))
