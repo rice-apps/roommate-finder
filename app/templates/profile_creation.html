@@ -1,23 +1,196 @@
-<!doctype html>
-<html>
-    <body>
-        <p>Hello {{ data.net_id }}!</p>
-        <form action="/createprofile" method="POST">
-            <p>net id</p>
-            <input type="text" name="net_id" value="{{ data.net_id }}">
-            <p>name</p>
-            <input type="text" name="name">
-            <p>year</p>
-            <input type="text" name="year">
-            <p>age</p>
-            <input type="text" name="age">
-            <p>college</p>
-            <input type="text" name="college">
-            <p>gender</p>
-            <input type="text" name="gender">
-            <p>bio</p>
-            <input type="text" name="bio">
-            <input type="submit" name="my-form" value="make profile">
-        </form>
-    </body>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+    	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    	<!--Fonts-->
+		<link href='http://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+
+        <!--jQuery, required for some functions of Bootstrap-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+        <!--Boostrap v3, retrieved from a third party CDN-->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+		<!--Roomate Finder stylesheet-->
+		<link type="text/css" rel="stylesheet" href="static/stylesheet.css">
+
+        <title>create profile | roommate finder | rice university</title>
+
+        <!--Override some CSS properties-->
+		<style type="text/css">
+            body {
+                background: #F5F5F5;
+                margin-top: 150px;
+                margin-bottom: 150px;
+            }
+            #content {
+                margin-left: 10%;
+            }
+            p.heading {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+                line-height: 70px;
+				font-size: 70px;
+				color: #171717;
+            }
+            p.subheading {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 20px;
+				color: #171717;
+            }
+            p.fieldname {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+                line-height: 1px;
+				font-size: 14px;
+				color: #171717;
+			}
+            p.button {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+                line-height: 18px;
+				font-size: 20px;
+				color: #EDEDED;
+			}
+        </style>
+	</head>
+
+	<body>
+		<div id="headercontainer">
+			<div id="header">
+            	<table width="100%">
+                	<tr>
+                    	<td width="50%">
+                        	<p>[ONCE WE HAVE A LOGO, IT WILL GO HERE]</p>
+                        </td>
+                        <td width="50%">
+                        	<p align="right"><a href="intro.html">HOME</a> | <a href="">ABOUT</a></p>
+                        </td>
+                    </tr>
+                </table>
+			</div>
+		</div>
+
+        <div id="content">
+            <p class="heading">Welcome to Roommate Finder.</p>
+            <p class="subheading">Let's create your profile</p>
+            <br/><br/>
+            <form action="/createprofile" method="POST">
+                <table width="70%">
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">Net ID</p>
+                        </td>
+                        <td>
+                            <input class="form-control" type="text" name="net_id" value="{{ data.net_id }}" readonly>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">Name</p>
+                        </td>
+                        <td>
+                            <input class="form-control" type="text" name="name">
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">Year</p>
+                        </td>
+                        <td>
+                            <select class="form-control" type="text" name="year">
+                                <option>Freshman</option>
+                                <option>Sophomore</option>
+                                <option>Junior</option>
+                                <option>Senior</option>
+                                <option>Other (graduate student, fifth year student, etc.)</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">Age</p>
+                        </td>
+                        <td>
+                            <input class="form-control" type="text" name="age">
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">Gender</p>
+                        </td>
+                        <td>
+                            <select class="form-control" type="text" name="gender">
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Other</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">College</p>
+                        </td>
+                        <td>
+                            <select class="form-control" type="text" name="college">
+                                <option>Baker</option>
+                                <option>Brown</option>
+                                <option>Duncan</option>
+                                <option>Hanszen</option>
+                                <option>Jones</option>
+                                <option>Lovett</option>
+                                <option>Martel</option>
+                                <option>McMurtry</option>
+                                <option>Sid Richardson</option>
+                                <option>Wiess</option>
+                                <option>Will Rice</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">Bio (optional)</p>
+                        </td>
+                        <td>
+                            <textarea class="form-control" name="bio" rows="3"></textarea>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                </table>
+                <br/><br/>
+                <p class="text">Ready to go? You can edit your profile later.</p>
+                <button type="submit" class="btn btn-primary btn-lg" name="my-form"><p class="button">create profile</p></button>
+            </form>
+        </div>
+
+        <div id="footercontainer">
+			<div id="footer">
+            	<table width="100%">
+                	<tr>
+                    	<td>
+                        	<p class="footer">A PROJECT OF RICE APPS, 2014</p>
+                        </td>
+                        <td>
+                        	<p class="footer" align="right">CREATED BY ALEX TRAN, KEVIN LIN, FILIP DROZDOWSKI, AND ANANT TIBREWAL</p>
+                        </td>
+                    </tr>
+                </table>
+			</div>
+		</div>
+	</body>
 </html>

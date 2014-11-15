@@ -34,14 +34,19 @@ def create_user():
     """
     Processes form data in POST request and adds the user to the database table Profiles.
     """
-    net_id = request.form['net_id']
-    name = request.form['name']
-    year = request.form['year']
-    age = request.form['age']
-    college = request.form['college']
-    gender = request.form['gender']
-    bio = request.form['bio']
-    user = Profile(net_id, name, year, age, college, gender, bio)
+    # Fields from form
+    fields = ["net_id", "name", "year", "age", "college", "gender", "bio"]
+    # User-entered values from form
+    values = []
+    for field in fields:
+        values.append(request.form[field])
+    # Complain if the user left one of the fields blank (excluding the optional bio)
+    if "" in values[:6]:
+        # raise an error and stop
+        pass
+    # Create a new user from the Profile model
+    user = Profile(values[0], values[1], values[2], values[3], values[4], values[5], values[6])
+    # Add this new user to the databsae
     db.session.add(user)
     db.session.commit()
     return app.send_static_file('intro.html')
@@ -60,4 +65,4 @@ def about():
 
 @lm.user_loader
 def load_user(id):
-    return Profiles.query.get(int(id))
+    return Profile.query.get(int(id))
