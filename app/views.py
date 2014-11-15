@@ -10,9 +10,10 @@ app.config.setdefault('CAS_USERNAME_SESSION_KEY', 'CAS_USERNAME')
 
 @app.route('/after_login')
 def after_login():
+    # this netid
     login = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
 
-    user = User.query.filter_by(nickname=login).first()
+    user = User.query.filter_by(netid=login).first()
     if user is None:
         nickname = login
         user = User(nickname=nickname, email=nickname+"@rice.edu")
