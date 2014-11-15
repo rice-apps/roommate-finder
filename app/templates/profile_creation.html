@@ -1,4 +1,23 @@
 <!doctype html>
-<title>Hello from Flask</title>
-  <h1>Hello {{ data.net_id }}!</h1>
-  <h1>Hello World!</h1>
+<html>
+    <body>
+        <p>Hello {{ data.net_id }}!</p>
+        <form action="/createprofile" method="POST">
+            <p>net id</p>
+            <input type="text" name="net_id" value="{{ data.net_id }}">
+            <p>name</p>
+            <input type="text" name="name">
+            <p>year</p>
+            <input type="text" name="year">
+            <p>age</p>
+            <input type="text" name="age">
+            <p>college</p>
+            <input type="text" name="college">
+            <p>gender</p>
+            <input type="text" name="gender">
+            <p>bio</p>
+            <input type="text" name="bio">
+            <input type="submit" name="my-form" value="make profile">
+        </form>
+    </body>
+</html>
