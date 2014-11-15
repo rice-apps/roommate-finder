@@ -4,7 +4,7 @@ from app import app, db, lm
 from app.models import Profile
 from app.forms import LoginForm
 from werkzeug.utils import secure_filename
-import os, random
+import os, random, urllib2
 
 # This needs to be an absolute path. That's so stupid.
 UPLOAD_FOLDER = "C:/Users/Kevin/SkyDrive/Homework/Rice University/Miscellaneous/Rice Apps/roommate-finder/app/photos"
@@ -28,14 +28,18 @@ def after_login():
     user = Profile.query.filter_by(net_id=login).first()
     if user is None:
         # User doesn't exist in DB
+        # Get user details from Rice public directory
+        (name, year, college) = get_user_details(login)
+        data["name"] = name
+        data["year"] = year
+        data["college"] = college
         # Redirect the user to the profile creation page
-        print("User does not exist")
         return render_template('profile_creation.html', data=data)
     else:
         # User does exist in DB
         # Redirect user to main page
-        print("User does exist")
-        return app.send_static_file('intro.html')
+        data["profile"] = user
+        return render_template('user_exists.html', data=data)
 
 
 @app.route('/createprofile', methods=['POST'])
@@ -69,21 +73,57 @@ def create_user():
     # Store the user's profile photo on the server
     if photo and allowed_file(photo.filename):
         filename = secure_filename(photo_hash) + "." + file_extension(photo.filename)
+        print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     return app.send_static_file('intro.html')
 
 
+def get_user_details(net_id):
+    """
+    Look up the passed net ID in the Rice online directory and attempt to find
+    the user's name, class, and college
+
+    Returns a tuple in the form (name, year, college)
+    """
+    # Rice 411 lookup directory
+    url = "http://fouroneone.rice.edu/query.php?tab=people&search=" + net_id + "&department=&phone=&action=Search"
+    data = urllib2.urlopen(url)
+    name = ""
+    year = ""
+    college = ""
+    # Parsing HTML data like this is highly unpredictable. Thus, a bunch of try-excepts:
+    for line in data.readlines()[200:]:
+        if "name: " in line:
+            try:
+                name_list = line.strip().lstrip("name: <b>").rstrip(">b/<").split(", ")
+                name = name_list[1] + " " + name_list[0]
+            except:
+                print("Error getting name")
+        if "class: " in line:
+            try:
+                year = line.strip()[7:].split()[0]
+            except:
+                print("Error getting year")
+        if "college: " in line:
+            try:
+                college = line.strip()[9:]
+            except:
+                print("Error getting college")
+    return (name, year, college)
+
+
 def allowed_file(filename):
     """
-    Check if the file if of a permissible file extension.
+    Check if the file is of a permissible file extension.
     """
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-def file_extension(file):
+
+def file_extension(filename):
     """
     Get the file extension of file. Excludes the "." before the extension.
     """
-    return file.rsplit('.', 1)[1]
+    return filename.rsplit('.', 1)[1]
 
 
 @app.route('/', methods=['GET'])
