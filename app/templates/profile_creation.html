@@ -10,12 +10,12 @@
         <!--jQuery, required for some functions of Bootstrap-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-        <!--Boostrap v3, retrieved from a third party CDN-->
+        <!--Bootstrap v3, retrieved from a third party CDN-->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 
-		<!--Roomate Finder stylesheet-->
+		<!--Roommate Finder stylesheet-->
 		<link type="text/css" rel="stylesheet" href="static/stylesheet.css">
 
         <title>create profile | roommate finder | rice university</title>
@@ -29,6 +29,14 @@
             }
             #content {
                 margin-left: 10%;
+            }
+            #preview {
+                max-width: 150px;
+                max-height: 150px;
+            }
+            img.preview {
+                max-width: 150px;
+                max-height: 150px;
             }
             p.heading {
                 font-family: 'Oxygen', sans-serif;
@@ -62,6 +70,29 @@
 				color: #EDEDED;
 			}
         </style>
+
+        <!--Javascript-->
+        <script type="text/javascript">
+            function handleFiles(files) {
+                // Get existing image, if exists
+                var oldImage = document.getElementById("preview");
+                // Remove it from the div (so to replace it with the new image)
+                while (oldImage.firstChild) {
+                    oldImage.removeChild(oldImage.firstChild);
+                }
+                // Get the image selected by the user
+                var file = files[0];
+                var img = document.createElement("img");
+                img.classList.add("preview");
+                img.file = file;
+                // Add it to the div preview
+                preview.appendChild(img); // Assuming that "preview" is a the div output where the content will be displayed.
+                // Load image
+                var reader = new FileReader();
+                reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
+                reader.readAsDataURL(file);
+            }
+        </script>
 	</head>
 
 	<body>
@@ -84,7 +115,7 @@
             <p class="heading">Welcome to Roommate Finder.</p>
             <p class="subheading">Let's create your profile</p>
             <br/><br/>
-            <form action="/createprofile" method="POST">
+            <form action="/createprofile" method="POST" enctype="multipart/form-data">
                 <table width="70%">
                     <tr>
                         <td width="150px" valign="middle">
@@ -100,7 +131,7 @@
                             <p class="fieldname">Name</p>
                         </td>
                         <td>
-                            <input class="form-control" type="text" name="name">
+                            <input class="form-control" type="text" name="name" required>
                         </td>
                     </tr>
                     <tr height="20px"></tr>
@@ -124,7 +155,7 @@
                             <p class="fieldname">Age</p>
                         </td>
                         <td>
-                            <input class="form-control" type="text" name="age">
+                            <input class="form-control" type="text" name="age" required>
                         </td>
                     </tr>
                     <tr height="20px"></tr>
@@ -133,7 +164,7 @@
                             <p class="fieldname">Gender</p>
                         </td>
                         <td>
-                            <select class="form-control" type="text" name="gender">
+                            <select class="form-control" type="text" name="gender" required>
                                 <option>Male</option>
                                 <option>Female</option>
                                 <option>Other</option>
@@ -146,7 +177,7 @@
                             <p class="fieldname">College</p>
                         </td>
                         <td>
-                            <select class="form-control" type="text" name="college">
+                            <select class="form-control" type="text" name="college" required>
                                 <option>Baker</option>
                                 <option>Brown</option>
                                 <option>Duncan</option>
@@ -158,6 +189,7 @@
                                 <option>Sid Richardson</option>
                                 <option>Wiess</option>
                                 <option>Will Rice</option>
+                                <option>N/A</option>
                             </select>
                         </td>
                     </tr>
@@ -171,6 +203,16 @@
                         </td>
                     </tr>
                     <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">Photo (optional)</p>
+                        </td>
+                        <td>
+                            <div id="preview"></div>
+                            <br/>
+                            <input type="file" name="photo" onchange="handleFiles(this.files)">
+                        </td>
+                    </tr>
                 </table>
                 <br/><br/>
                 <p class="text">Ready to go? You can edit your profile later.</p>

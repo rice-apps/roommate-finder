@@ -9,8 +9,9 @@ class Profile(db.Model):
         college = db.Column(db.String(255))
         gender = db.Column(db.String(255))
         bio = db.Column(db.String(255))
+        photo = db.Column(db.String(255))
 
-        def __init__(self, net_id, name, year, age, college, gender, bio):
+        def __init__(self, net_id, name, year, age, college, gender, bio, photo=None):
             self.net_id = net_id
             self.name = name
             self.year = year
@@ -18,6 +19,7 @@ class Profile(db.Model):
             self.college = college
             self.gender = gender
             self.bio = bio
+            self.photo = photo
 
         def __repr__(self):
                 return '<User %r>' % self.net_id
