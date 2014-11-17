@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, session, url_for, request, g
+from flask import render_template, flash, redirect, session, url_for, request, g, send_from_directory
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm
 from app.models import Profile
@@ -14,6 +14,14 @@ app.config['CAS_SERVER'] = 'https://netid.rice.edu'
 app.config['CAS_AFTER_LOGIN'] = 'after_login'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config.setdefault('CAS_USERNAME_SESSION_KEY', 'CAS_USERNAME')
+
+
+@app.route('/photos/<path:filename>')
+def photos(filename):
+    """
+    Proper routing of /photos, the uploaded profile pictures directory.
+    """
+    return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
 
 @app.route('/after_login', methods=['GET'])
@@ -39,7 +47,7 @@ def after_login():
         # User does exist in DB
         # Redirect user to main page
         data["profile"] = user
-        return render_template('user_exists.html', data=data)
+        return render_template('my_profile.html', data=data)
 
 
 @app.route('/createprofile', methods=['POST'])
@@ -73,8 +81,55 @@ def create_user():
     # Store the user's profile photo on the server
     if photo and allowed_file(photo.filename):
         filename = secure_filename(photo_hash) + "." + file_extension(photo.filename)
-        print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    data = {"net_id": values[0], "profile": user}
+    return render_template('my_profile.html', data=data)
+
+
+@app.route('/updateprofile', methods=['POST'])
+def update_user():
+    """
+    Called when the user is modifying is/her account from the My Profile page.
+    Updates the database to reflect the user's changes.
+    """
+    # Retrieve the user by net ID from the database
+    user = Profile.query.filter_by(net_id=request.form["net_id"]).first()
+    # Update all the columns
+    user.name = request.form["name"]
+    user.year = request.form["year"]
+    user.age = request.form["age"]
+    user.college = request.form["college"]
+    user.gender = request.form["gender"]
+    user.bio = request.form["bio"]
+    # Update the photo only if the user has changed the picture
+    photo = request.files['photo']
+    if photo and allowed_file(photo.filename):
+        photo_hash = str(hash(request.files['photo']))
+        filename = secure_filename(photo_hash) + "." + file_extension(photo.filename)
+        photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        user.photo = photo_hash + "." + file_extension(photo.filename)
+    # Commit the changes
+    db.session.merge(user)
+    db.session.commit()
+    # Pass along the data after refresh
+    data = {"net_id": user.net_id, "profile": user}
+    return render_template('my_profile.html', data=data)
+
+
+@app.route('/deleteprofile', methods=['GET', 'POST'])
+def delete_user():
+    """
+    Removes the user from the database.
+    """
+    # Get Net ID from GET data
+    net_id = request.args.get('net_id', '')
+    # Security measure - make sure the Net ID of the user whose deletion was requested
+    # matches with the Net ID of the user currently logged in
+    # This is a pretty lame security measure in all truth
+    if session.get(app.config['CAS_USERNAME_SESSION_KEY'], None) == net_id:
+        user = Profile.query.filter_by(net_id=net_id).first()
+        db.session.delete(user)
+        db.session.commit()
     return app.send_static_file('intro.html')
 
 
