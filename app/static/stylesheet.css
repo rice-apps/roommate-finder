@@ -133,7 +133,7 @@
   				background-size: cover;
 				background-color: #000000;
 			}
-			a:link {
+            a:link {
 				color: #EDEDED;
 				text-decoration: none;
 			}
@@ -148,5 +148,22 @@
 			}
 			a:active {
 				color: #EDEDED;
+				text-decoration: none;
+			}
+			#footer a:link {
+				color: #171717;
+				text-decoration: none;
+			}
+			#footer a:hover {
+				color: #171717;
+				text-decoration: none;
+				border-bottom: 2px solid #171717;
+			}
+			#footer a:visited {
+				color: #171717;
+				text-decoration: none;
+			}
+			#footer a:active {
+				color: #171717;
 				text-decoration: none;
 			}
