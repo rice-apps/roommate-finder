@@ -4,7 +4,7 @@ class Profile(db.Model):
         # Columns for user profile table
         net_id = db.Column(db.String(64), primary_key = True, unique = True, index = True)
         name = db.Column(db.String(255))
-        year = db.Column(db.Integer)
+        year = db.Column(db.String(255))
         age = db.Column(db.Integer)
         college = db.Column(db.String(255))
         gender = db.Column(db.String(255))
