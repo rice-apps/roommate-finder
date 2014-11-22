@@ -1,3 +1,7 @@
 *.pyc
-app.db
+*.db
 *.xml
+*.iml
+.idea/workspace.xml
+
+.idea/workspace.xml
