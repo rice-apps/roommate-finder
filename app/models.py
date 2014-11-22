@@ -1,34 +1,25 @@
 from app import db
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nickname = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
-    posts = db.relationship('Post', backref='author', lazy='dynamic')
+class Profile(db.Model):
+        # Columns for user profile table
+        net_id = db.Column(db.String(64), primary_key = True, unique = True, index = True)
+        name = db.Column(db.String(255))
+        year = db.Column(db.String(255))
+        age = db.Column(db.Integer)
+        college = db.Column(db.String(255))
+        gender = db.Column(db.String(255))
+        bio = db.Column(db.String(255))
+        photo = db.Column(db.String(255))
 
-    def is_authenticated(self):
-        return True
+        def __init__(self, net_id, name, year, age, college, gender, bio, photo=None):
+            self.net_id = net_id
+            self.name = name
+            self.year = year
+            self.age = age
+            self.college = college
+            self.gender = gender
+            self.bio = bio
+            self.photo = photo
 
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        try:
-            return unicode(self.id)  # python 2
-        except NameError:
-            return str(self.id)  # python 3
-
-    def __repr__(self):
-        return '<User %r>' % (self.nickname)
-
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    body = db.Column(db.String(140))
-    timestamp = db.Column(db.DateTime)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    def __repr__(self):
-        return '<Post %r>' % (self.body)
+        def __repr__(self):
+                return '<User %r>' % self.net_id
