@@ -10,9 +10,9 @@ from app.models import Profile
 
 
 # This needs to be an absolute path. That's so stupid.
-# UPLOAD_FOLDER = "Z:/RoommateFinder/roommate-finder/app/photos"
+UPLOAD_FOLDER = "Z:/RoommateFinder/roommate-finder/app/photos"
 # Upload folder for local development environment.
-UPLOAD_FOLDER = "C:/Users/Kevin/SkyDrive/Homework/Rice University/Miscellaneous/Rice Apps/roommate-finder/app/photos"
+# UPLOAD_FOLDER = "C:/Users/Kevin/SkyDrive/Homework/Rice University/Miscellaneous/Rice Apps/roommate-finder/app/photos"
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app.config['CAS_SERVER'] = 'https://netid.rice.edu'
