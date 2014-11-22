@@ -219,3 +219,6 @@ pip-log.txt
 app.db
 .idea/
 *.pyc
+*.db
+app/photos/*.jpg
+app/photos/
