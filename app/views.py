@@ -74,7 +74,8 @@ def create_user():
     photo_hash = str(hash(photo))
     # Create a new user from the Profile model
     if photo:
-        user = Profile(values[0], values[1], values[2], values[3], values[4], values[5], values[6], photo_hash + "." + file_extension(photo.filename))
+        user = Profile(values[0], values[1], values[2], values[3], values[4], values[5], values[6],
+                       photo_hash + "." + file_extension(photo.filename))
     else:
         user = Profile(values[0], values[1], values[2], values[3], values[4], values[5], values[6])
     # Add this new user to the database
@@ -185,14 +186,46 @@ def file_extension(filename):
 
 @app.route('/', methods=['GET'])
 def index():
-    login = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
-    user = {'nickname': login}
-    return app.send_static_file('intro.html')
+    """
+    First check if the user is logged in. If so, redirect him/her to the main search page.
+    If not, redirect him/her to the intro page.
+    """
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    if net_id is not None:
+        data = {"net_id": net_id}
+        return render_template('search.html', data=data)
+    else:
+        return app.send_static_file('intro.html')
 
 
 @app.route('/about')
 def about():
     return app.send_static_file('about.html')
+
+
+# TODO: for all of the below, redirect to intro if user is not logged in
+
+@app.route('/delete_account')
+def delete_account():
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    data = {"net_id": net_id}
+    return render_template('delete_account.html', data=data)
+
+
+@app.route('/my_profile')
+def my_profile():
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    user = Profile.query.filter_by(net_id=net_id).first()
+    data = {"net_id": net_id, "profile": user}
+    return render_template('my_profile.html', data=data)
+
+
+@app.route('/my_postings')
+def my_postings():
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    user = Profile.query.filter_by(net_id=net_id).first()
+    data = {"net_id": net_id, "profile": user}
+    return render_template('my_postings.html', data=data)
 
 
 @lm.user_loader

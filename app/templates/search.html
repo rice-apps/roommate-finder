@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+    	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    	<!--Fonts-->
+		<link href='http://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+
+        <!--jQuery, required for some functions of Bootstrap-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+        <!--Bootstrap v3, retrieved from a third party CDN-->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+        <!--Date Time Picker-->
+        <link rel="stylesheet" href="http://eonasdan.github.io/bootstrap-datetimepicker/content/bootstrap-datetimepicker.css">
+        <script type="text/javascript" src="http://momentjs.com/downloads/moment.js"></script>
+        <script type="text/javascript" src="https://raw.githubusercontent.com/Eonasdan/bootstrap-datetimepicker/master/build/js/bootstrap-datetimepicker.min.js"></script>
+
+		<!--Roommate Finder stylesheet-->
+		<link type="text/css" rel="stylesheet" href="static/stylesheet.css">
+
+        <title>my profile | roommate finder | rice university</title>
+
+        <!--Override some CSS properties-->
+		<style type="text/css">
+            body {
+                background: #F5F5F5;
+                margin-top: 150px;
+                margin-bottom: 150px;
+            }
+            #content {
+                margin-left: 10%;
+            }
+            #preview {
+                max-width: 150px;
+                max-height: 150px;
+            }
+            img.preview {
+                max-width: 150px;
+                max-height: 150px;
+            }
+            p.heading {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+                line-height: 70px;
+				font-size: 70px;
+				color: #171717;
+            }
+            p.subheading {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 20px;
+				color: #171717;
+            }
+            p.fieldname {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+                line-height: 1px;
+				font-size: 14px;
+				color: #171717;
+			}
+            p.button {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+                line-height: 18px;
+				font-size: 20px;
+				color: #EDEDED;
+			}
+            p.delete {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				font-size: 12px;
+				color: #CC2323;
+            }
+            #delete a:link {
+				color: #CC2323;
+				text-decoration: none;
+			}
+			#delete a:hover {
+				color: #9E0E0E;
+				text-decoration: none;
+				border-bottom: 2px solid #9E0E0E;
+			}
+			#delete a:visited {
+				color: #CC2323;
+				text-decoration: none;
+			}
+			#delete a:active {
+				color: #CC2323;
+				text-decoration: none;
+			}
+        </style>
+
+        <!--Javascript-->
+        <script type="text/javascript">
+            function handleFiles(files) {
+                // Get existing image, if exists
+                var oldImage = document.getElementById("preview");
+                // Remove it from the div (so to replace it with the new image)
+                while (oldImage.firstChild) {
+                    oldImage.removeChild(oldImage.firstChild);
+                }
+                // Get the image selected by the user
+                var file = files[0];
+                var img = document.createElement("img");
+                img.classList.add("preview");
+                img.file = file;
+                // Add it to the div preview
+                preview.appendChild(img); // Assuming that "preview" is a the div output where the content will be displayed.
+                // Load image
+                var reader = new FileReader();
+                reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
+                reader.readAsDataURL(file);
+            }
+        </script>
+	</head>
+
+	<body>
+		<div id="headercontainer">
+			<div id="header">
+            	<table width="100%">
+                	<tr>
+                    	<td width="50%">
+                        	<p>[ONCE WE HAVE A LOGO, IT WILL GO HERE]</p>
+                        </td>
+                        <td width="50%">
+                        	<p align="right"><a href="intro.html">HOME</a> | <a href="">ABOUT</a></p>
+                        </td>
+                    </tr>
+                </table>
+			</div>
+		</div>
+
+        <div id="content">
+            <p class="heading">you're already logged in</p>
+            <p class="subheading">temporarily, go to /logout to log out</p>
+            <br/><br/>
+        </div>
+
+        <div id="footercontainer">
+			<div id="footer">
+            	<table width="100%">
+                	<tr>
+                    	<td>
+                        	<p class="footer">A PROJECT OF RICE APPS, 2014</p>
+                        </td>
+                        <td>
+                        	<p class="footer" align="right">CREATED BY ALEX TRAN, KEVIN LIN, FILIP DROZDOWSKI, AND ANANT TIBREWAL</p>
+                        </td>
+                    </tr>
+                </table>
+			</div>
+		</div>
+	</body>
+</html>
