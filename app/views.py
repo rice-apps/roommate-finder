@@ -1,10 +1,12 @@
-from flask import render_template, flash, redirect, session, url_for, request, g, send_from_directory
-from flask.ext.login import login_user, logout_user, current_user, login_required
+import os
+import urllib2
+
+from flask import render_template, session, request, send_from_directory
+from werkzeug.utils import secure_filename
+
 from app import app, db, lm
 from app.models import Profile
-from app.forms import LoginForm
-from werkzeug.utils import secure_filename
-import os, random, urllib2
+
 
 # This needs to be an absolute path. That's so stupid.
 UPLOAD_FOLDER = "Z:/RoommateFinder/roommate-finder/app/photos"
@@ -60,7 +62,7 @@ def create_user():
     The actual photo file is stored as app/photos/<hash>.<file_extension>
     """
     # Fields from form
-    fields = ["net_id", "name", "year", "age", "college", "gender", "bio"]
+    fields = ["net_id", "name", "year", "dob", "college", "gender", "bio"]
     # Get user-entered values from form
     values = []
     for field in fields:
@@ -97,7 +99,7 @@ def update_user():
     # Update all the columns
     user.name = request.form["name"]
     user.year = request.form["year"]
-    user.age = request.form["age"]
+    user.dob = request.form["dob"]
     user.college = request.form["college"]
     user.gender = request.form["gender"]
     user.bio = request.form["bio"]
