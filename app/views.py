@@ -1,10 +1,12 @@
-from flask import render_template, flash, redirect, session, url_for, request, g, send_from_directory
-from flask.ext.login import login_user, logout_user, current_user, login_required
+import os
+import urllib2
+
+from flask import render_template, session, request, send_from_directory
+from werkzeug.utils import secure_filename
+
 from app import app, db, lm
 from app.models import Profile
-from app.forms import LoginForm
-from werkzeug.utils import secure_filename
-import os, random, urllib2
+
 
 # This needs to be an absolute path. That's so stupid.
 UPLOAD_FOLDER = "Z:/RoommateFinder/roommate-finder/app/photos"
@@ -12,6 +14,7 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app.config['CAS_SERVER'] = 'https://netid.rice.edu'
 app.config['CAS_AFTER_LOGIN'] = 'after_login'
+app.config['APP_URL'] = 'http://roommatefinder.kevinlin.info'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config.setdefault('CAS_USERNAME_SESSION_KEY', 'CAS_USERNAME')
 
@@ -31,6 +34,9 @@ def after_login():
 
     # Dictionary of values to pass
     data = {"net_id": login}
+
+    # User is logged in -> display logout button in the template
+    data["logout"] = 1
 
     # Try to find Net ID in database
     user = Profile.query.filter_by(net_id=login).first()
@@ -60,7 +66,7 @@ def create_user():
     The actual photo file is stored as app/photos/<hash>.<file_extension>
     """
     # Fields from form
-    fields = ["net_id", "name", "year", "age", "college", "gender", "bio"]
+    fields = ["net_id", "name", "year", "dob", "college", "gender", "bio"]
     # Get user-entered values from form
     values = []
     for field in fields:
@@ -83,6 +89,7 @@ def create_user():
         filename = secure_filename(photo_hash) + "." + file_extension(photo.filename)
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     data = {"net_id": values[0], "profile": user}
+
     return render_template('my_profile.html', data=data)
 
 
@@ -97,7 +104,7 @@ def update_user():
     # Update all the columns
     user.name = request.form["name"]
     user.year = request.form["year"]
-    user.age = request.form["age"]
+    user.dob = request.form["dob"]
     user.college = request.form["college"]
     user.gender = request.form["gender"]
     user.bio = request.form["bio"]
@@ -113,6 +120,9 @@ def update_user():
     db.session.commit()
     # Pass along the data after refresh
     data = {"net_id": user.net_id, "profile": user}
+    # User is logged in -> display logout button in the template
+    data["logout"] = 1
+
     return render_template('my_profile.html', data=data)
 
 

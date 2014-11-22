@@ -1,0 +1,169 @@
+* {
+				margin: 0;
+				padding: 0;
+			}
+			#headercontainer {
+				width: 100%;
+				height: 60px;
+				position: fixed;
+				top: 0;
+				background: #303030;
+				z-index: 5;
+			}
+			#header {
+				margin-left: 10%;
+				margin-right: 10%;
+				margin-top: 20px;
+			}
+			#bannercontainer {
+				top: 140px;
+				position: absolute;
+				width: 100%;
+				height: 250px;
+				z-index: 1;
+			}
+			#banner {
+				margin-top: 30px;
+				z-index: 1;
+			}
+			#footercontainer {
+				width: 100%;
+				height: 50px;
+				position: fixed;
+				bottom: 0;
+				background: #F0F0F0;
+			}
+			#footer {
+				margin-top: 15px;
+				margin-bottom: 20px;
+				margin-left: 10%;
+				margin-right: 10%;
+			}
+			#contentcontainer {
+				width: 100%;
+				height: auto;
+				margin-top: 550px;
+				background: #F5F5F5;
+			}
+			#content {
+				margin-left: 10%;
+				margin-right: 10%;
+			}
+			#start {
+				width: 350px;
+				height: 80px;
+				background: #2CA8E6;
+			}
+			p {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 13px;
+				color: #EDEDED;
+			}
+			p.title {
+				font-family: 'Oswald', sans-serif;
+				font-weight: 300;
+				letter-spacing: 4px;
+				font-size: 110px;
+				color: #EDEDED;
+				line-height: 100px;
+				text-shadow: 0.5px 0.5px 0.5px #000000;
+			}
+			p.subtitle {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 700;
+				letter-spacing: 1px;
+				font-size: 16px;
+				color: #EDEDED;
+				text-shadow: 0.5px 0.5px 1px #000000;
+			}
+			p.button {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+				font-size: 18px;
+				color: #FFFFFF;
+				line-height: 30px;
+				text-shadow: 0.5px 0.5px 1px #000000;
+			}
+			p.header {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 30px;
+				color: #171717;
+			}
+			p.text {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 14px;
+				color: #171717;
+			}
+			p.start1 {
+				font-family: 'Oswald', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+				font-size: 18px;
+				text-shadow: 0.5px 0.5px 1px #000000;
+				color: #EDEDED;
+			}
+			p.start2 {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 20px;
+				line-height: 5px;
+				text-shadow: 0.5px 0.5px 1px #000000;
+				color: #EDEDED;
+			}
+			p.footer {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 10px;
+				color: #171717;
+			}
+			body {
+				background: url('http://www.pgal.com/media/portfolio/03_F10_1.JPG') no-repeat center center fixed;
+  				-webkit-background-size: cover;
+  				-moz-background-size: cover;
+  				-o-background-size: cover;
+  				background-size: cover;
+				background-color: #000000;
+			}
+            a:link {
+				color: #EDEDED;
+				text-decoration: none;
+			}
+			a:hover {
+				color: #EDEDED;
+				text-decoration: none;
+				border-bottom: 2px solid #EDEDED;
+			}
+			a:visited {
+				color: #EDEDED;
+				text-decoration: none;
+			}
+			a:active {
+				color: #EDEDED;
+				text-decoration: none;
+			}
+			#footer a:link {
+				color: #171717;
+				text-decoration: none;
+			}
+			#footer a:hover {
+				color: #171717;
+				text-decoration: none;
+				border-bottom: 2px solid #171717;
+			}
+			#footer a:visited {
+				color: #171717;
+				text-decoration: none;
+			}
+			#footer a:active {
+				color: #171717;
+				text-decoration: none;
+			}

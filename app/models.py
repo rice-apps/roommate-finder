@@ -5,17 +5,17 @@ class Profile(db.Model):
         net_id = db.Column(db.String(64), primary_key = True, unique = True, index = True)
         name = db.Column(db.String(255))
         year = db.Column(db.String(255))
-        age = db.Column(db.Integer)
+        dob = db.Column(db.Integer)
         college = db.Column(db.String(255))
         gender = db.Column(db.String(255))
         bio = db.Column(db.String(255))
         photo = db.Column(db.String(255))
 
-        def __init__(self, net_id, name, year, age, college, gender, bio, photo=None):
+        def __init__(self, net_id, name, year, dob, college, gender, bio, photo=None):
             self.net_id = net_id
             self.name = name
             self.year = year
-            self.age = age
+            self.dob = dob
             self.college = college
             self.gender = gender
             self.bio = bio
