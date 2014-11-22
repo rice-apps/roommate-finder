@@ -112,29 +112,6 @@
 				text-decoration: none;
 			}
         </style>
-
-        <!--Javascript-->
-        <script type="text/javascript">
-            function handleFiles(files) {
-                // Get existing image, if exists
-                var oldImage = document.getElementById("preview");
-                // Remove it from the div (so to replace it with the new image)
-                while (oldImage.firstChild) {
-                    oldImage.removeChild(oldImage.firstChild);
-                }
-                // Get the image selected by the user
-                var file = files[0];
-                var img = document.createElement("img");
-                img.classList.add("preview");
-                img.file = file;
-                // Add it to the div preview
-                preview.appendChild(img); // Assuming that "preview" is a the div output where the content will be displayed.
-                // Load image
-                var reader = new FileReader();
-                reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
-                reader.readAsDataURL(file);
-            }
-        </script>
 	</head>
 
 	<body>

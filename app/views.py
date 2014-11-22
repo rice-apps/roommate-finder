@@ -9,7 +9,9 @@ from app.models import Profile
 
 
 # This needs to be an absolute path. That's so stupid.
-UPLOAD_FOLDER = "Z:/RoommateFinder/roommate-finder/app/photos"
+# UPLOAD_FOLDER = "Z:/RoommateFinder/roommate-finder/app/photos"
+# Upload folder for local development environment.
+UPLOAD_FOLDER = "C:/Users/Kevin/SkyDrive/Homework/Rice University/Miscellaneous/Rice Apps/roommate-finder/app/photos"
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app.config['CAS_SERVER'] = 'https://netid.rice.edu'
@@ -203,29 +205,83 @@ def about():
     return app.send_static_file('about.html')
 
 
-# TODO: for all of the below, redirect to intro if user is not logged in
-
 @app.route('/delete_account')
 def delete_account():
+    """
+    Delete user account page.
+    """
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
-    data = {"net_id": net_id}
-    return render_template('delete_account.html', data=data)
+    if net_id is not None:
+        data = {"net_id": net_id}
+        return render_template('delete_account.html', data=data)
+    else:
+        # Redirect user to intro
+        index()
 
 
 @app.route('/my_profile')
 def my_profile():
+    """
+    Edit my profile page.
+    """
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
-    user = Profile.query.filter_by(net_id=net_id).first()
-    data = {"net_id": net_id, "profile": user}
-    return render_template('my_profile.html', data=data)
+    if net_id is not None:
+        user = Profile.query.filter_by(net_id=net_id).first()
+        data = {"net_id": net_id, "profile": user}
+        return render_template('my_profile.html', data=data)
+    else:
+        index()
 
 
 @app.route('/my_postings')
 def my_postings():
+    """
+    Page showing the user's postings.
+
+    Yet to be implemented.
+    """
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
-    user = Profile.query.filter_by(net_id=net_id).first()
-    data = {"net_id": net_id, "profile": user}
-    return render_template('my_postings.html', data=data)
+    if net_id is not None:
+        user = Profile.query.filter_by(net_id=net_id).first()
+        data = {"net_id": net_id, "profile": user}
+        return render_template('my_postings.html', data=data)
+    else:
+        index()
+
+
+@app.route('/user/<path:path>')
+def user_profile(path):
+    """
+    Handles routing of /user/net_id (returns that person's profile page)
+
+    TODO: Only allow access to the user page is user is logged in.
+    """
+    # Get the currently logged in user
+    login = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    # Check if such a net ID even exists
+    user = Profile.query.filter_by(net_id=path).first()
+    # Stylistic typographic choices: uppercase and lowercase versions
+    # I'm sure there's an easier way to do this
+    data = {}
+    data["profile"] = user
+    data["net_id"] = path
+    # Meh; too many net ID's to keep track of...
+    data["logged_in_net_id"] = login
+    if user is not None:
+        data["net_id_uppercase"] = path.upper()
+        data["net_id_lowercase"] = path.lower()
+        data["name_uppercase"] = user.name.upper()
+        data["name_lowercase"] = user.name.lower()
+        data["name_first_uppercase"] = str(user.name).split()[0].upper()
+        #data["name_last_uppercase"] = str(user.name).split()[1].upper()
+        data["college_uppercase"] = user.college.upper()
+        data["college_lowercase"] = user.college.lower()
+        data["year_uppercase"] = user.year.upper()
+        data["year_lowercase"] = user.year.lower()
+        return render_template('user.html', data=data)
+    else:
+        # If user doesn't exist, profile key will map to None.
+        return render_template('user_not_exists.html', data=data)
 
 
 @lm.user_loader

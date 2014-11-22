@@ -21,9 +21,9 @@
         <script type="text/javascript" src="https://raw.githubusercontent.com/Eonasdan/bootstrap-datetimepicker/master/build/js/bootstrap-datetimepicker.min.js"></script>
 
 		<!--Roommate Finder stylesheet-->
-		<link type="text/css" rel="stylesheet" href="static/stylesheet.css">
+		<link type="text/css" rel="stylesheet" href="/static/stylesheet.css">
 
-        <title>delete account | roommate finder | rice university</title>
+        <title>{{ data.name_lowercase }} | roommate finder | rice university</title>
 
         <!--Override some CSS properties-->
 		<style type="text/css">
@@ -35,28 +35,16 @@
             #content {
                 margin-left: 10%;
             }
-            #preview {
-                max-width: 150px;
-                max-height: 150px;
-            }
-            img.preview {
-                max-width: 150px;
-                max-height: 150px;
+            img.photo {
+                max-width: 300px;
+                max-height: 300px;
             }
             p.heading {
                 font-family: 'Oxygen', sans-serif;
-				font-weight: 300;
+				font-weight: 700;
 				letter-spacing: 1px;
                 line-height: 70px;
 				font-size: 70px;
-				color: #171717;
-            }
-            p.heading2 {
-                font-family: 'Oxygen', sans-serif;
-				font-weight: 300;
-				letter-spacing: 1px;
-                line-height: 70px;
-				font-size: 30px;
 				color: #171717;
             }
             p.subheading {
@@ -64,6 +52,13 @@
 				font-weight: 300;
 				letter-spacing: 1px;
 				font-size: 20px;
+				color: #171717;
+            }
+            p.fieldtitle {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 16px;
 				color: #171717;
             }
             p.fieldname {
@@ -85,7 +80,7 @@
             p.delete {
                 font-family: 'Oxygen', sans-serif;
 				font-weight: 300;
-				font-size: 14px;
+				font-size: 12px;
 				color: #CC2323;
             }
             span.pagesection {
@@ -131,7 +126,7 @@
                         	<p>[ONCE WE HAVE A LOGO, IT WILL GO HERE]</p>
                         </td>
                         <td width="50%">
-                        	<p align="right">WELCOME, {{ data.net_id }} | <a href="/">HOME</a> | <a href="/about">ABOUT</a></p>
+                        	<p align="right">WELCOME, {{ data.logged_in_net_id }} | <a href="/">HOME</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/about">ABOUT</a> | <a href="/logout">LOGOUT</a></p>
                         </td>
                     </tr>
                 </table>
@@ -139,21 +134,43 @@
 		</div>
         <div id="headercontainer2">
 			<div id="header">
-            	<p><a href="/my_profile"><span class="pagesection">MY PROFILE</span></a> · <a href="/my_postings"><span class="pagesection">MY POSTINGS</span></a> · <a href="/delete_account"><span class="pagesectionbold">DELETE MY ACCOUNT</span></a></p>
+            	<p><a href=""><span class="pagesectionbold">{{ data.name_uppercase }} [{{ data.net_id_uppercase }}]</span></a> · <a href="mailto:{{ data.net_id_lowercase }}@rice.edu"><span class="pagesection">EMAIL {{ data.name_first_uppercase }}</span></a> · <a href=""><span class="pagesection">??????</span></a></p>
 			</div>
 		</div>
 
         <div id="content">
-            <p class="heading">delete account</p>
-            <p class="subheading">Remove your account from Roommate Finder</p>
-            <br/><br/>
-            <p class="heading2">We're sad to see you go.</p>
-            <p class="text">To permanently remove your profile and all associated data from our server, click the below link.</p>
-            <p class="text">Note that you won't be able to retrieve your profile data or your postings after you delete your account.</p>
-            <br/>
-            <div id="delete">
-                <p class="delete"><a href="/deleteprofile?net_id={{ data.net_id }}">delete my account</a></p>
-            </div>
+            <table>
+                <tr>
+                    <td width="1px" valign="top">
+                        <!--TODO: Fancybox photo popup-->
+                        {% if data.profile.photo != None %}
+                            <a href="../photos/{{ data.profile.photo }}"><img class="photo" src="../photos/{{ data.profile.photo }}" /></a>
+                        {% endif %}
+                    </td>
+                    <!--Padding between photo and content, if photo exists.-->
+                    {% if data.profile.photo != None %}
+                        <td width="70px"></td>
+                    {% endif %}
+                    <td width="500px" valign="top">
+                        <p class="heading">{{ data.name_uppercase }}</p>
+                        <p class="subheading">{{ data.year_uppercase }}, {{ data.college_uppercase }}</p>
+                        <br/>
+                        <br/>
+                        <p class="fieldtitle">AGE</p>
+                        <p class="text">compute this later</p>
+                        <br/>
+                        <p class="fieldtitle">GENDER</p>
+                        <p class="text">{{ data.profile.gender }}</p>
+                        <br/>
+                        <p class="fieldtitle">BIO</p>
+                        <p class="text">{{ data.profile.bio }}</p>
+                    </td>
+                    <td width="70px"></td>
+                    <td width="300px" valign="top">
+                        <p class="text">djhfaksfd</p>
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <div id="footercontainer">
