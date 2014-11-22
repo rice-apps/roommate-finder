@@ -219,3 +219,4 @@ pip-log.txt
 app.db
 .idea/
 *.pyc
+photos/*.jpg #Don't upload user profile photos to GitHub
