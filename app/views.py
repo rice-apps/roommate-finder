@@ -190,7 +190,7 @@ def allowed_file(filename):
     """
     Check if the file is of a permissible file extension.
     """
-    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def file_extension(filename):
