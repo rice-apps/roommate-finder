@@ -2,7 +2,8 @@ import os
 import urllib2
 
 from flask import render_template, session, request, send_from_directory
-from werkzeug.utils import secure_filename
+import time
+from werkzeug.utils import secure_filename, redirect
 
 from app import app, db, lm
 from app.models import Profile
@@ -18,6 +19,17 @@ app.config['CAS_SERVER'] = 'https://netid.rice.edu'
 app.config['CAS_AFTER_LOGIN'] = 'after_login'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config.setdefault('CAS_USERNAME_SESSION_KEY', 'CAS_USERNAME')
+
+
+@app.after_request
+def add_header(response):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+    response.headers['Cache-Control'] = 'public, max-age=0'
+    return response
 
 
 @app.route('/photos/<path:filename>')
@@ -135,7 +147,8 @@ def delete_user():
         user = Profile.query.filter_by(net_id=net_id).first()
         db.session.delete(user)
         db.session.commit()
-    return app.send_static_file('intro.html')
+    # Logout the session after profile deletion.
+    return redirect("/logout", code=302)
 
 
 def get_user_details(net_id):
@@ -278,10 +291,24 @@ def user_profile(path):
         data["college_lowercase"] = user.college.lower()
         data["year_uppercase"] = user.year.upper()
         data["year_lowercase"] = user.year.lower()
+        data["age"] = compute_age(user.dob)
         return render_template('user.html', data=data)
     else:
         # If user doesn't exist, profile key will map to None.
         return render_template('user_not_exists.html', data=data)
+
+
+def compute_age(dob):
+    """
+    Given a MM/DD/YYYY formatted date of birth, calculate current age (relative to now, of course).
+    """
+    birth_date = dob.split("/")
+    age = int(time.strftime("%Y")) - int(birth_date[2])
+    if int(time.strftime("%m"))/float(birth_date[0]) < 1:
+        age -= 1
+    if int(time.strftime("%m")) == int(birth_date[0]) and int(time.strftime("%d")) < int(birth_date[1]):
+        age -= 1
+    return age
 
 
 @lm.user_loader

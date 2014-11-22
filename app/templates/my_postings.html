@@ -23,7 +23,7 @@
 		<!--Roommate Finder stylesheet-->
 		<link type="text/css" rel="stylesheet" href="static/stylesheet.css">
 
-        <title>my profile | roommate finder | rice university</title>
+        <title>my postings | roommate finder | rice university</title>
 
         <!--Override some CSS properties-->
 		<style type="text/css">
@@ -136,127 +136,10 @@
 		</div>
 
         <div id="content">
-            <p class="heading">my profile</p>
-            <p class="subheading">Edit your profile</p>
+            <p class="heading">my postings</p>
+            <p class="subheading">View, edit, and delete your postings</p>
             <br/><br/>
-            <form action="/updateprofile" method="POST" enctype="multipart/form-data">
-                <table width="60%">
-                    <tr>
-                        <td width="150px" valign="middle">
-                            <p class="fieldname">Net ID</p>
-                        </td>
-                        <td>
-                            <input class="form-control" type="text" name="net_id" value="{{ data.profile.net_id }}" readonly>
-                        </td>
-                    </tr>
-                    <tr height="20px"></tr>
-                    <tr>
-                        <td width="150px" valign="middle">
-                            <p class="fieldname">Name</p>
-                        </td>
-                        <td>
-                            <input class="form-control" type="text" name="name" value="{{ data.profile.name }}" required>
-                        </td>
-                    </tr>
-                    <tr height="20px"></tr>
-                    <tr>
-                        <td width="150px" valign="middle">
-                            <p class="fieldname">Year</p>
-                        </td>
-                        <td>
-                            <select class="form-control" type="text" name="year" autocomplete="off">
-                                <option {% if data.profile.year == "Freshman" %}selected{% endif %}>Freshman</option>
-                                <option {% if data.profile.year == "Sophomore" %}selected{% endif %}>Sophomore</option>
-                                <option {% if data.profile.year == "Junior" %}selected{% endif %}>Junior</option>
-                                <option {% if data.profile.year == "Senior" %}selected{% endif %}>Senior</option>
-                                <option>Other (graduate student, fifth year student, etc.)</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr height="20px"></tr>
-                    <tr>
-                        <td width="150px" valign="middle">
-                            <p class="fieldname">Date of birth</p>
-                        </td>
-                        <td>
-                            <div class="form-group">
-                                <div class='input-group date' id='datetimepicker1'>
-                                    <input type='text' class="form-control" name="dob" value="{{ data.profile.dob }}" required>
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                    <script type="text/javascript">
-                                        $(function () {
-				                            $('#datetimepicker1').datetimepicker({
-					                        pickTime: false
-				                        });
-			                        });
-                                    </script>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr height="10px"></tr>
-                    <tr>
-                        <td width="150px" valign="middle">
-                            <p class="fieldname">Gender</p>
-                        </td>
-                        <td>
-                            <select class="form-control" type="text" name="gender" value="{{ data.profile.gender }}" required>
-                                <option>Male</option>
-                                <option>Female</option>
-                                <option>Other</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr height="20px"></tr>
-                    <tr>
-                        <td width="150px" valign="middle">
-                            <p class="fieldname">College</p>
-                        </td>
-                        <td>
-                            <select class="form-control" type="text" name="college" autocomplete="off" required>
-                                <option {% if "Baker" in data.profile.college %}selected{% endif %}>Baker</option>
-                                <option {% if "Brown" in data.profile.college %}selected{% endif %}>Brown</option>
-                                <option {% if "Duncan" in data.profile.college %}selected{% endif %}>Duncan</option>
-                                <option {% if "Hanszen" in data.profile.college %}selected{% endif %}>Hanszen</option>
-                                <option {% if "Jones" in data.profile.college %}selected{% endif %}>Jones</option>
-                                <option {% if "Lovett" in data.profile.college %}selected{% endif %}>Lovett</option>
-                                <option {% if "Martel" in data.profile.college %}selected{% endif %}>Martel</option>
-                                <option {% if "McMurtry" in data.profile.college %}selected{% endif %}>McMurtry</option>
-                                <option {% if "Sid Richardson" in data.profile.college %}selected{% endif %}>Sid Richardson</option>
-                                <option {% if "Wiess" in data.profile.college %}selected{% endif %}>Wiess</option>
-                                <option {% if "Will Rice" in data.profile.college %}selected{% endif %}>Will Rice</option>
-                                <option {% if data.college == "" or data.college == None %}selected{% endif %}>N/A</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr height="20px"></tr>
-                    <tr>
-                        <td width="150px" valign="middle">
-                            <p class="fieldname">Bio (optional)</p>
-                        </td>
-                        <td>
-                            <textarea class="form-control" name="bio" rows="3" {% if data.profile.bio == None or data.profile.bio == "" %}placeholder="Write a short description of yourself. What's your major? How late do you sleep? Do you like quiet or noise?">{% else %}>{{ data.profile.bio }}{% endif %}</textarea>
-                        </td>
-                    </tr>
-                    <tr height="20px"></tr>
-                    <tr>
-                        <td width="150px" valign="middle">
-                            <p class="fieldname">Photo (optional)</p>
-                        </td>
-                        <td>
-                            <div id="preview">{% if data.profile.photo != "" or data.profile.photo != None %}<a href="photos/{{ data.profile.photo }}"><img class="preview" src="photos/{{ data.profile.photo }}" /></a>{% endif %}</div>
-                            <br/>
-                            <input type="file" name="photo" onchange="handleFiles(this.files)">
-                        </td>
-                    </tr>
-                </table>
-                <br/><br/>
-                <button type="submit" class="btn btn-primary btn-lg" name="my-form"><p class="button">update profile</p></button>
-            </form>
-            <br/><br/><br/>
-            <div id="delete">
-                <p class="delete"><a href="/deleteprofile?net_id={{ data.profile.net_id }}">delete my profile</a></p>
-            </div>
+
         </div>
 
         <div id="footercontainer">

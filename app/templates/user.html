@@ -49,7 +49,7 @@
             }
             p.subheading {
                 font-family: 'Oswald', sans-serif;
-				font-weight: 300;
+				font-weight: 400;
 				letter-spacing: 1px;
 				font-size: 20px;
 				color: #171717;
@@ -97,6 +97,23 @@
 				font-size: 13px;
 				color: #EDEDED;
 			}
+            #connect a:link {
+				color: #17657A;
+				text-decoration: none;
+			}
+			#connect a:hover {
+				color: #318FA8;
+				text-decoration: none;
+				border-bottom: 2px solid #318FA8;
+			}
+			#connect a:visited {
+				color: #17657A;
+				text-decoration: none;
+			}
+			#connect a:active {
+				color: #17657A;
+				text-decoration: none;
+			}
             #delete a:link {
 				color: #CC2323;
 				text-decoration: none;
@@ -139,6 +156,9 @@
 		</div>
 
         <div id="content">
+            <p class="heading">{{ data.name_uppercase }}</p>
+            <p class="subheading">{{ data.year_uppercase }}, {{ data.college_uppercase }}</p>
+            <br/><br/>
             <table>
                 <tr>
                     <td width="1px" valign="top">
@@ -152,12 +172,9 @@
                         <td width="70px"></td>
                     {% endif %}
                     <td width="500px" valign="top">
-                        <p class="heading">{{ data.name_uppercase }}</p>
-                        <p class="subheading">{{ data.year_uppercase }}, {{ data.college_uppercase }}</p>
-                        <br/>
-                        <br/>
+                        <p class="subheading">PROFILE</p>
                         <p class="fieldtitle">AGE</p>
-                        <p class="text">compute this later</p>
+                        <p class="text">{{ data.age }}</p>
                         <br/>
                         <p class="fieldtitle">GENDER</p>
                         <p class="text">{{ data.profile.gender }}</p>
@@ -167,7 +184,8 @@
                     </td>
                     <td width="70px"></td>
                     <td width="300px" valign="top">
-                        <p class="text">djhfaksfd</p>
+                        <p class="subheading">CONNECT WITH {{ data.name_first_uppercase }}</p>
+                        <div id="connect"><p class="text"><a href="mailto:{{ data.net_id_lowercase }}@rice.edu">{{ data.net_id_lowercase }}@rice.edu</a></p></div>
                     </td>
                 </tr>
             </table>

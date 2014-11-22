@@ -58,6 +58,13 @@
 				font-size: 20px;
 				color: #171717;
             }
+            p.subheading2 {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+				font-size: 20px;
+				color: #171717;
+            }
             p.fieldname {
 				font-family: 'Oxygen', sans-serif;
 				font-weight: 300;
@@ -93,6 +100,23 @@
 				letter-spacing: 1px;
 				font-size: 13px;
 				color: #EDEDED;
+			}
+            #darklink a:link {
+				color: #17657A;
+				text-decoration: none;
+			}
+			#darklink a:hover {
+				color: #318FA8;
+				text-decoration: none;
+				border-bottom: 2px solid #318FA8;
+			}
+			#darklink a:visited {
+				color: #17657A;
+				text-decoration: none;
+			}
+			#darklink a:active {
+				color: #17657A;
+				text-decoration: none;
 			}
             #delete a:link {
 				color: #CC2323;
@@ -160,7 +184,7 @@
 
         <div id="content">
             <p class="heading">my profile</p>
-            <p class="subheading">Edit your profile</p>
+            <div id="darklink"><p class="subheading">Edit your profile (<a href="/user/{{ data.profile.net_id }}">View your public profile</a>)</p></div>
             <br/><br/>
             <form action="/updateprofile" method="POST" enctype="multipart/form-data">
                 <table width="60%">
@@ -258,7 +282,7 @@
                             <p class="fieldname">Bio (optional)</p>
                         </td>
                         <td>
-                            <textarea class="form-control" name="bio" rows="3" {% if data.profile.bio == None or data.profile.bio == "" %}placeholder="Write a short description of yourself. What's your major? How late do you sleep? Do you like quiet or noise?">{% else %}>{{ data.profile.bio }}{% endif %}</textarea>
+                            <textarea class="form-control" name="bio" rows="5" {% if data.profile.bio == None or data.profile.bio == "" %}placeholder="Write a short description of yourself. What's your major? How late do you sleep? Do you like quiet or noise?">{% else %}>{{ data.profile.bio }}{% endif %}</textarea>
                         </td>
                     </tr>
                     <tr height="20px"></tr>
