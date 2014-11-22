@@ -2,7 +2,8 @@ import os
 import urllib2
 
 from flask import render_template, session, request, send_from_directory
-from werkzeug.utils import secure_filename
+import time
+from werkzeug.utils import secure_filename, redirect
 
 from app import app, db, lm
 from app.models import Profile
@@ -10,12 +11,26 @@ from app.models import Profile
 
 # This needs to be an absolute path. That's so stupid.
 UPLOAD_FOLDER = "Z:/RoommateFinder/roommate-finder/app/photos"
+# Upload folder for local development environment.
+# UPLOAD_FOLDER = "C:/Users/Kevin/SkyDrive/Homework/Rice University/Miscellaneous/Rice Apps/roommate-finder/app/photos"
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app.config['CAS_SERVER'] = 'https://netid.rice.edu'
 app.config['CAS_AFTER_LOGIN'] = 'after_login'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['APP_URL'] = 'http://roommatefinder.kevinlin.info'
 app.config.setdefault('CAS_USERNAME_SESSION_KEY', 'CAS_USERNAME')
+
+
+@app.after_request
+def add_header(response):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+    response.headers['Cache-Control'] = 'public, max-age=0'
+    return response
 
 
 @app.route('/photos/<path:filename>')
@@ -74,7 +89,8 @@ def create_user():
     photo_hash = str(hash(photo))
     # Create a new user from the Profile model
     if photo:
-        user = Profile(values[0], values[1], values[2], values[3], values[4], values[5], values[6], photo_hash + "." + file_extension(photo.filename))
+        user = Profile(values[0], values[1], values[2], values[3], values[4], values[5], values[6],
+                       photo_hash + "." + file_extension(photo.filename))
     else:
         user = Profile(values[0], values[1], values[2], values[3], values[4], values[5], values[6])
     # Add this new user to the database
@@ -132,7 +148,8 @@ def delete_user():
         user = Profile.query.filter_by(net_id=net_id).first()
         db.session.delete(user)
         db.session.commit()
-    return app.send_static_file('intro.html')
+    # Logout the session after profile deletion.
+    return redirect("/logout", code=302)
 
 
 def get_user_details(net_id):
@@ -185,14 +202,114 @@ def file_extension(filename):
 
 @app.route('/', methods=['GET'])
 def index():
-    login = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
-    user = {'nickname': login}
-    return app.send_static_file('intro.html')
+    """
+    First check if the user is logged in. If so, redirect him/her to the main search page.
+    If not, redirect him/her to the intro page.
+    """
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    if net_id is not None:
+        data = {"net_id": net_id}
+        return render_template('search.html', data=data)
+    else:
+        return app.send_static_file('intro.html')
 
 
 @app.route('/about')
 def about():
     return app.send_static_file('about.html')
+
+
+@app.route('/delete_account')
+def delete_account():
+    """
+    Delete user account page.
+    """
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    if net_id is not None:
+        data = {"net_id": net_id}
+        return render_template('delete_account.html', data=data)
+    else:
+        # Redirect user to intro
+        index()
+
+
+@app.route('/my_profile')
+def my_profile():
+    """
+    Edit my profile page.
+    """
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    if net_id is not None:
+        user = Profile.query.filter_by(net_id=net_id).first()
+        data = {"net_id": net_id, "profile": user}
+        return render_template('my_profile.html', data=data)
+    else:
+        index()
+
+
+@app.route('/my_postings')
+def my_postings():
+    """
+    Page showing the user's postings.
+
+    Yet to be implemented.
+    """
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    if net_id is not None:
+        user = Profile.query.filter_by(net_id=net_id).first()
+        data = {"net_id": net_id, "profile": user}
+        return render_template('my_postings.html', data=data)
+    else:
+        index()
+
+
+@app.route('/user/<path:path>')
+def user_profile(path):
+    """
+    Handles routing of /user/net_id (returns that person's profile page)
+
+    TODO: Only allow access to the user page is user is logged in.
+    """
+    # Get the currently logged in user
+    login = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    # Check if such a net ID even exists
+    user = Profile.query.filter_by(net_id=path).first()
+    # Stylistic typographic choices: uppercase and lowercase versions
+    # I'm sure there's an easier way to do this
+    data = {}
+    data["profile"] = user
+    data["net_id"] = path
+    # Meh; too many net ID's to keep track of...
+    data["logged_in_net_id"] = login
+    if user is not None:
+        data["net_id_uppercase"] = path.upper()
+        data["net_id_lowercase"] = path.lower()
+        data["name_uppercase"] = user.name.upper()
+        data["name_lowercase"] = user.name.lower()
+        data["name_first_uppercase"] = str(user.name).split()[0].upper()
+        #data["name_last_uppercase"] = str(user.name).split()[1].upper()
+        data["college_uppercase"] = user.college.upper()
+        data["college_lowercase"] = user.college.lower()
+        data["year_uppercase"] = user.year.upper()
+        data["year_lowercase"] = user.year.lower()
+        data["age"] = compute_age(user.dob)
+        return render_template('user.html', data=data)
+    else:
+        # If user doesn't exist, profile key will map to None.
+        return render_template('user_not_exists.html', data=data)
+
+
+def compute_age(dob):
+    """
+    Given a MM/DD/YYYY formatted date of birth, calculate current age (relative to now, of course).
+    """
+    birth_date = dob.split("/")
+    age = int(time.strftime("%Y")) - int(birth_date[2])
+    if int(time.strftime("%m"))/float(birth_date[0]) < 1:
+        age -= 1
+    if int(time.strftime("%m")) == int(birth_date[0]) and int(time.strftime("%d")) < int(birth_date[1]):
+        age -= 1
+    return age
 
 
 @lm.user_loader

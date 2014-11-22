@@ -10,6 +10,14 @@
 				background: #303030;
 				z-index: 5;
 			}
+            #headercontainer2 {
+				width: 100%;
+				height: 60px;
+				position: fixed;
+				top: 60px;
+				background: #17657A;
+				z-index: 5;
+			}
 			#header {
 				margin-left: 10%;
 				margin-right: 10%;
