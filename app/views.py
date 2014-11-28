@@ -267,11 +267,11 @@ def my_postings():
 def user_profile(path):
     """
     Handles routing of /user/net_id (returns that person's profile page)
-
-    TODO: Only allow access to the user page is user is logged in.
     """
     # Get the currently logged in user
     login = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    if login is None:
+        return redirect("/login", code=302)
     # Check if such a net ID even exists
     user = Profile.query.filter_by(net_id=path).first()
     # Stylistic typographic choices: uppercase and lowercase versions

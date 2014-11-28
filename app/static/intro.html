@@ -10,15 +10,92 @@
         <!--jQuery, required for some functions of Bootstrap-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         
-        <!--Boostrap v3, retrieved from a third party CDN-->
+        <!--Bootstrap v3, retrieved from a third party CDN-->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 		
-		<!--Roomate Finder stylesheet-->
+		<!--Roommate Finder stylesheet-->
 		<link type="text/css" rel="stylesheet" href="static/stylesheet.css">
         
         <title>roommate finder | rice university</title>
+
+        <style type="text/css">
+            #block1 {
+				width: 100%;
+				height: 400px;
+                background: #F5F5F5;
+            }
+            #block2 {
+				width: 100%;
+				height: 400px;
+                background: url("static/graphics/brockman.png") center center;
+            }
+            #block3 {
+				width: 100%;
+				height: 400px;
+                background: url("static/graphics/mcmurtry.png") center bottom;
+            }
+            #block4 {
+                width: 100%;
+				height: 320px;
+                background: #1F1F1F;
+            }
+            div.blocktextright {
+                max-width: 500px;
+            }
+            div.blocktextleft {
+                margin-left: 10%;
+                max-width: 500px;
+            }
+            p.blockheading {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+                line-height: 30px;
+				font-size: 30px;
+				color: #17657A;
+            }
+            p.blockheading2 {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+                line-height: 30px;
+				font-size: 30px;
+				color: #6FC0D6;
+                text-shadow: 0.5px 0.5px 1px #000000;
+            }
+            p.blocktext {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 16px;
+				color: #171717;
+            }
+            p.blocktext2 {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 16px;
+				color: #EDEDED;
+                text-shadow: 0.5px 0.5px 1px #000000;
+            }
+            p.getstarted {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 35px;
+				color: #F5F5F5;
+            }
+            p.subgetstarted {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+                line-height: 10px;
+				font-size: 20px;
+				color: #17657A;
+            }
+        </style>
 	</head>
 	
 	<body>
@@ -51,44 +128,69 @@
                 </center>
 			</div>
 		</div>
+
         <div id="contentcontainer">
-        	<div id="content">
-            	<!--Some space padding before content actually starts-->
-            	<div style="height:50px;"></div>
+            <div id="block1">
+                <div style="height:100px;"></div>
                 <table width="100%">
-                	<tr>
-                    	<td width="30%" valign="top">
-                        	<center>
-	                        	<p class="header">This is a sample heading with no useful information right now</p>
-                                <br/>
-                                <p class="text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean fermentum orci scelerisque ante porta molestie et et diam. Aliquam pulvinar feugiat nulla, eu blandit magna convallis eget. Ut ultrices sem sodales mauris viverra, id rutrum sem iaculis. Donec ut tincidunt mi, in aliquet eros. Integer in laoreet nulla, vitae rhoncus velit. Vestibulum consectetur vestibulum erat, vel maximus risus vulputate at. Nunc condimentum augue in lobortis tempor. Proin pulvinar, neque nec bibendum lobortis, orci sapien sagittis ipsum, in posuere libero lectus eu libero. Nulla posuere, tellus eget mollis sollicitudin, nisl orci porttitor eros, ac dapibus est massa vitae dolor. Proin sit amet lectus ligula. Mauris malesuada urna eros, eget dictum tortor ornare nec. Nam posuere ultrices iaculis. Curabitur vel est tempus, aliquam nulla sed, aliquet felis. Vestibulum eget nunc mauris. Nulla viverra tortor dolor.</p>
-                                <p class="text">Fusce eget condimentum augue, in tincidunt urna. Donec vulputate vehicula lacus, eu sollicitudin enim commodo et. Proin nec pulvinar arcu. Morbi facilisis, diam quis varius blandit, nisl tellus pretium lorem, nec condimentum lorem mauris convallis lacus. Donec consectetur vel sapien eget euismod. Quisque enim ex, congue quis sem a, consequat mattis felis. Nulla non erat nec lectus finibus mollis. Sed nec faucibus dolor. Maecenas blandit dictum ligula mattis accumsan. Aenean vel dapibus est. Donec vulputate purus ac turpis hendrerit malesuada non et mi. In efficitur magna vel sollicitudin dignissim. Mauris a tortor ut orci pulvinar iaculis quis nec felis. Nullam semper, nisi in sagittis imperdiet, neque quam tristique mauris, at efficitur leo ligula eu enim. Phasellus venenatis sagittis odio. Sed pretium lectus id consequat accumsan.</p>
-                            </center>
+                    <tr>
+                        <td width="10%"></td>
+                        <td width="40%">
+                            <img src="http://www.cloudflaremanager.com/resources/graphics/compressed/introduction_2.png" height="300px">
                         </td>
-                        <td width="5%" valign="top"></td>
-                        <td width="30%" valign="top">
-                        	<center>
-                        		<p class="header">Maybe here we can brag about how cool our app is</p>
+                        <td width="50%" valign="top">
+                            <div class="blocktextright">
+                                <p class="blockheading">FINDING ROOMMATES IS EASY.</p>
                                 <br/>
-                                <p class="text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean fermentum orci scelerisque ante porta molestie et et diam. Aliquam pulvinar feugiat nulla, eu blandit magna convallis eget. Ut ultrices sem sodales mauris viverra, id rutrum sem iaculis. Donec ut tincidunt mi, in aliquet eros. Integer in laoreet nulla, vitae rhoncus velit. Vestibulum consectetur vestibulum erat, vel maximus risus vulputate at. Nunc condimentum augue in lobortis tempor. Proin pulvinar, neque nec bibendum lobortis, orci sapien sagittis ipsum, in posuere libero lectus eu libero. Nulla posuere, tellus eget mollis sollicitudin, nisl orci porttitor eros, ac dapibus est massa vitae dolor. Proin sit amet lectus ligula. Mauris malesuada urna eros, eget dictum tortor ornare nec. Nam posuere ultrices iaculis. Curabitur vel est tempus, aliquam nulla sed, aliquet felis. Vestibulum eget nunc mauris. Nulla viverra tortor dolor.</p>
-                                <p class="text">Fusce eget condimentum augue, in tincidunt urna. Donec vulputate vehicula lacus, eu sollicitudin enim commodo et. Proin nec pulvinar arcu. Morbi facilisis, diam quis varius blandit, nisl tellus pretium lorem, nec condimentum lorem mauris convallis lacus. Donec consectetur vel sapien eget euismod. Quisque enim ex, congue quis sem a, consequat mattis felis. Nulla non erat nec lectus finibus mollis. Sed nec faucibus dolor. Maecenas blandit dictum ligula mattis accumsan. Aenean vel dapibus est. Donec vulputate purus ac turpis hendrerit malesuada non et mi. In efficitur magna vel sollicitudin dignissim. Mauris a tortor ut orci pulvinar iaculis quis nec felis. Nullam semper, nisi in sagittis imperdiet, neque quam tristique mauris, at efficitur leo ligula eu enim. Phasellus venenatis sagittis odio. Sed pretium lectus id consequat accumsan.</p>
-                            </center>
-                        </td>
-                        <td width="5%" valign="top"></td>
-                        <td width="30%" valign="top">
-                        	<center>
-	                        	<p class="header">And have some flashy images of the campus or something</p>
-                                <br/>
-                                <p class="text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean fermentum orci scelerisque ante porta molestie et et diam. Aliquam pulvinar feugiat nulla, eu blandit magna convallis eget. Ut ultrices sem sodales mauris viverra, id rutrum sem iaculis. Donec ut tincidunt mi, in aliquet eros. Integer in laoreet nulla, vitae rhoncus velit. Vestibulum consectetur vestibulum erat, vel maximus risus vulputate at. Nunc condimentum augue in lobortis tempor. Proin pulvinar, neque nec bibendum lobortis, orci sapien sagittis ipsum, in posuere libero lectus eu libero. Nulla posuere, tellus eget mollis sollicitudin, nisl orci porttitor eros, ac dapibus est massa vitae dolor. Proin sit amet lectus ligula. Mauris malesuada urna eros, eget dictum tortor ornare nec. Nam posuere ultrices iaculis. Curabitur vel est tempus, aliquam nulla sed, aliquet felis. Vestibulum eget nunc mauris. Nulla viverra tortor dolor.</p>
-                                <p class="text">Fusce eget condimentum augue, in tincidunt urna. Donec vulputate vehicula lacus, eu sollicitudin enim commodo et. Proin nec pulvinar arcu. Morbi facilisis, diam quis varius blandit, nisl tellus pretium lorem, nec condimentum lorem mauris convallis lacus. Donec consectetur vel sapien eget euismod. Quisque enim ex, congue quis sem a, consequat mattis felis. Nulla non erat nec lectus finibus mollis. Sed nec faucibus dolor. Maecenas blandit dictum ligula mattis accumsan. Aenean vel dapibus est. Donec vulputate purus ac turpis hendrerit malesuada non et mi. In efficitur magna vel sollicitudin dignissim. Mauris a tortor ut orci pulvinar iaculis quis nec felis. Nullam semper, nisi in sagittis imperdiet, neque quam tristique mauris, at efficitur leo ligula eu enim. Phasellus venenatis sagittis odio. Sed pretium lectus id consequat accumsan.</p>
-                        	</center>
+                                <p class="blocktext">Whether you're looking for an apartment or looking for roommates to fill your apartment, the Rice Roommate Finder web app makes it easy to find the perfect group of people. And best of all, it's totally free.</p>
+                            </div>
                         </td>
                     </tr>
                 </table>
-                <!--More space padding-->
-            	<div style="height:100px;"></div>
+            </div>
+            <div id="block2">
+                <div style="height:100px;"></div>
+                <div class="blocktextleft">
+                    <p class="blockheading2">SEARCH FOR ROOMMATES.</p>
+                    <br/>
+                    <p class="blocktext2">Looking to move off campus and need roommates? Search through postings of apartments other Rice students are trying to fill.</p>
+                </div>
+            </div>
+            <div id="block1">
+                <div style="height:100px;"></div>
+                <table width="100%">
+                    <tr>
+                        <td width="10%"></td>
+                        <td width="40%">
+                            <img src="http://www.cloudflaremanager.com/resources/graphics/compressed/introduction_2.png" height="300px">
+                        </td>
+                        <td width="50%" valign="top">
+                            <div class="blocktextright">
+                                <p class="blockheading">FILL YOUR APARTMENT.</p>
+                                <br/>
+                                <p class="blocktext">Need to fill your new apartment rent with roommates? Create public postings advertising your apartment--viewable only by Rice students.</p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="block3">
+                <div style="height:100px;"></div>
+                <div class="blocktextleft">
+                    <p class="blockheading2">FOR RICE STUDENTS, BY RICE STUDENTS.</p>
+                    <br/>
+                    <p class="blocktext2">We're students, just like you. And we know that it can be difficult to find the right roommates. And Roommate Finder solves that problem--it's made by Rice students, for Rice students.</p>
+                </div>
+            </div>
+            <div id="block4">
+                <div style="height:100px;"></div>
+                <center>
+                    <p class="subgetstarted">WHAT ARE YOU WAITING FOR?</p>
+                    <p class="getstarted"><a href="/login">Get started now</a></p>
+                </center>
             </div>
         </div>
+
 		<div id="footercontainer">
 			<div id="footer">
             	<table width="100%">

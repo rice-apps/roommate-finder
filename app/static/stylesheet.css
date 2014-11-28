@@ -134,7 +134,7 @@
 				color: #171717;
 			}
 			body {
-				background: url('http://www.pgal.com/media/portfolio/03_F10_1.JPG') no-repeat center center fixed;
+				background: url("graphics/martel.jpg") no-repeat center center fixed;
   				-webkit-background-size: cover;
   				-moz-background-size: cover;
   				-o-background-size: cover;
