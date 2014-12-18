@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
     	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -58,6 +58,14 @@
 				font-size: 20px;
 				color: #171717;
             }
+            p.error {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+                line-height: 1px;
+				font-size: 20px;
+				color: #CC2323;
+			}
             p.fieldname {
 				font-family: 'Oxygen', sans-serif;
 				font-weight: 300;
@@ -97,6 +105,7 @@
                 reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
                 reader.readAsDataURL(file);
             }
+
         </script>
 	</head>
 
@@ -120,6 +129,9 @@
             <p class="heading">Welcome to Roommate Finder.</p>
             <p class="subheading">Let's create your profile</p>
             <br/><br/>
+            {% if data.error %}
+                <p class="error">{{ data.error }}</p><br/><br/>
+            {% endif %}
             <form action="/createprofile" method="POST" enctype="multipart/form-data">
                 <table width="60%">
                     <tr>
@@ -162,7 +174,7 @@
                         <td>
                             <div class="form-group">
                                 <div class='input-group date' id='datetimepicker1'>
-                                    <input type='text' class="form-control" name="dob" placeholder="MM/DD/YYYY" required>
+                                    <input type='text' class="form-control" name="dob" placeholder="MM/DD/YYYY" {% if data.dob %}value="{{ data.dob }}"{% endif %} required>
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                     <script type="text/javascript">
                                         $(function () {
@@ -182,9 +194,10 @@
                         </td>
                         <td>
                             <select class="form-control" type="text" name="gender" required>
-                                <option>Male</option>
-                                <option>Female</option>
-                                <option>Other</option>
+                                <option value="Select one..." disabled selected>Select one...</option>
+                                <option {% if data.gender == "Male" %}selected{% endif %}>Male</option>
+                                <option {% if data.gender == "Female" %}selected{% endif %}>Female</option>
+                                <option {% if data.gender == "Other" %}selected{% endif %}>Other</option>
                             </select>
                         </td>
                     </tr>
@@ -216,7 +229,7 @@
                             <p class="fieldname">Bio (optional)</p>
                         </td>
                         <td>
-                            <textarea class="form-control" name="bio" placeholder="Write a short description of yourself. What's your major? How late do you sleep? Do you like quiet or noise?" rows="3"></textarea>
+                            <textarea class="form-control" name="bio" {% if not data.error %}placeholder="Write a short description of yourself. What's your major? How late do you sleep? Do you like quiet or noise?"{% endif %} rows="3">{% if data.error %}{{ data.bio }}{% endif %}</textarea>
                         </td>
                     </tr>
                     <tr height="20px"></tr>
