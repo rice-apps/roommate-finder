@@ -10,9 +10,9 @@ from app.models import Profile
 
 
 # This needs to be an absolute path. That's so stupid.
-UPLOAD_FOLDER = "Z:/RoommateFinder/roommate-finder/app/photos"
+# UPLOAD_FOLDER = "Z:/RoommateFinder/roommate-finder/app/photos"
 # Upload folder for local development environment.
-# UPLOAD_FOLDER = "C:/Users/Kevin/SkyDrive/Homework/Rice University/Miscellaneous/Rice Apps/roommate-finder/app/photos"
+UPLOAD_FOLDER = "D:/GitHub/roommate-finder/app/photos"
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app.config['CAS_SERVER'] = 'https://netid.rice.edu'
@@ -79,9 +79,9 @@ def create_user():
     # Fields from form
     fields = ["net_id", "name", "year", "dob", "college", "gender", "bio"]
     # Get user-entered values from form
-    values = []
+    values = {}
     for field in fields:
-        values.append(request.form[field])
+        values[field] = request.form[field]
     # Uploaded profile photo
     photo = request.files['photo']
     # Generate a string representation of a hash of the photo
@@ -89,18 +89,22 @@ def create_user():
     photo_hash = str(hash(photo))
     # Create a new user from the Profile model
     if photo:
-        user = Profile(values[0], values[1], values[2], values[3], values[4], values[5], values[6],
-                       photo_hash + "." + file_extension(photo.filename))
+        user = Profile(values["net_id"], values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"], photo_hash + "." + file_extension(photo.filename))
     else:
-        user = Profile(values[0], values[1], values[2], values[3], values[4], values[5], values[6])
-    # Add this new user to the database
-    db.session.add(user)
-    db.session.commit()
+        user = Profile(values["net_id"], values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"])
+    # The user selected a photo of an invalid file extension
+    # Redirect the user to an error page
+    if photo and not allowed_file(photo.filename):
+        data = {"net_id": values["net_id"], "name": values["name"], "year": values["year"], "dob": values["dob"], "college": values["college"], "gender": values["gender"], "bio": values["bio"], "error": "Error: invalid photo file extension ." + str(file_extension(photo.filename))}
+        return render_template('profile_creation.html', data=data)
     # Store the user's profile photo on the server
     if photo and allowed_file(photo.filename):
         filename = secure_filename(photo_hash) + "." + file_extension(photo.filename)
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    data = {"net_id": values[0], "profile": user}
+    # Add this new user to the database
+    db.session.add(user)
+    db.session.commit()
+    data = {"net_id": values["net_id"], "profile": user}
     return render_template('my_profile.html', data=data)
 
 
@@ -190,7 +194,7 @@ def allowed_file(filename):
     """
     Check if the file is of a permissible file extension.
     """
-    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def file_extension(filename):
@@ -267,11 +271,11 @@ def my_postings():
 def user_profile(path):
     """
     Handles routing of /user/net_id (returns that person's profile page)
-
-    TODO: Only allow access to the user page is user is logged in.
     """
     # Get the currently logged in user
     login = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    if login is None:
+        return redirect("/login", code=302)
     # Check if such a net ID even exists
     user = Profile.query.filter_by(net_id=path).first()
     # Stylistic typographic choices: uppercase and lowercase versions
@@ -287,7 +291,6 @@ def user_profile(path):
         data["name_uppercase"] = user.name.upper()
         data["name_lowercase"] = user.name.lower()
         data["name_first_uppercase"] = str(user.name).split()[0].upper()
-        #data["name_last_uppercase"] = str(user.name).split()[1].upper()
         data["college_uppercase"] = user.college.upper()
         data["college_lowercase"] = user.college.lower()
         data["year_uppercase"] = user.year.upper()
