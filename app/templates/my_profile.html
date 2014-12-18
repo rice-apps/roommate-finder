@@ -163,22 +163,22 @@
 
 	<body>
 		<div id="headercontainer">
-			<div id="header">
-            	<table width="100%">
-                	<tr>
-                    	<td width="50%">
-                        	<p>[ONCE WE HAVE A LOGO, IT WILL GO HERE]</p>
-                        </td>
-                        <td width="50%">
-                        	<p align="right">WELCOME, {{ data.net_id }} | <a href="/">FIND ROOMMATES</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p>
-                        </td>
-                    </tr>
-                </table>
-			</div>
+            <table width="100%" height="60px">
+                <tr>
+                    <td width="10%"></td>
+                    <td width="40%" valign="middle">
+                        <a href="../"><img src="../static/graphics/logo.png" width="300px" height="60px" border="0" /></a>
+                    </td>
+                    <td width="40%" valign="bottom">
+                        <div id="links"><p align="right">WELCOME, {{ data.net_id }} | <a href="/">FIND ROOMMATES</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p></div>
+                    </td>
+                    <td width="10%"></td>
+                </tr>
+            </table>
 		</div>
         <div id="headercontainer2">
 			<div id="header">
-            	<p><a href="/my_profile"><span class="pagesectionbold">MY PROFILE</span></a> · <a href="/my_postings"><span class="pagesection">MY POSTINGS</span></a> · <a href="/delete_account"><span class="pagesection">DELETE MY ACCOUNT</span></a></p>
+            	<div id="links"><p><a href="/my_profile"><span class="pagesectionbold">MY PROFILE</span></a> · <a href="/my_postings"><span class="pagesection">MY POSTINGS</span></a> · <a href="/delete_account"><span class="pagesection">DELETE MY ACCOUNT</span></a></p></div>
 			</div>
 		</div>
 
