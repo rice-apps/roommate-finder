@@ -277,10 +277,10 @@
                         </td>
                         <td>
                             <select class="form-control" type="text" name="year" autocomplete="off">
-                                <option {% if data.year == "Freshman" %}selected{% endif %}>Freshman</option>
-                                <option {% if data.year == "Sophomore" %}selected{% endif %}>Sophomore</option>
-                                <option {% if data.year == "Junior" %}selected{% endif %}>Junior</option>
-                                <option {% if data.year == "Senior" %}selected{% endif %}>Senior</option>
+                                <option {% if data.year == "Freshman" or data.year == "freshman" %}selected{% endif %}>Freshman</option>
+                                <option {% if data.year == "Sophomore" or data.year == "sophomore" %}selected{% endif %}>Sophomore</option>
+                                <option {% if data.year == "Junior" or data.year == "junior" %}selected{% endif %}>Junior</option>
+                                <option {% if data.year == "Senior" or data.year == "senior" %}selected{% endif %}>Senior</option>
                                 <option>Other (graduate student, fifth year student, etc.)</option>
                             </select>
                         </td>
