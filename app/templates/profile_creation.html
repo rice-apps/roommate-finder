@@ -18,7 +18,7 @@
         <!--Date Time Picker-->
         <link rel="stylesheet" href="http://eonasdan.github.io/bootstrap-datetimepicker/content/bootstrap-datetimepicker.css">
         <script type="text/javascript" src="http://momentjs.com/downloads/moment.js"></script>
-        <script type="text/javascript" src="https://raw.githubusercontent.com/Eonasdan/bootstrap-datetimepicker/master/build/js/bootstrap-datetimepicker.min.js"></script>
+        <script type="text/javascript" src="../static/js/bootstrap-datetimepicker.min.js"></script>
 
 		<!--Roommate Finder stylesheet-->
 		<link type="text/css" rel="stylesheet" href="static/stylesheet.css">
@@ -38,6 +38,11 @@
             #preview {
                 max-width: 150px;
                 max-height: 150px;
+            }
+            #facebooklogin {
+                position: absolute;
+                max-width: 20%;
+                left: 65%;
             }
             img.preview {
                 max-width: 150px;
@@ -74,6 +79,13 @@
 				font-size: 14px;
 				color: #171717;
 			}
+            p.facebook {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 20px;
+				color: #171717;
+			}
             p.button {
 				font-family: 'Oxygen', sans-serif;
 				font-weight: 400;
@@ -105,7 +117,77 @@
                 reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
                 reader.readAsDataURL(file);
             }
+        </script>
 
+        <script>
+            // This is called with the results from from FB.getLoginStatus().
+            function statusChangeCallback(response) {
+                if (response.status === 'connected') {
+                    importData()
+                }
+            }
+
+            function checkLoginState() {
+                FB.getLoginStatus(function (response) {
+                    statusChangeCallback(response);
+                });
+            }
+
+            window.fbAsyncInit = function () {
+                FB.init({
+                    appId: '1516541918613824', // App ID registered: Rice Roommate Finder
+                    cookie: true,
+                    xfbml: true,
+                    version: 'v2.1'
+                });
+
+                FB.getLoginStatus(function (response) {
+                    statusChangeCallback(response);
+                });
+            };
+
+            // Load the SDK asynchronously
+            (function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+
+            // Here we run a very simple test of the Graph API after login is
+            // successful.  See statusChangeCallback() for when this call is made.
+            function importData() {
+                FB.api('/me', function (response) {
+                    // Console debug log
+                    console.log("Facebook login success. Full response: " + JSON.stringify(response));
+
+                    // Set name
+                    document.getElementById("name").value = response.name;
+
+                    // Set gender
+                    if (response.gender == "male")
+                        document.getElementById("gender").selectedIndex = 1;
+                    else if (response.gender == "female")
+                        document.getElementById("gender").selectedIndex = 2;
+                    else
+                        document.getElementById("gender").selectedIndex = 3;
+
+                    // Set ID
+                    document.getElementById("facebook").value = response.id;
+                });
+
+                // Profile picture
+                FB.api('/me/picture', {"redirect": false, "type": "large"}, function(response) {
+                    console.log("Facebook profile picture grab success. Full response: " + JSON.stringify(response))
+                });
+
+                // Log the user out after retrieving the above information
+                FB.logout(function(response) {
+                    console.log("Facebook logout success. Full response: " + JSON.stringify(response))
+                });
+            }
         </script>
 	</head>
 
@@ -133,6 +215,10 @@
                 <p class="error">{{ data.error }}</p><br/><br/>
             {% endif %}
             <form action="/createprofile" method="POST" enctype="multipart/form-data">
+                <div id="facebooklogin">
+                    <p class="facebook">You can optionally log in with Facebook to connect your Facebook account. This makes it easier for potential roommates to communicate with you.</p>
+                    <div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="false" onlogin="checkLoginState();"></div>
+                </div>
                 <table width="60%">
                     <tr>
                         <td width="150px" valign="middle">
@@ -145,10 +231,19 @@
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
+                            <p class="fieldname">Facebook ID</p>
+                        </td>
+                        <td>
+                            <input class="form-control" type="text" id="facebook" name="facebook" {% if data.facebook %}value="{{ data.facebook }}"{% endif %} placeholder="Log in with Facebook to connect your account" readonly>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
                             <p class="fieldname">Name</p>
                         </td>
                         <td>
-                            <input class="form-control" type="text" name="name" value="{{ data.name }}" required>
+                            <input class="form-control" type="text" id="name" name="name" value="{{ data.name }}" required>
                         </td>
                     </tr>
                     <tr height="20px"></tr>
@@ -193,8 +288,7 @@
                             <p class="fieldname">Gender</p>
                         </td>
                         <td>
-                            <select class="form-control" type="text" name="gender" required>
-                                <option value="Select one..." disabled selected>Select one...</option>
+                            <select class="form-control" type="text" id="gender" name="gender" required>
                                 <option {% if data.gender == "Male" %}selected{% endif %}>Male</option>
                                 <option {% if data.gender == "Female" %}selected{% endif %}>Female</option>
                                 <option {% if data.gender == "Other" %}selected{% endif %}>Other</option>
