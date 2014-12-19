@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+    	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    	<!--Fonts-->
+		<link href='http://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+
+        <!--jQuery, required for some functions of Bootstrap-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+        <!--Bootstrap v3, retrieved from a third party CDN-->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+        <!--Date Time Picker-->
+        <link rel="stylesheet" href="http://eonasdan.github.io/bootstrap-datetimepicker/content/bootstrap-datetimepicker.css">
+        <script type="text/javascript" src="http://momentjs.com/downloads/moment.js"></script>
+        <script type="text/javascript" src="../static/js/bootstrap-datetimepicker.min.js"></script>
+
+		<!--Roommate Finder stylesheet-->
+		<link type="text/css" rel="stylesheet" href="../static/stylesheet.css">
+
+        <title>welcome, {{ data.first_name_lower }} | roommate finder | rice university</title>
+
+        <!--Override some CSS properties-->
+		<style type="text/css">
+            body {
+                background: #F5F5F5;
+                margin-top: 60px;
+                margin-bottom: 50px;
+            }
+            #welcomeblock {
+				width: 100%;
+				height: 500px;
+                background: #17657A;
+            }
+            #contentblock {
+				width: 100%;
+				height: 500px;
+                background: #F5F5F5;
+            }
+            #endblock {
+                width: 100%;
+				height: 250px;
+                background: #1F1F1F;
+            }
+            p.welcomeheading {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+                line-height: 70px;
+				font-size: 70px;
+				color: #EDEDED;
+            }
+            p.welcomesubheading1 {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+                line-height: 70px;
+				font-size: 50px;
+				color: #EDEDED;
+            }
+            p.welcomesubheading2 {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 20px;
+				color: #EDEDED;
+            }
+            p.blockheading {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+                line-height: 30px;
+				font-size: 30px;
+				color: #17657A;
+            }
+            p.blocktext {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 16px;
+				color: #171717;
+            }
+            p.endtext1 {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 22px;
+				color: #F5F5F5;
+            }
+            p.endtext2 {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 15px;
+                line-height: 10px;
+				color: #F5F5F5;
+            }
+            img.blockimg {
+                max-width: 400px;
+            }
+            #darklink a:link {
+				color: #17657A;
+				text-decoration: none;
+			}
+			#darklink a:hover {
+				color: #318FA8;
+				text-decoration: none;
+				border-bottom: 2px solid #318FA8;
+			}
+			#darklink a:visited {
+				color: #17657A;
+				text-decoration: none;
+			}
+			#darklink a:active {
+				color: #17657A;
+				text-decoration: none;
+			}
+        </style>
+	</head>
+
+	<body>
+		<div id="headercontainer">
+            <table width="100%" height="60px">
+                <tr>
+                    <td width="10%"></td>
+                    <td width="40%" valign="middle">
+                        <a href="../"><img src="../static/graphics/logo.png" width="300px" height="60px" border="0" /></a>
+                    </td>
+                    <td width="40%" valign="bottom">
+                        <div id="links"><p align="right">WELCOME, {{ data.net_id }} | <a href="/">FIND ROOMMATES</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p></div>
+                    </td>
+                    <td width="10%"></td>
+                </tr>
+            </table>
+		</div>
+
+        <!--Welcome to Roommate Finder.-->
+        <div id="welcomeblock">
+            <div style="height: 130px;"></div>
+            <p class="welcomeheading" align="center">Hi {{ data.first_name }}.</p>
+            <p class="welcomesubheading1" align="center">Welcome to Roommate Finder.</p>
+            <br/>
+            <p class="welcomesubheading2" align="center">Here's how to get started</p>
+        </div>
+        <!--Setting up profile-->
+        <div id="contentblock">
+            <div style="height: 100px;"></div>
+            <table width="100%">
+                <tr>
+                    <td width="10%"></td>
+                    <td width="30%" valign="top">
+                        <img class="blockimg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Vector-based_example.svg/2000px-Vector-based_example.svg.png" />
+                    </td>
+                    <td width="10%"></td>
+                    <td width="40%" valign="middle">
+                        <p class="blockheading">SETTING UP YOUR PROFILE.</p><br/>
+                        <div id="darklink"><p class="blocktext">You've already set up your profile! If you need to make any changes, including changing your profile picture{% if data.profile.facebook %} or disconnecting your Facebook account{% endif %}, go to "My Account" in the navigation bar, or <a href="/my_profile">click here</a>. From here, you can also view your current listings and delete your Roommate Finder account if you need to.</p></div>
+                    </td>
+                    <td width="10%"></td>
+                </tr>
+            </table>
+        </div>
+        <!--Using the main search interface-->
+        <div id="contentblock">
+            <div style="height: 100px;"></div>
+            <table width="100%">
+                <tr>
+                    <td width="10%"></td>
+                    <td width="40%">
+                        <p class="blockheading">SEARCH FOR NEW ROOMMATES.</p><br/>
+                        <div id="darklink"><p class="blocktext">Want to see existing apartment listings and join someone looking for roommates? Use the main search interface by going to "Find Roommates" in the navigation bar, or by <a href="/search">clicking here</a>.</p></div>
+                    </td>
+                    <td width="10%"></td>
+                    <td width="30%">
+                        <img class="blockimg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Vector-based_example.svg/2000px-Vector-based_example.svg.png" />
+                    </td>
+                    <td width="10%"></td>
+                </tr>
+            </table>
+        </div>
+        <!--Create a posting-->
+        <div id="contentblock">
+            <div style="height: 100px;"></div>
+            <table width="100%">
+                <tr>
+                    <td width="10%"></td>
+                    <td width="30%">
+                        <img class="blockimg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Vector-based_example.svg/2000px-Vector-based_example.svg.png" />
+                    </td>
+                    <td width="10%"></td>
+                    <td width="40%">
+                        <p class="blockheading">FILL YOUR EXISTING APARTMENT.</p><br/>
+                        <div id="darklink"><p class="blocktext">Do you already have an apartment and are looking for roommates to fill your apartment? Go to "Create a New Listing" in the navigation bar or <a href="/new_listing">click here</a> to create a new apartment listing. From here, you'll be able to fill out details about the apartment and yourself, and your listing will be available to all other users of Roommate Finder.</p></div>
+                    </td>
+                    <td width="10%"></td>
+                </tr>
+            </table>
+        </div>
+        <div style="height: 100px;"></div>
+        <!--End block-->
+        <div id="endblock">
+            <div style="height: 70px;"></div>
+            <p class="endtext1" align="center">Roommate Finder is a Flask-based web application created by CS students in Rice Apps.</p><br/>
+            <p class="endtext2" align="center">Are you a motivated developer who loves building beautiful, practical, front-facing applications?</p>
+            <div id="darklink"><p class="endtext2" align="center"><a href="mailto:kevinlin@rice.edu">Let us know and join our team.</a></p></div>
+        </div>
+
+
+        <div id="footercontainer">
+			<div id="footer">
+            	<table width="100%">
+                	<tr>
+                    	<td>
+                        	<p class="footer">A PROJECT OF RICE APPS, 2014</p>
+                        </td>
+                        <td>
+                        	<p class="footer" align="right"><a href="/about">ABOUT ROOMMATE FINDER</a> | <a href="https://github.com/rice-apps/roommate-finder">GITHUB SOURCE</a> | <a href="http://riceapps.org">RICE APPS</a> | <a href="http://www.rice.edu">RICE UNIVERSITY</a></p>
+                        </td>
+                    </tr>
+                </table>
+			</div>
+		</div>
+	</body>
+</html>
