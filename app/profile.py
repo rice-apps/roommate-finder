@@ -31,6 +31,7 @@ def create_user():
     values = {}
     for field in fields:
         values[field] = request.form[field]
+    photo_hash = None
 
     # Check for Facebook account connection: if the user connected an account, then the ID is a string of
     # numbers without spaces; otherwise, it's just the placeholder text, which should be None
@@ -38,13 +39,16 @@ def create_user():
     if values["facebook"].count(" ") > 0:
         values["facebook"] = None
     else:
-        facebook_photo = requests.get(values["facebook_photo"])
-        # Generate a string representation of a hash of the photo
-        # This associates the local copy of the file with the user in the database
-        photo_hash = str(hash(facebook_photo))
-        # Save the file locally to /app/photos
-        with open(app.config["UPLOAD_FOLDER"] + "/" + photo_hash + "." + file_extension(values["facebook_photo"][:values["facebook_photo"].rfind("?")]), "wb") as f:
-            f.write(facebook_photo.content)
+        try:
+            facebook_photo = requests.get(values["facebook_photo"])
+            # Generate a string representation of a hash of the photo
+            # This associates the local copy of the file with the user in the database
+            photo_hash = str(hash(facebook_photo))
+            # Save the file locally to /app/photos
+            with open(app.config["UPLOAD_FOLDER"] + "/" + photo_hash + "." + file_extension(values["facebook_photo"][:values["facebook_photo"].rfind("?")]), "wb") as f:
+                f.write(facebook_photo.content)
+        except:
+            pass
 
     # Uploaded profile photo (if exists)
     photo = request.files['photo']
