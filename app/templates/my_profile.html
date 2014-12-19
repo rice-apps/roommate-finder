@@ -262,9 +262,9 @@
             function disconnectFacebook() {
                     document.getElementById("facebook").value = "";
                     document.getElementById("facebooklogin").innerHTML = "<p class=\"facebook\">You've unlinked your Facebook account. Make sure to update your profile to save these changes.</p>";
-                    FB.logout(function (response) {
+                    /*FB.logout(function (response) {
                         console.log("Facebook logout success. Full response: " + JSON.stringify(response))
-                    });
+                    });*/
                     document.getElementById("getfacebookpicture").className = "hidden";
                 }
         </script>
