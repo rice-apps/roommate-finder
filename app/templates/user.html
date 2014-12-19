@@ -129,7 +129,7 @@
 		</div>
         <div id="headercontainer2">
 			<div id="header">
-            	<div id="links"><p><a href=""><span class="pagesectionbold">{{ data.name_uppercase }} [{{ data.net_id_uppercase }}]</span></a> · <a href="mailto:{{ data.net_id_lowercase }}@rice.edu"><span class="pagesection">EMAIL {{ data.name_first_uppercase }}</span></a></div>
+            	<div id="links"><p><a href=""><span class="pagesectionbold">{{ data.name_uppercase }} [{{ data.net_id_uppercase }}]</span></a> · <a href="mailto:{{ data.net_id_lowercase }}@rice.edu"><span class="pagesection">EMAIL {{ data.name_first_uppercase }}</span></a>{% if data.profile.facebook %} · <a href="https://www.facebook.com/:{{ data.profile.facebook }}"><span class="pagesection">GO TO {{ data.name_first_uppercase }}'S FACEBOOK PROFILE</span></a>{% endif %}</div>
 			</div>
 		</div>
 

@@ -32,12 +32,25 @@
                 margin-top: 180px;
                 margin-bottom: 150px;
             }
+            .hidden {
+  				visibility: hidden;
+  				opacity: 0;
+			}
+            .visible {
+  				visibility: visible;
+  				opacity: 1;
+			}
             #content {
                 margin-left: 10%;
             }
             #preview {
                 max-width: 150px;
                 max-height: 150px;
+            }
+            #facebooklogin {
+                position: absolute;
+                max-width: 20%;
+                left: 65%;
             }
             img.preview {
                 max-width: 150px;
@@ -58,18 +71,18 @@
 				font-size: 20px;
 				color: #171717;
             }
-            p.subheading2 {
-                font-family: 'Oswald', sans-serif;
-				font-weight: 400;
-				letter-spacing: 1px;
-				font-size: 20px;
-				color: #171717;
-            }
             p.fieldname {
 				font-family: 'Oxygen', sans-serif;
 				font-weight: 300;
 				letter-spacing: 1px;
                 line-height: 1px;
+				font-size: 14px;
+				color: #171717;
+			}
+            p.text {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
 				font-size: 14px;
 				color: #171717;
 			}
@@ -81,12 +94,21 @@
 				font-size: 20px;
 				color: #EDEDED;
 			}
-            p.delete {
-                font-family: 'Oxygen', sans-serif;
+            p.facebook {
+				font-family: 'Oxygen', sans-serif;
 				font-weight: 300;
-				font-size: 12px;
+				letter-spacing: 1px;
+				font-size: 20px;
+				color: #171717;
+			}
+            p.error {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+                line-height: 1px;
+				font-size: 20px;
 				color: #CC2323;
-            }
+			}
             span.pagesection {
 				font-family: 'Oxygen', sans-serif;
 				font-weight: 300;
@@ -159,6 +181,108 @@
                 reader.readAsDataURL(file);
             }
         </script>
+
+        <!--Facebook integration JS-->
+        <script>
+            function statusChangeCallback(response) {
+                if (response.status === 'connected') {
+                    importData()
+                }
+            }
+
+            function checkLoginState() {
+                FB.getLoginStatus(function (response) {
+                    statusChangeCallback(response);
+                });
+            }
+
+            window.fbAsyncInit = function () {
+                FB.init({
+                    appId: '1516541918613824', // App ID registered: Rice Roommate Finder
+                    cookie: true,
+                    xfbml: true,
+                    version: 'v2.1'
+                });
+
+                FB.getLoginStatus(function (response) {
+                    statusChangeCallback(response);
+                });
+            };
+
+            // Load the SDK asynchronously
+            (function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+
+            function importData() {
+                FB.api('/me', function (response) {
+                    // Console debug log
+                    console.log("Facebook login success. Full response: " + JSON.stringify(response));
+
+                    // Set ID
+                    document.getElementById("facebook").value = response.id;
+
+                    // Reveal link to grab profile picture from Facebook
+                    document.getElementById("getfacebookpicture").className = "visible";
+
+                    // Change the Facebook login box to show completion of login
+                    document.getElementById("facebooklogin").innerHTML = "<div id=\"darklink\"><p class=\"facebook\">You've connected your Facebook account! If you want to disconnect your Facebook account, <a onclick=\"disconnectFacebook();\" href=\"javascript:void(0);\">click here</a>.</p></div>";
+                });
+            }
+        </script>
+
+        <script type="text/javascript">
+            // As the name implies, this is an onclick handler for pulling the user's profile image from Facebook.
+            function getFacebookProfilePicture() {
+                FB.api('/me/picture', {"redirect": false, "type": "large"}, function (response) {
+                        // Secretly (as in, the URL is visually hidden to the user) record URL of profile picture
+                        document.getElementById("facebook_photo").value = response.data.url;
+                        var oldImage = document.getElementById("preview");
+                        while (oldImage.firstChild) {
+                            oldImage.removeChild(oldImage.firstChild);
+                        }
+
+                        // Update image preview
+                        var img = document.createElement("img");
+                        img.classList.add("preview");
+                        img.src = response.data.url;
+                        // Add it to the div preview
+                        preview.appendChild(img);
+
+                        // Clear file input, if exists
+                        $("#photo_upload").replaceWith($("#photo_upload").val('').clone(true));
+                    });
+            }
+
+            function disconnectFacebook() {
+                    document.getElementById("facebook").value = "";
+                    document.getElementById("facebooklogin").innerHTML = "<p class=\"facebook\">You've unlinked your Facebook account. Make sure to update your profile to save these changes.</p>";
+                    FB.logout(function (response) {
+                        console.log("Facebook logout success. Full response: " + JSON.stringify(response))
+                    });
+                    document.getElementById("getfacebookpicture").className = "hidden";
+                }
+        </script>
+
+        <!--Bootstrap tooltips-->
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#dob').tooltip({'trigger': 'focus', 'title': 'We require your date of birth in order to determine your age. It will be hidden to other users.'});
+            });
+        </script>
+
+        {% if data.profile.facebook %}
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    document.getElementById("facebooklogin").innerHTML = "<div id=\"darklink\"><p class=\"facebook\">You've connected your Facebook account! If you want to disconnect your Facebook account, <a onclick=\"disconnectFacebook();\" href=\"javascript:void(0);\">click here</a>.</p></div>";
+                });
+            </script>
+        {% endif %}
 	</head>
 
 	<body>
@@ -186,11 +310,18 @@
             <p class="heading">my profile</p>
             <div id="darklink"><p class="subheading">Edit your profile (<a href="/user/{{ data.profile.net_id }}">View your public profile</a>)</p></div>
             <br/><br/>
+            {% if data.error %}
+                <p class="error">{{ data.error }}</p><br/><br/>
+            {% endif %}
             <form action="/updateprofile" method="POST" enctype="multipart/form-data">
+                <div id="facebooklogin">
+                    <p class="facebook">You can optionally log in with Facebook to connect your Facebook account. This makes it easier for potential roommates to communicate with you.</p>
+                    <div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="false" onlogin="checkLoginState();"></div>
+                </div>
                 <table width="60%">
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Net ID</p>
+                            <p class="fieldname">Net ID*</p>
                         </td>
                         <td>
                             <input class="form-control" type="text" name="net_id" value="{{ data.profile.net_id }}" readonly>
@@ -199,16 +330,26 @@
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Name</p>
+                            <p class="fieldname">Facebook ID</p>
                         </td>
                         <td>
-                            <input class="form-control" type="text" name="name" value="{{ data.profile.name }}" required>
+                            <input class="form-control" type="text" id="facebook" name="facebook" {% if data.profile.facebook %}value="{{ data.profile.facebook }}"{% endif %} placeholder="Log in with Facebook to connect your account" readonly>
+                            <div class="hidden"><input class="form-control" type="text" id="facebook_photo" name="facebook_photo" readonly></div>
                         </td>
                     </tr>
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Year</p>
+                            <p class="fieldname">Name*</p>
+                        </td>
+                        <td>
+                            <input class="form-control" type="text" id="name" name="name" value="{{ data.profile.name }}" required>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">Year*</p>
                         </td>
                         <td>
                             <select class="form-control" type="text" name="year" autocomplete="off">
@@ -223,12 +364,12 @@
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Date of birth</p>
+                            <p class="fieldname">Date of birth*</p>
                         </td>
                         <td>
                             <div class="form-group">
                                 <div class='input-group date' id='datetimepicker1'>
-                                    <input type='text' class="form-control" name="dob" value="{{ data.profile.dob }}" required>
+                                    <input type='text' class="form-control" id="dob" name="dob" placeholder="MM/DD/YYYY" {% if data.profile.dob %}value="{{ data.profile.dob }}"{% endif %} required>
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                     <script type="text/javascript">
                                         $(function () {
@@ -244,20 +385,20 @@
                     <tr height="10px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Gender</p>
+                            <p class="fieldname">Gender*</p>
                         </td>
                         <td>
-                            <select class="form-control" type="text" name="gender" value="{{ data.profile.gender }}" required>
-                                <option>Male</option>
-                                <option>Female</option>
-                                <option>Other</option>
+                            <select class="form-control" type="text" id="gender" name="gender" required>
+                                <option {% if data.profile.gender == "Male" %}selected{% endif %}>Male</option>
+                                <option {% if data.profile.gender == "Female" %}selected{% endif %}>Female</option>
+                                <option {% if data.profile.gender == "Other" %}selected{% endif %}>Other</option>
                             </select>
                         </td>
                     </tr>
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">College</p>
+                            <p class="fieldname">College*</p>
                         </td>
                         <td>
                             <select class="form-control" type="text" name="college" autocomplete="off" required>
@@ -272,7 +413,7 @@
                                 <option {% if "Sid Richardson" in data.profile.college %}selected{% endif %}>Sid Richardson</option>
                                 <option {% if "Wiess" in data.profile.college %}selected{% endif %}>Wiess</option>
                                 <option {% if "Will Rice" in data.profile.college %}selected{% endif %}>Will Rice</option>
-                                <option {% if data.college == "" or data.college == None %}selected{% endif %}>N/A</option>
+                                <option {% if data.profile.college == "" or data.college == None %}selected{% endif %}>N/A</option>
                             </select>
                         </td>
                     </tr>
@@ -282,7 +423,7 @@
                             <p class="fieldname">Bio (optional)</p>
                         </td>
                         <td>
-                            <textarea class="form-control" name="bio" rows="5" {% if data.profile.bio == None or data.profile.bio == "" %}placeholder="Write a short description of yourself. What's your major? How late do you sleep? Do you like quiet or noise?">{% else %}>{{ data.profile.bio }}{% endif %}</textarea>
+                            <textarea class="form-control" name="bio" {% if not data.error %}placeholder="Write a short description of yourself. What's your major? How late do you sleep? Do you like quiet or noise?"{% endif %} rows="3">{% if data.error %}{{ data.profile.bio }}{% endif %}</textarea>
                         </td>
                     </tr>
                     <tr height="20px"></tr>
@@ -293,7 +434,9 @@
                         <td>
                             <div id="preview">{% if data.profile.photo != "" or data.profile.photo != None %}<a href="photos/{{ data.profile.photo }}"><img class="preview" src="photos/{{ data.profile.photo }}" /></a>{% endif %}</div>
                             <br/>
-                            <input type="file" name="photo" onchange="handleFiles(this.files)">
+                            <input type="file" id="photo_upload" name="photo" onchange="handleFiles(this.files)">
+                            <br/>
+                            <div id="darklink"><div id="getfacebookpicture" class="{% if data.profile.facebook %}visible{% else %}hidden{% endif %}"><p class="text"><a onclick="getFacebookProfilePicture();" href="javascript:void(0);">Pull profile picture from Facebook</a></p></div></div>
                         </td>
                     </tr>
                 </table>

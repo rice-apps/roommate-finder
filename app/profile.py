@@ -73,8 +73,8 @@ def create_user():
     db.session.add(user)
     db.session.commit()
 
-    data = {"net_id": values["net_id"], "profile": user}
-    return render_template('my_profile.html', data=data)
+    data = {"net_id": values["net_id"], "profile": user, "first_name_lower": values["name"].split()[0].lower(), "first_name": values["name"].split()[0]}
+    return render_template('welcome.html', data=data)
 
 
 @app.route('/updateprofile', methods=['POST'])
@@ -92,13 +92,33 @@ def update_user():
     user.college = request.form["college"]
     user.gender = request.form["gender"]
     user.bio = request.form["bio"]
-    # Update the photo only if the user has changed the picture
+    user.facebook = request.form["facebook"]
+
+    try:
+        facebook_photo = requests.get(request.form["facebook_photo"])
+    except:
+        facebook_photo = None
+
     photo = request.files['photo']
+
+    if request.form["facebook"].count(" ") > 0:
+        user.facebook = None
+    elif facebook_photo and not photo:
+        photo_hash = str(hash(facebook_photo))
+        user.photo = photo_hash + "." + file_extension(request.form["facebook_photo"][:request.form["facebook_photo"].rfind("?")])
+        with open(app.config["UPLOAD_FOLDER"] + "/" + photo_hash + "." + file_extension(request.form["facebook_photo"][:request.form["facebook_photo"].rfind("?")]), "wb") as f:
+            f.write(facebook_photo.content)
+
     if photo and allowed_file(photo.filename):
         photo_hash = str(hash(request.files['photo']))
         filename = secure_filename(photo_hash) + "." + file_extension(photo.filename)
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         user.photo = photo_hash + "." + file_extension(photo.filename)
+
+    if photo and not allowed_file(photo.filename):
+        data = {"net_id": request.form["net_id"], "profile": user, "error": "Error: invalid photo file extension ." + str(file_extension(photo.filename))}
+        return render_template('my_profile.html', data=data)
+
     # Commit the changes
     db.session.merge(user)
     db.session.commit()

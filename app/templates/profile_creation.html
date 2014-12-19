@@ -160,8 +160,6 @@
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
 
-            // Here we run a very simple test of the Graph API after login is
-            // successful.  See statusChangeCallback() for when this call is made.
             function importData() {
                 FB.api('/me', function (response) {
                     // Console debug log
@@ -201,8 +199,18 @@
                     FB.logout(function (response) {
                         console.log("Facebook logout success. Full response: " + JSON.stringify(response))
                     });
+
+                    // Change the Facebook login box to show completion of login
+                    document.getElementById("facebooklogin").innerHTML = "<p class=\"facebook\">You've connected your Facebook account!</p>";
                 });
             }
+        </script>
+
+        <!--Bootstrap tooltips-->
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#dob').tooltip({'trigger': 'focus', 'title': 'We require your date of birth in order to determine your age. It will be hidden to other users.'});
+            });
         </script>
 	</head>
 
@@ -237,7 +245,7 @@
                 <table width="60%">
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Net ID</p>
+                            <p class="fieldname">Net ID*</p>
                         </td>
                         <td>
                             <input class="form-control" type="text" name="net_id" value="{{ data.net_id }}" readonly>
@@ -256,7 +264,7 @@
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Name</p>
+                            <p class="fieldname">Name*</p>
                         </td>
                         <td>
                             <input class="form-control" type="text" id="name" name="name" value="{{ data.name }}" required>
@@ -265,14 +273,14 @@
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Year</p>
+                            <p class="fieldname">Year*</p>
                         </td>
                         <td>
                             <select class="form-control" type="text" name="year" autocomplete="off">
-                                <option {% if data.year == "freshman" %}selected{% endif %}>Freshman</option>
-                                <option {% if data.year == "sophomore" %}selected{% endif %}>Sophomore</option>
-                                <option {% if data.year == "junior" %}selected{% endif %}>Junior</option>
-                                <option {% if data.year == "senior" %}selected{% endif %}>Senior</option>
+                                <option {% if data.year == "Freshman" %}selected{% endif %}>Freshman</option>
+                                <option {% if data.year == "Sophomore" %}selected{% endif %}>Sophomore</option>
+                                <option {% if data.year == "Junior" %}selected{% endif %}>Junior</option>
+                                <option {% if data.year == "Senior" %}selected{% endif %}>Senior</option>
                                 <option>Other (graduate student, fifth year student, etc.)</option>
                             </select>
                         </td>
@@ -280,12 +288,12 @@
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Date of birth</p>
+                            <p class="fieldname">Date of birth*</p>
                         </td>
                         <td>
                             <div class="form-group">
                                 <div class='input-group date' id='datetimepicker1'>
-                                    <input type='text' class="form-control" name="dob" placeholder="MM/DD/YYYY" {% if data.dob %}value="{{ data.dob }}"{% endif %} required>
+                                    <input type='text' class="form-control" id="dob" name="dob" placeholder="MM/DD/YYYY" {% if data.dob %}value="{{ data.dob }}"{% endif %} required>
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                     <script type="text/javascript">
                                         $(function () {
@@ -301,7 +309,7 @@
                     <tr height="10px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Gender</p>
+                            <p class="fieldname">Gender*</p>
                         </td>
                         <td>
                             <select class="form-control" type="text" id="gender" name="gender" required>
@@ -314,7 +322,7 @@
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">College</p>
+                            <p class="fieldname">College*</p>
                         </td>
                         <td>
                             <select class="form-control" type="text" name="college" autocomplete="off" required>
