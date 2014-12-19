@@ -6,6 +6,7 @@
 import os
 
 from flask import render_template, session, request
+import requests
 from werkzeug.utils import secure_filename, redirect
 
 from app import app, db
@@ -25,37 +26,53 @@ def create_user():
     The actual photo file is stored as app/photos/<hash>.<file_extension>
     """
     # Fields from form
-    fields = ["net_id", "name", "year", "dob", "college", "gender", "bio", "facebook"]
+    fields = ["net_id", "name", "year", "dob", "college", "gender", "bio", "facebook", "facebook_photo"]
     # Get user-entered values from form
     values = {}
     for field in fields:
         values[field] = request.form[field]
-    # Uploaded profile photo
-    photo = request.files['photo']
-    # Generate a string representation of a hash of the photo
-    # This associates the local copy of the file with the user in the database
-    photo_hash = str(hash(photo))
+
     # Check for Facebook account connection: if the user connected an account, then the ID is a string of
     # numbers without spaces; otherwise, it's just the placeholder text, which should be None
+    # If the user connected an account, store the profile photo
     if values["facebook"].count(" ") > 0:
         values["facebook"] = None
+    else:
+        facebook_photo = requests.get(values["facebook_photo"])
+        # Generate a string representation of a hash of the photo
+        # This associates the local copy of the file with the user in the database
+        photo_hash = str(hash(facebook_photo))
+        # Save the file locally to /app/photos
+        with open(app.config["UPLOAD_FOLDER"] + "/" + photo_hash + "." + file_extension(values["facebook_photo"][:values["facebook_photo"].rfind("?")]), "wb") as f:
+            f.write(facebook_photo.content)
+
+    # Uploaded profile photo (if exists)
+    photo = request.files['photo']
+
     # Create a new user from the Profile model
     if photo:
+        photo_hash = str(hash(photo))
         user = Profile(values["net_id"], values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"], values["facebook"], photo_hash + "." + file_extension(photo.filename))
+    elif not photo and photo_hash:
+        user = Profile(values["net_id"], values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"], values["facebook"], photo_hash + "." + file_extension(values["facebook_photo"][:values["facebook_photo"].rfind("?")]))
     else:
         user = Profile(values["net_id"], values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"], values["facebook"])
+
     # The user selected a photo of an invalid file extension
     # Redirect the user to an error page
     if photo and not allowed_file(photo.filename):
         data = {"net_id": values["net_id"], "name": values["name"], "year": values["year"], "dob": values["dob"], "college": values["college"], "gender": values["gender"], "bio": values["bio"], "facebook": values["facebook"], "error": "Error: invalid photo file extension ." + str(file_extension(photo.filename))}
         return render_template('profile_creation.html', data=data)
+
     # Store the user's profile photo on the server
     if photo and allowed_file(photo.filename):
         filename = secure_filename(photo_hash) + "." + file_extension(photo.filename)
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
     # Add this new user to the database
     db.session.add(user)
     db.session.commit()
+
     data = {"net_id": values["net_id"], "profile": user}
     return render_template('my_profile.html', data=data)
 

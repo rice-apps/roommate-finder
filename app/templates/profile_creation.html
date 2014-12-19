@@ -32,6 +32,10 @@
                 margin-top: 150px;
                 margin-bottom: 150px;
             }
+            .hidden {
+  				visibility: hidden;
+  				opacity: 0;
+			}
             #content {
                 margin-left: 10%;
             }
@@ -119,8 +123,8 @@
             }
         </script>
 
+        <!--Facebook integration JS-->
         <script>
-            // This is called with the results from from FB.getLoginStatus().
             function statusChangeCallback(response) {
                 if (response.status === 'connected') {
                     importData()
@@ -168,24 +172,35 @@
 
                     // Set gender
                     if (response.gender == "male")
-                        document.getElementById("gender").selectedIndex = 1;
+                        document.getElementById("gender").selectedIndex = 0;
                     else if (response.gender == "female")
-                        document.getElementById("gender").selectedIndex = 2;
+                        document.getElementById("gender").selectedIndex = 1;
                     else
-                        document.getElementById("gender").selectedIndex = 3;
+                        document.getElementById("gender").selectedIndex = 2;
 
                     // Set ID
                     document.getElementById("facebook").value = response.id;
-                });
 
-                // Profile picture
-                FB.api('/me/picture', {"redirect": false, "type": "large"}, function(response) {
-                    console.log("Facebook profile picture grab success. Full response: " + JSON.stringify(response))
-                });
+                    // Profile picture
+                    FB.api('/me/picture', {"redirect": false, "type": "large"}, function (response) {
+                        console.log("Facebook profile picture grab success. Full response: " + JSON.stringify(response))
 
-                // Log the user out after retrieving the above information
-                FB.logout(function(response) {
-                    console.log("Facebook logout success. Full response: " + JSON.stringify(response))
+                        // Secretly (as in, the URL is visually hidden to the user) record URL of profile picture
+                        document.getElementById("facebook_photo").value = response.data.url;
+
+                        // Update image preview
+                        var img = document.createElement("img");
+                        img.classList.add("preview");
+                        img.src = response.data.url;
+                        // Add it to the div preview
+                        preview.appendChild(img);
+
+                    });
+
+                    // Log the user out after retrieving the above information
+                    FB.logout(function (response) {
+                        console.log("Facebook logout success. Full response: " + JSON.stringify(response))
+                    });
                 });
             }
         </script>
@@ -235,6 +250,7 @@
                         </td>
                         <td>
                             <input class="form-control" type="text" id="facebook" name="facebook" {% if data.facebook %}value="{{ data.facebook }}"{% endif %} placeholder="Log in with Facebook to connect your account" readonly>
+                            <div class="hidden"><input class="form-control" type="text" id="facebook_photo" name="facebook_photo" readonly></div>
                         </td>
                     </tr>
                     <tr height="20px"></tr>

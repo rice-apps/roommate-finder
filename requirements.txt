@@ -1,0 +1,5 @@
+Flask extensions:
+requests
+werkzeug
+Flask-CAS
+Flask-WTF

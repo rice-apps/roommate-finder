@@ -164,6 +164,9 @@
                     <td width="300px" valign="top">
                         <p class="subheading">CONNECT WITH {{ data.name_first_uppercase }}</p>
                         <div id="connect"><p class="text"><a href="mailto:{{ data.net_id_lowercase }}@rice.edu">{{ data.net_id_lowercase }}@rice.edu</a></p></div>
+                        {% if data.profile.facebook %}
+                            <div id="connect"><p class="text"><a href="https://www.facebook.com/{{ data.profile.facebook }}">Facebook profile</a></p></div>
+                        {% endif %}
                     </td>
                 </tr>
             </table>
