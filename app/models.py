@@ -15,6 +15,7 @@ class Profile(db.Model):
     bio = db.Column(db.String(255))
     facebook = db.Column(db.String(255))
     photo = db.Column(db.String(255))
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
 
     def __init__(self, net_id, name, year, dob, college, gender, bio, facebook=None, photo=None):
         self.net_id = net_id  # User's Net ID
@@ -29,3 +30,17 @@ class Profile(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.net_id
+
+
+class Post(db.Model):
+    # Columns for user post table
+    id = db.Column(db.Integer, primary_key = True, unique = True)
+    apartment_name = db.Column(db.String(255))
+    location = db.Column(db.String(255))
+    rent = db.Column(db.Integer)
+    body = db.Column(db.String(255)) # temporary
+    timestamp = db.Column(db.DateTime)
+    net_id = db.Column(db.String(64),  db.ForeignKey('profile.net_id'))
+
+    def __repr__(self):
+        return '<Post %r>' % (self.body)

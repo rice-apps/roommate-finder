@@ -4,12 +4,13 @@
 
 import urllib2
 import time
+import datetime
 
 from flask import render_template, session, send_from_directory
 from werkzeug.utils import redirect
 
-from app import app, lm
-from app.models import Profile
+from app import app, lm, db
+from app.models import Profile, Post
 
 
 # Server upload folder - do not change
@@ -66,6 +67,7 @@ def photos(filename):
 def after_login():
     # User Net ID
     login = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    net_id = login
 
     # Dictionary of values to pass
     data = {"net_id": login}
@@ -160,7 +162,9 @@ def my_postings():
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
     if net_id is not None:
         user = Profile.query.filter_by(net_id=net_id).first()
-        data = {"net_id": net_id, "profile": user}
+        posts = user.posts.all()
+        print("posts gathered: " + str(len(posts)))
+        data = {"net_id": net_id, "profile": user, "posts": posts}
         return render_template('my_postings.html', data=data)
     else:
         index()

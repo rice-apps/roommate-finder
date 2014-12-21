@@ -139,7 +139,11 @@
             <p class="heading">my postings</p>
             <p class="subheading">View, edit, and delete your postings</p>
             <br/><br/>
-
+            {% block content %}
+                    {% for post in data.posts %}
+                         <div>{{ post.net_id}} says: <b>{{ post.body }}</b></div>
+                    {% endfor %}
+            {% endblock %}
         </div>
 
         <div id="footercontainer">
