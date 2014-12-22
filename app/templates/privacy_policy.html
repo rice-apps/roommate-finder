@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+    	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    	<!--Fonts-->
+		<link href='http://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+
+        <!--jQuery, required for some functions of Bootstrap-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+        <!--Bootstrap v3, retrieved from a third party CDN-->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+        <!--Pace.js and associated stylesheet-->
+        <script src="../static/js/pace.min.js"></script>
+        <link rel="stylesheet" href="../static/css/pace.css">
+        <script src="../static/js/splash-fade.js"></script>
+
+        <!--Date Time Picker-->
+        <link rel="stylesheet" href="http://eonasdan.github.io/bootstrap-datetimepicker/content/bootstrap-datetimepicker.css">
+        <script type="text/javascript" src="http://momentjs.com/downloads/moment.js"></script>
+        <script type="text/javascript" src="../static/js/bootstrap-datetimepicker.min.js"></script>
+
+		<!--Roommate Finder stylesheet-->
+		<link type="text/css" rel="stylesheet" href="../static/stylesheet.css">
+
+        <title>privacy policy | roommate finder | rice university</title>
+
+        <!--Override some CSS properties-->
+		<style type="text/css">
+            body {
+                background: #F5F5F5;
+                margin-top: 60px;
+                margin-bottom: 50px;
+                height: 100%;
+            }
+            html {
+                height: 100%;
+            }
+            #titlecontainer {
+                position: fixed;
+                background-color: #17657A;
+                width: 30%;
+                height: 100%;
+            }
+            #title {
+                padding-top: 40%;
+                margin-right: 10%;
+            }
+            #textcontainer {
+                margin-left: 35%;
+                height: 100%;
+            }
+            #text {
+                padding-top: 10%;
+                padding-bottom: 150px;
+                margin-right: 10%;
+            }
+            p.heading {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 700;
+				letter-spacing: 1px;
+                line-height: 50px;
+				font-size: 70px;
+				color: #EDEDED;
+            }
+            p.subheading {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 20px;
+				color: #EDEDED;
+            }
+            p.text {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 15px;
+				color: #171717;
+            }
+            p.textheader {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 700;
+				letter-spacing: 1px;
+				font-size: 20px;
+				color: #171717;
+            }
+            p.smalltext {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 10px;
+				color: #171717;
+            }
+            #darklink a:link {
+				color: #17657A;
+				text-decoration: none;
+			}
+			#darklink a:hover {
+				color: #318FA8;
+				text-decoration: none;
+				border-bottom: 2px solid #318FA8;
+			}
+			#darklink a:visited {
+				color: #17657A;
+				text-decoration: none;
+			}
+			#darklink a:active {
+				color: #17657A;
+				text-decoration: none;
+			}
+        </style>
+	</head>
+
+	<body>
+        <div id="splash" class="visible">
+            <div id="splashlogo">
+                <img src="../static/graphics/logo_text_invert.png" width="600px" height="120px" />
+            </div>
+        </div>
+
+		<div id="headercontainer">
+            <table width="100%" height="60px">
+                <tr>
+                    <td width="10%"></td>
+                    <td width="40%" valign="middle">
+                        <a href="../"><img src="../static/graphics/logo.png" width="300px" height="60px" border="0" /></a>
+                    </td>
+                    <td width="40%" valign="bottom">
+                        {% if data.net_id and data.profile %}
+                            <div id="links"><p align="right">WELCOME, {{ data.net_id }} | <a href="/">FIND ROOMMATES</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p></div>
+                        {% else %}
+                            <div id="links"><p align="right"><a href="../">HOME</a> | <a href="about">ABOUT</a> | <a href="login">LOGIN WITH RICE NETID</a></p></div>
+                        {% endif %}
+                    </td>
+                    <td width="10%"></td>
+                </tr>
+            </table>
+		</div>
+
+        <div id="titlecontainer">
+            <div id="title">
+                <p align="right" class="heading">PRIVACY</p>
+                <p align="right" class="heading">POLICY</p>
+                <br/>
+                <p align="right" class="subheading">What information we collect and how we use it</p>
+            </div>
+        </div>
+        <div id="textcontainer">
+            <div id="text">
+                <div id="darklink">
+                    <p class="textheader">Information we voluntary collect.</p>
+
+                    <p class="text">We only collect information that we explicitly ask for and that you explicitly
+                        give us. When signing in when your Net ID, authentication is controlled by the University;
+                        the only data we collect is your Net ID as a string, for authentication in this application. When you first
+                        sign in with your Rice Net ID, the application automatically looks up your Net ID in the
+                        <a href="http://fouroneone.rice.edu">Rice online directory</a> and attempts to extract the following
+                        information: your full name, your residential college, and your class standing. When you create
+                        a profile, the data that you voluntary enter (including your profile image) is stored in a database
+                        on our server. If you choose to sign in via Facebook, the application receives (1) your Facebook
+                        ID, in order to associate you with a Facebook account, (2) your full name as it appears on Facebook,
+                        (3) your gender, and (4) your Facebook profile picture. These details will be stored only if you choose
+                        not to overwrite them when creating a profile. When you create a listing, the details you enter
+                        in the listing are also stored locally in a database on our server.</p><br/>
+
+                    <p class="textheader">How your data is used.</p>
+
+                    <p class="text">The data you provide us is used to identify users who create and respond to apartment
+                        listings. It is also used to create {% if data.net_id and data.profile %}<a href="/user/{{ data.net_id }}">{% endif %}user profile pages{% if data.net_id and data.profile %}</a>{% endif %}. Your
+                        data is never sold to advertisers and is never used outside of this application. However, the Roommate
+                        Finder application developers may browse through the databases for debugging purposes.</p><br/>
+
+                    <p class="textheader">How your data is stored.</p>
+
+                    <p class="text">Your data is stored in a SQLite database (and as image files, if you choose to upload
+                        a profile picture) on a personally managed, dedicated server located in Los Angeles, CA. Data
+                        is automatically uploaded and stored in the databases as you use the application (i.e. creating
+                        or modifying an account, creating a listing, etc.). User profile images are hashed before being
+                        stored on the server; thus, there is no way to personally identify an image without the corresponding
+                        database entry. If you choose to {% if data.net_id and data.profile %}<a href="/delete_account">{% endif %}delete your Roommate Finder
+                        profile{% if data.net_id and data.profile %}</a>{% endif %}, database entries associated with your Net ID will be automatically deleted. Note
+                        that your uploaded profile picture(s) will not be automatically deleted; please contact the server
+                        administrator (below) for manual deletion.</p><br/>
+
+                    <p class="textheader">Further concerns.</p>
+
+                    <p class="text">For any further questions and concerns not addressed in this privacy policy, please
+                        directly email {% if data.net_id and data.profile %}<a href="mailto:kevinlin@rice.edu">{% endif %}Kevin{% if data.net_id and data.profile %}</a>{% endif %}. This is also the point of contact
+                        for any concerns related to data storage, including manually purging data from the server.</p><br/>
+                    <br/>
+
+                    <p class="smalltext">Last updated 12/21/2014</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="footercontainer">
+			<div id="footer">
+            	<table width="100%">
+                	<tr>
+                    	<td>
+                        	<p class="footer">A PROJECT OF RICE APPS, 2014</p>
+                        </td>
+                        <td>
+                        	<p class="footer" align="right"><a href="/about">ABOUT ROOMMATE FINDER</a> | <a href="/privacy_policy">PRIVACY POLICY</a> | <a href="https://github.com/rice-apps/roommate-finder">GITHUB SOURCE</a> | <a href="http://riceapps.org">RICE APPS</a> | <a href="http://www.rice.edu">RICE UNIVERSITY</a></p>
+                        </td>
+                    </tr>
+                </table>
+			</div>
+		</div>
+	</body>
+</html>

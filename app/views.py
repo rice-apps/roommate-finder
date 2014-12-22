@@ -51,7 +51,18 @@ def index():
 
 @app.route('/about')
 def about():
-    return app.send_static_file('about.html')
+    """
+    About page. Code below checks if user is logged in and exists in DB.
+    """
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    user = Profile.query.filter_by(net_id=net_id).first()
+    if net_id and user:
+        # Appropriately package the user's data if the user is logged in and has a profile set up
+        data = {"net_id": net_id, "profile": user}
+        return render_template('about.html', data=data)
+    else:
+        # Return the same page, but with null data
+        return render_template('about.html', data={"net_id": None, "profile": None})
 
 
 @app.route('/photos/<path:filename>')
@@ -164,6 +175,21 @@ def my_postings():
         return render_template('my_postings.html', data=data)
     else:
         index()
+
+@app.route('/privacy_policy')
+def privacy_policy():
+    """
+    Privacy policy page.
+    """
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    user = Profile.query.filter_by(net_id=net_id).first()
+    if net_id and user:
+        # Appropriately package the user's data if the user is logged in and has a profile set up
+        data = {"net_id": net_id, "profile": user}
+        return render_template('privacy_policy.html', data=data)
+    else:
+        # Return the same page, but with null data
+        return render_template('privacy_policy.html', data={"net_id": None, "profile": None})
 
 
 @app.route('/user/<path:path>')

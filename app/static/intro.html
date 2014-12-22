@@ -2,29 +2,215 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
     	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        
+
     	<!--Fonts-->
 		<link href='http://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
-        
+
         <!--jQuery, required for some functions of Bootstrap-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        
+        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+
         <!--Bootstrap v3, retrieved from a third party CDN-->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-		
+
+        <!--Pace.js and associated stylesheet-->
+        <script src="../static/js/pace.min.js"></script>
+        <link rel="stylesheet" href="../static/css/pace.css">
+        <script src="../static/js/splash-fade.js"></script>
+
 		<!--Roommate Finder stylesheet-->
-		<link type="text/css" rel="stylesheet" href="static/stylesheet.css">
+		<link type="text/css" rel="stylesheet" href="../static/stylesheet.css">
         
         <title>roommate finder | rice university</title>
 
+        <!--Controls fading behavior of text elements-->
+        <script type="text/javascript">
+            $(document).ready(function () {
+                setTimeout(function () {
+                    document.getElementById("headercontainer").className = "fadein";
+                }, 700);
+                ;
+                setTimeout(function () {
+                    document.getElementById("title").className = "fadein";
+                }, 900);
+                ;
+                setTimeout(function () {
+                    document.getElementById("scroll").className = "fadein";
+                }, 1500);
+                ;
+                setTimeout(function () {
+                    document.getElementById("footercontainer").className = "fadein";
+                }, 1700);
+                ;
+            });
+        </script>
+
+        <!--Controls CSS property animations of header, footer, and "scroll to learn more" div-->
+        <script type="text/javascript">
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 1) {
+                    // Condition if scrollbar is not at top of page
+                    // Header and footer should be opaque
+                    // "Scroll to learn more" should not be displayed
+                    $("#headercontainer").css({"background": "#303030"});
+                    $("#footercontainer").css({"background": "#171717"});
+                    $(".scroll").css({"color": "rgba(0, 0, 0, 0)", "text-shadow": "0px 0px 7px rgba(0, 0, 0, 0)"});
+                    $(".scrollarrow").css({"color": "rgba(0, 0, 0, 0)", "text-shadow": "0px 0px 7px rgba(0, 0, 0, 0)"});
+                }
+                else {
+                    // Condition if the scrollbar is at top of page
+                    // Header and footer should be transparent
+                    // "Scroll to learn more" should be displayed
+                    $("#headercontainer").css({"background": "rgba(0, 0, 0, 0)"});
+                    $("#footercontainer").css({"background": "rgba(0, 0, 0, 0)"});
+                    $(".scroll").css({"color": "#D1D1D1", "text-shadow": "0px 0px 7px rgba(0, 0, 0, 0.7)"});
+                    $(".scrollarrow").css({"color": "#D1D1D1", "text-shadow": "0px 0px 7px rgba(0, 0, 0, 0)"});
+                }
+            });
+        </script>
+
         <style type="text/css">
+            body {
+                background: url("../static/graphics/apartments.jpg") no-repeat center bottom fixed;
+                background-size: cover;
+            }
+            #splash {
+                height: 100%;
+                width: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                background-color: #171717;
+                z-index: 1000;
+            }
+            #headercontainer {
+                width: 100%;
+                height: 60px;
+                position: fixed;
+                top: 0;
+                background: rgba(0, 0, 0, 0);
+                z-index: 5;
+                transition: all 0.65s ease;
+            }
+            #titlecontainer {
+                width: 100%;
+                height: 100vh;
+                margin-right: 10%;
+            }
+            #title {
+                margin-left: 10%;
+                margin-right: 10%;
+                padding-top: 15%;
+            }
+            #scroll {
+                position: absolute;
+                bottom: 60px;
+                width: 100%;
+            }
+            #footercontainer {
+                width: 100%;
+                height: 50px;
+                position: fixed;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0);
+                transition: all 0.65s ease;
+            }
+            #footer {
+                margin-top: 15px;
+                margin-bottom: 20px;
+                margin-left: 10%;
+                margin-right: 10%;
+            }
+            p.title {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 700;
+                letter-spacing: 2px;
+                line-height: 90px;
+                font-size: 100px;
+                color: #EDEDED;
+                text-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+            }
+            p.block {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 300;
+                letter-spacing: 2px;
+                line-height: 35px;
+                font-size: 30px;
+                color: #EDEDED;
+                text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            }
+            p.scroll {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 700;
+                letter-spacing: 3px;
+                line-height: 13px;
+                font-size: 16px;
+                color: #D1D1D1;
+                text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+                transition: all 0.7s ease;
+            }
+            p.scrollarrow {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 300;
+                letter-spacing: 2px;
+                line-height: 13px;
+                font-size: 25px;
+                color: #D1D1D1;
+                text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.7);
+                transition: all 0.7s ease;
+            }
+            p.footer {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 300;
+                letter-spacing: 1px;
+                font-size: 10px;
+                color: #EDEDED;
+                text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+            }
+            .fadein {
+                -webkit-animation: fadein 2.5s; /* Safari and Chrome */
+                -moz-animation: fadein 2.5s; /* Firefox */
+                -ms-animation: fadein 2.5s; /* Internet Explorer */
+                -o-animation: fadein 2.5s; /* Opera */
+                animation: fadein 2.5s;
+            }
+            .rotate {
+                -webkit-transform: rotate(-90deg);
+                -moz-transform: rotate(-90deg);
+                -ms-transform: rotate(-90deg);
+                -o-transform: rotate(-90deg);
+                filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+            }
+            #links a:link {
+                color: #EDEDED;
+                text-decoration: none;
+                text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+            }
+            #links a:hover {
+                color: #EDEDED;
+                text-decoration: none;
+                border-bottom: 2px solid #EDEDED;
+                text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+            }
+            #links a:visited {
+                color: #EDEDED;
+                text-decoration: none;
+                text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+            }
+            #links a:active {
+                color: #EDEDED;
+                text-decoration: none;
+                text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+            }
+
+
+            /* CSS FOR INTRO PAGE ACTUAL CONTENT */
             #block1 {
 				width: 100%;
 				height: 400px;
-                background: #F5F5F5;
+                background: #DEDEDE;
             }
             #block2 {
 				width: 100%;
@@ -39,7 +225,7 @@
             #block4 {
                 width: 100%;
 				height: 320px;
-                background: #1F1F1F;
+                background: #DEDEDE;
             }
             div.blocktextright {
                 max-width: 500px;
@@ -85,7 +271,7 @@
 				font-weight: 300;
 				letter-spacing: 1px;
 				font-size: 35px;
-				color: #F5F5F5;
+				color: #17657A;
             }
             p.subgetstarted {
                 font-family: 'Oswald', sans-serif;
@@ -93,13 +279,19 @@
 				letter-spacing: 1px;
                 line-height: 10px;
 				font-size: 20px;
-				color: #17657A;
+				color: #171717;
             }
         </style>
 	</head>
-	
+
 	<body>
-        <div id="headercontainer">
+        <div id="splash" class="visible">
+            <div id="splashlogo">
+                <img src="../static/graphics/logo_text.png" width="600px" height="120px" />
+            </div>
+        </div>
+
+        <div id="headercontainer" class="hidden">
             <table width="100%" height="60px">
                 <tr>
                     <td width="10%"></td>
@@ -113,21 +305,32 @@
                 </tr>
             </table>
 		</div>
-		<div id="bannercontainer">
-			<div id="banner">
-	            <center>
-					<p class="title">rice roommate finder</p>
-					<p class="subtitle">THE EASY SOLUTION TO FINDING ROOMMATES AT RICE UNIVERSITY</p>
-					<br/><br/>
-                    <!--<button type="button" onclick="location.href='login'" class="btn btn-primary"><p class="button">Login with your Net ID to get started</p></button>-->
-					<a href="login"><div id="start">
-						<div style="height:10px;"></div>
-						<p class="start1">GET STARTED</p>
-						<p class="start2">Login with your Net ID</p>
-					</div></a>
-                </center>
-			</div>
-		</div>
+
+        <div id="titlecontainer">
+            <div id="title" class="hidden">
+                <table width="100%">
+                    <tr>
+                        <td width="50%" valign="middle">
+                            <p class="title">RICE</p>
+                            <p class="title">ROOMMATE</p>
+                            <p class="title">FINDER</p>
+                        </td>
+                        <td width="10%"></td>
+                        <td width="40%" valign="middle">
+                            <p class="block">Introducing Roommate Finder, the easy solution for students to find roommates at Rice University.</p>
+                            <br/>
+                            <p class="block">All you need is your Net ID.</p>
+                            <p class="block"><a href="/login">Get started now</a></p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="scroll" class="hidden">
+            <p align="center" class="scroll">SCROLL DOWN TO LEARN MORE</p>
+            <div class="rotate"><p align="center" class="scrollarrow">«</p></div>
+        </div>
 
         <div id="contentcontainer">
             <div id="block1">
@@ -179,7 +382,7 @@
                 <div class="blocktextleft">
                     <p class="blockheading2">FOR RICE STUDENTS, BY RICE STUDENTS.</p>
                     <br/>
-                    <p class="blocktext2">We're students, just like you. And we know that it can be difficult to find the right roommates. And Roommate Finder solves that problem--it's made by Rice students, for Rice students.</p>
+                    <p class="blocktext2">We're students, just like you. And we know that it can be difficult to find the right roommates. Roommate Finder solves that problem--it's made by Rice students, for Rice students.</p>
                 </div>
             </div>
             <div id="block4">
@@ -191,7 +394,7 @@
             </div>
         </div>
 
-		<div id="footercontainer">
+		<div id="footercontainer" class="hidden">
 			<div id="footer">
             	<table width="100%">
                 	<tr>
@@ -199,7 +402,7 @@
                         	<p class="footer">A PROJECT OF RICE APPS, 2014</p>
                         </td>
                         <td>
-                        	<p class="footer" align="right"><a href="https://github.com/rice-apps/roommate-finder">GITHUB SOURCE</a> | <a href="http://riceapps.org">RICE APPS</a> | <a href="http://www.rice.edu">RICE UNIVERSITY</a></p>
+                        	<div id="links"><p class="footer" align="right"><a href="https://github.com/rice-apps/roommate-finder">GITHUB SOURCE</a> | <a href="http://riceapps.org">RICE APPS</a> | <a href="http://www.rice.edu">RICE UNIVERSITY</a></p></div>
                         </td>
                     </tr>
                 </table>

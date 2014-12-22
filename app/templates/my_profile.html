@@ -8,12 +8,17 @@
 		<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
 
         <!--jQuery, required for some functions of Bootstrap-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
 
         <!--Bootstrap v3, retrieved from a third party CDN-->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+        <!--Pace.js and associated stylesheet-->
+        <script src="../static/js/pace.min.js"></script>
+        <link rel="stylesheet" href="../static/css/pace.css">
+        <script src="../static/js/splash-fade.js"></script>
 
         <!--Date Time Picker-->
         <link rel="stylesheet" href="http://eonasdan.github.io/bootstrap-datetimepicker/content/bootstrap-datetimepicker.css">
@@ -21,7 +26,7 @@
         <script type="text/javascript" src="static/js/bootstrap-datetimepicker.min.js"></script>
 
 		<!--Roommate Finder stylesheet-->
-		<link type="text/css" rel="stylesheet" href="static/stylesheet.css">
+		<link type="text/css" rel="stylesheet" href="../static/stylesheet.css">
 
         <title>my profile | roommate finder | rice university</title>
 
@@ -286,6 +291,12 @@
 	</head>
 
 	<body>
+        <div id="splash" class="visible">
+            <div id="splashlogo">
+                <img src="../static/graphics/logo_text_invert.png" width="600px" height="120px" />
+            </div>
+        </div>
+
 		<div id="headercontainer">
             <table width="100%" height="60px">
                 <tr>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+    	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    	<!--Fonts-->
+		<link href='http://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+
+        <!--jQuery, required for some functions of Bootstrap-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+        <!--Bootstrap v3, retrieved from a third party CDN-->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+        <!--Pace.js and associated stylesheet-->
+        <script src="../static/js/pace.min.js"></script>
+        <link rel="stylesheet" href="../static/css/pace.css">
+        <script src="../static/js/splash-fade.js"></script>
+
+        <!--Date Time Picker-->
+        <link rel="stylesheet" href="http://eonasdan.github.io/bootstrap-datetimepicker/content/bootstrap-datetimepicker.css">
+        <script type="text/javascript" src="http://momentjs.com/downloads/moment.js"></script>
+        <script type="text/javascript" src="../static/js/bootstrap-datetimepicker.min.js"></script>
+
+		<!--Roommate Finder stylesheet-->
+		<link type="text/css" rel="stylesheet" href="../static/stylesheet.css">
+
+        <title>about | roommate finder | rice university</title>
+
+        <!--Override some CSS properties-->
+		<style type="text/css">
+            body {
+                background: #F5F5F5;
+                margin-top: 60px;
+                margin-bottom: 50px;
+                height: 100%;
+            }
+            html {
+                height: 100%;
+            }
+            img.profileimage {
+                max-width: 200px;
+            }
+            #titlecontainer {
+                position: fixed;
+                background-color: #17657A;
+                width: 30%;
+                height: 100%;
+            }
+            #title {
+                padding-top: 40%;
+                margin-right: 10%;
+            }
+            #textcontainer {
+                margin-left: 35%;
+                height: 100%;
+            }
+            #text {
+                padding-top: 10%;
+                padding-bottom: 150px;
+                margin-right: 10%;
+            }
+            #bio {
+                margin-left: 5%;
+                margin-right: 10%;
+                width: 100%;
+            }
+            p.heading {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 700;
+				letter-spacing: 1px;
+                line-height: 50px;
+				font-size: 70px;
+				color: #EDEDED;
+            }
+            p.subheading {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 20px;
+				color: #EDEDED;
+            }
+            p.text {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 15px;
+				color: #171717;
+            }
+            p.name {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+                line-height: 20px;
+				font-size: 26px;
+				color: #171717;
+            }
+            p.position {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+				font-size: 16px;
+				color: #171717;
+            }
+            p.textheader {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 700;
+				letter-spacing: 1px;
+				font-size: 20px;
+				color: #171717;
+            }
+            p.textheaderalt {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+                line-height: 45px;
+				font-size: 40px;
+				color: #171717;
+            }
+            p.smalltext {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 10px;
+				color: #171717;
+            }
+            #darklink a:link {
+				color: #17657A;
+				text-decoration: none;
+			}
+			#darklink a:hover {
+				color: #318FA8;
+				text-decoration: none;
+				border-bottom: 2px solid #318FA8;
+			}
+			#darklink a:visited {
+				color: #17657A;
+				text-decoration: none;
+			}
+			#darklink a:active {
+				color: #17657A;
+				text-decoration: none;
+			}
+        </style>
+	</head>
+
+	<body>
+        <div id="splash" class="visible">
+            <div id="splashlogo">
+                <img src="../static/graphics/logo_text_invert.png" width="600px" height="120px" />
+            </div>
+        </div>
+
+		<div id="headercontainer">
+            <table width="100%" height="60px">
+                <tr>
+                    <td width="10%"></td>
+                    <td width="40%" valign="middle">
+                        <a href="../"><img src="../static/graphics/logo.png" width="300px" height="60px" border="0" /></a>
+                    </td>
+                    <td width="40%" valign="bottom">
+                        {% if data.net_id and data.profile %}
+                            <div id="links"><p align="right">WELCOME, {{ data.net_id }} | <a href="/">FIND ROOMMATES</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p></div>
+                        {% else %}
+                            <div id="links"><p align="right"><a href="../">HOME</a> | <a href="about">ABOUT</a> | <a href="login">LOGIN WITH RICE NETID</a></p></div>
+                        {% endif %}
+                    </td>
+                    <td width="10%"></td>
+                </tr>
+            </table>
+		</div>
+
+        <div id="titlecontainer">
+            <div id="title">
+                <p align="right" class="heading">ABOUT</p>
+                <br/>
+                <p align="right" class="subheading">Meet the developers</p>
+            </div>
+        </div>
+        <div id="textcontainer">
+            <div id="text">
+                <div id="darklink">
+                    <p class="textheaderalt">Roommate Finder is an app designed to make your life easier.</p>
+                    <p class="text">Forget about making public Facebook and social media posts to fill your apartment with roommates. Nor do you have to go through the logistics hassle of advertising your need for a space to live. Roommate Finder is designed to solve the problem of finding off-campus roommates by providing Rice students with a centralized and simple way to communicate to the entire Rice community their interest in finding new roommates. This application allows you to search for existing listings and create your own apartment listing.</p><br/>
+
+					<br/><br/>
+
+                    <p class="textheaderalt">The development team.</p>
+                    <p class="text">Roommate Finder is a project of <a href="http://riceapps.org">Rice Apps</a>, a student-led organization dedicated to making students' lives easier through technology. We're completely <a href="https://github.com/rice-apps/roommate-finder">open-source</a>, and built on Python (Flask), SQLite, PHP, Bootstrap CSS, and a ton of fantastic JS libraries including jQuery, AngularJS, and PaceJS.</p><br/>
+                    <br/>
+
+                    <!--Alex-->
+                    <table width="100%">
+                        <tr>
+                            <td width="200px" valign="top">
+                                <img class="profileimage" src="../static/graphics/developers/kevin.png"/>
+                            </td>
+                            <td valign="top">
+                                <div id="bio">
+                                    <p class="name">Alex Tran, MATH/ECON '16</p>
+                                    <p class="position">PROJECT LEAD</p><br/>
+                                    <p class="text">Placeholder</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr height="40px"></tr>
+                    </table>
+
+                    <!--Kevin-->
+                    <table width="100%">
+                        <tr>
+                            <td width="200px" valign="top">
+                                <img class="profileimage" src="../static/graphics/developers/kevin.png"/>
+                            </td>
+                            <td valign="top">
+                                <div id="bio">
+                                    <p class="name">Kevin Lin, ELEC/CS '18</p>
+                                    <p class="position">DEVELOPMENT LEAD</p><br/>
+                                    <p class="text">Kevin oversees the code that goes into Roommate Finder. He does a lot of Pythoning, HTMLing, CSSing, SQLing, and some JSing every here and there. He is also needlessly obsessive over UI/UX design.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr height="40px"></tr>
+                    </table>
+
+                    <!--Filip-->
+                    <table width="100%">
+                        <tr>
+                            <td width="200px" valign="top">
+                                <img class="profileimage" src="../static/graphics/developers/kevin.png"/>
+                            </td>
+                            <td valign="top">
+                                <div id="bio">
+                                    <p class="name">Filip Drozdowski, CS '16</p>
+                                    <p class="position">BACKEND DEVELOPER</p><br/>
+                                    <p class="text">Placeholder</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr height="40px"></tr>
+                    </table>
+
+                    <!--Anant-->
+                    <table width="100%">
+                        <tr>
+                            <td width="200px" valign="top">
+                                <img class="profileimage" src="../static/graphics/developers/kevin.png"/>
+                            </td>
+                            <td valign="top">
+                                <div id="bio">
+                                    <p class="name">Anant Tibrewal, CS '18</p>
+                                    <p class="position">FRONTEND DEVELOPER</p><br/>
+                                    <p class="text">Placeholder</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="footercontainer">
+			<div id="footer">
+            	<table width="100%">
+                	<tr>
+                    	<td>
+                        	<p class="footer">A PROJECT OF RICE APPS, 2014</p>
+                        </td>
+                        <td>
+                        	<p class="footer" align="right"><a href="/about">ABOUT ROOMMATE FINDER</a> | <a href="/privacy_policy">PRIVACY POLICY</a> | <a href="https://github.com/rice-apps/roommate-finder">GITHUB SOURCE</a> | <a href="http://riceapps.org">RICE APPS</a> | <a href="http://www.rice.edu">RICE UNIVERSITY</a></p>
+                        </td>
+                    </tr>
+                </table>
+			</div>
+		</div>
+	</body>
+</html>
