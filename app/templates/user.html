@@ -27,7 +27,7 @@
 		<!--Roommate Finder stylesheet-->
 		<link type="text/css" rel="stylesheet" href="/static/stylesheet.css">
 
-        <title>{{ data.name_lowercase }} | roommate finder | rice university</title>
+        <title>{% if data.profile %}{{ data.name_lowercase }}{% else %}user not found{% endif %} | roommate finder | rice university</title>
 
         <!--Attach Fancybox on page load-->
         <script type="text/javascript">
@@ -154,46 +154,68 @@
 		</div>
         <div id="headercontainer2">
 			<div id="header">
-            	<div id="links"><p><a href=""><span class="pagesectionbold">{{ data.name_uppercase }} [{{ data.net_id_uppercase }}]</span></a> · <a href="mailto:{{ data.net_id_lowercase }}@rice.edu"><span class="pagesection">EMAIL {{ data.name_first_uppercase }}</span></a>{% if data.profile.facebook %} · <a href="https://www.facebook.com/:{{ data.profile.facebook }}"><span class="pagesection">GO TO {{ data.name_first_uppercase }}'S FACEBOOK PROFILE</span></a>{% endif %}</div>
+                {% if data.profile %}
+            	    <div id="links"><p><a href=""><span class="pagesectionbold">{{ data.name_uppercase }} [{{ data.net_id_uppercase }}]</span></a> · <a href="mailto:{{ data.net_id_lowercase }}@rice.edu"><span class="pagesection">EMAIL {{ data.name_first_uppercase }}</span></a>{% if data.profile.facebook %} · <a href="https://www.facebook.com/:{{ data.profile.facebook }}"><span class="pagesection">GO TO {{ data.name_first_uppercase }}'S FACEBOOK PROFILE</span></a>{% endif %}</div>
+                {% else %}
+                    <div id="links"><p><a href=""><span class="pagesectionbold">{{ data.net_id_uppercase }}</span></a> · <a href="mailto:{{ data.net_id_lowercase }}@rice.edu"><span class="pagesection">EMAIL {{ data.net_id_uppercase }}</span></a></div>
+                {% endif %}
 			</div>
 		</div>
 
         <div id="content">
-            <p class="heading">{{ data.name_uppercase }}</p>
-            <p class="subheading">{{ data.year_uppercase }}, {{ data.college_uppercase }}</p>
-            <br/><br/>
-            <table>
-                <tr>
-                    <td width="1px" valign="top">
+            {% if data.profile %}
+                <p class="heading">{{ data.name_uppercase }}</p>
+                <p class="subheading">{{ data.year_uppercase }}, {{ data.college_uppercase }}</p>
+                <br/><br/>
+                <table>
+                    <tr>
+                        <td width="1px" valign="top">
+                            {% if data.profile.photo != None %}
+                                <a class="fancybox" rel="group" href="../photos/{{ data.profile.photo }}"><img
+                                        class="photo" src="../photos/{{ data.profile.photo }}" alt=""/></a>
+                            {% endif %}
+                        </td>
+                        <!--Padding between photo and content, if photo exists.-->
                         {% if data.profile.photo != None %}
-                            <a class="fancybox" rel="group" href="../photos/{{ data.profile.photo }}"><img class="photo" src="../photos/{{ data.profile.photo }}" alt="" /></a>
+                            <td width="70px"></td>
                         {% endif %}
-                    </td>
-                    <!--Padding between photo and content, if photo exists.-->
-                    {% if data.profile.photo != None %}
+                        <td width="500px" valign="top">
+                            <p class="subheading">PROFILE</p>
+
+                            <p class="fieldtitle">AGE</p>
+
+                            <p class="text">{{ data.age }}</p>
+                            <br/>
+
+                            <p class="fieldtitle">GENDER</p>
+
+                            <p class="text">{{ data.profile.gender }}</p>
+                            <br/>
+
+                            <p class="fieldtitle">BIO</p>
+
+                            <p class="text">{{ data.profile.bio }}</p>
+                        </td>
                         <td width="70px"></td>
-                    {% endif %}
-                    <td width="500px" valign="top">
-                        <p class="subheading">PROFILE</p>
-                        <p class="fieldtitle">AGE</p>
-                        <p class="text">{{ data.age }}</p>
-                        <br/>
-                        <p class="fieldtitle">GENDER</p>
-                        <p class="text">{{ data.profile.gender }}</p>
-                        <br/>
-                        <p class="fieldtitle">BIO</p>
-                        <p class="text">{{ data.profile.bio }}</p>
-                    </td>
-                    <td width="70px"></td>
-                    <td width="300px" valign="top">
-                        <p class="subheading">CONNECT WITH {{ data.name_first_uppercase }}</p>
-                        <div id="connect"><p class="text"><a href="mailto:{{ data.net_id_lowercase }}@rice.edu">{{ data.net_id_lowercase }}@rice.edu</a></p></div>
-                        {% if data.profile.facebook %}
-                            <div id="connect"><p class="text"><a href="https://www.facebook.com/{{ data.profile.facebook }}">Facebook profile</a></p></div>
-                        {% endif %}
-                    </td>
-                </tr>
-            </table>
+                        <td width="300px" valign="top">
+                            <p class="subheading">CONNECT WITH {{ data.name_first_uppercase }}</p>
+
+                            <div id="connect"><p class="text"><a
+                                    href="mailto:{{ data.net_id_lowercase }}@rice.edu">{{ data.net_id_lowercase }}@rice.edu</a>
+                            </p></div>
+                            {% if data.profile.facebook %}
+                                <div id="connect"><p class="text"><a
+                                        href="https://www.facebook.com/{{ data.profile.facebook }}">Facebook profile</a>
+                                </p></div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            {% else %}
+                <p class="heading">USER {{ data.net_id_uppercase }} NOT FOUND</p>
+                <p class="subheading">Either this person doesn't exist, or doesn't have a profile set up on Roommate
+                    Finder.</p>
+            {% endif %}
         </div>
 
         <div id="footercontainer">
