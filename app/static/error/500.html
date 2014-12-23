@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+    	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    	<!--Fonts-->
+		<link href='http://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+
+        <!--jQuery, required for some functions of Bootstrap-->
+        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+
+        <!--Bootstrap v3, retrieved from a third party CDN-->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+        <!--Pace.js and associated stylesheet-->
+        <script src="../../static/js/pace.min.js"></script>
+        <link rel="stylesheet" href="../../static/css/pace.css">
+        <script src="../../static/js/splash-fade.js"></script>
+
+		<!--Roommate Finder stylesheet-->
+		<link type="text/css" rel="stylesheet" href="../../static/stylesheet.css">
+
+        <title>500 internal server error | roommate finder | rice university</title>
+
+        <!--Controls fading behavior of text elements-->
+        <script type="text/javascript">
+            $(document).ready(function () {
+                setTimeout(function () {
+                    document.getElementById("headercontainer").className = "fadein";
+                }, 700);
+                ;
+                setTimeout(function () {
+                    document.getElementById("title").className = "fadein";
+                }, 1000);
+                ;
+                setTimeout(function () {
+                    document.getElementById("footercontainer").className = "fadein";
+                }, 1300);
+                ;
+            });
+        </script>
+
+        <style type="text/css">
+            body {
+                background: url("../../static/graphics/apartments.jpg") no-repeat center bottom fixed;
+                background-size: cover;
+            }
+            #splash {
+                height: 100%;
+                width: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                background-color: #171717;
+                z-index: 1000;
+            }
+            #headercontainer {
+                width: 100%;
+                height: 60px;
+                position: fixed;
+                top: 0;
+                background: rgba(0, 0, 0, 0);
+                z-index: 5;
+                transition: all 0.65s ease;
+            }
+            #titlecontainer {
+                width: 100%;
+                height: 100vh;
+                margin-right: 10%;
+            }
+            #title {
+                margin-left: 10%;
+                margin-right: 10%;
+                padding-top: 15%;
+            }
+            #scroll {
+                position: absolute;
+                bottom: 60px;
+                width: 100%;
+            }
+            #footercontainer {
+                width: 100%;
+                height: 50px;
+                position: fixed;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0);
+                transition: all 0.65s ease;
+            }
+            #footer {
+                margin-top: 15px;
+                margin-bottom: 20px;
+                margin-left: 10%;
+                margin-right: 10%;
+            }
+            p.title {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 700;
+                letter-spacing: 2px;
+                line-height: 90px;
+                font-size: 100px;
+                color: #EDEDED;
+                text-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+            }
+            p.block {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 300;
+                letter-spacing: 2px;
+                line-height: 35px;
+                font-size: 30px;
+                color: #EDEDED;
+                text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            }
+            p.scroll {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 700;
+                letter-spacing: 3px;
+                line-height: 13px;
+                font-size: 16px;
+                color: #D1D1D1;
+                text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+                transition: all 0.7s ease;
+            }
+            p.scrollarrow {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 300;
+                letter-spacing: 2px;
+                line-height: 13px;
+                font-size: 25px;
+                color: #D1D1D1;
+                text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.7);
+                transition: all 0.7s ease;
+            }
+            p.footer {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 300;
+                letter-spacing: 1px;
+                font-size: 10px;
+                color: #EDEDED;
+                text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+            }
+            .fadein {
+                -webkit-animation: fadein 2.5s; /* Safari and Chrome */
+                -moz-animation: fadein 2.5s; /* Firefox */
+                -ms-animation: fadein 2.5s; /* Internet Explorer */
+                -o-animation: fadein 2.5s; /* Opera */
+                animation: fadein 2.5s;
+            }
+            .rotate {
+                -webkit-transform: rotate(-90deg);
+                -moz-transform: rotate(-90deg);
+                -ms-transform: rotate(-90deg);
+                -o-transform: rotate(-90deg);
+                filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+            }
+            #links a:link {
+                color: #EDEDED;
+                text-decoration: none;
+                text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+            }
+            #links a:hover {
+                color: #EDEDED;
+                text-decoration: none;
+                border-bottom: 2px solid #EDEDED;
+                text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+            }
+            #links a:visited {
+                color: #EDEDED;
+                text-decoration: none;
+                text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+            }
+            #links a:active {
+                color: #EDEDED;
+                text-decoration: none;
+                text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+            }
+        </style>
+	</head>
+
+	<body>
+        <div id="splash" class="visible">
+            <div id="splashlogo">
+                <img src="../../static/graphics/logo_text.png" width="600px" height="120px" />
+            </div>
+        </div>
+
+        <div id="headercontainer" class="hidden">
+            <table width="100%" height="60px">
+                <tr>
+                    <td width="10%"></td>
+                    <td width="40%" valign="middle">
+                        <img src="../../static/graphics/logo.png" width="300px" height="60px" />
+                    </td>
+                    <td width="40%" valign="bottom">
+                        <div id="links"><p align="right"><a href="">HOME</a> | <a href="about">ABOUT</a> | <a href="login">LOGIN WITH RICE NETID</a></p></div>
+                    </td>
+                    <td width="10%"></td>
+                </tr>
+            </table>
+		</div>
+
+        <div id="titlecontainer">
+            <div id="title" class="hidden">
+                <p class="title">500 INTERNAL SERVER ERROR</p><br/>
+                <p class="block">You broke our application. You should <a href="mailto:kevinlin@rice.edu">tell us about it</a>, so that we can get on fixing it.</p>
+            </div>
+        </div>
+
+		<div id="footercontainer" class="hidden">
+			<div id="footer">
+            	<table width="100%">
+                	<tr>
+                    	<td>
+                        	<p class="footer">A PROJECT OF RICE APPS, 2014</p>
+                        </td>
+                        <td>
+                        	<div id="links"><p class="footer" align="right"><a href="https://github.com/rice-apps/roommate-finder">GITHUB SOURCE</a> | <a href="http://riceapps.org">RICE APPS</a> | <a href="http://www.rice.edu">RICE UNIVERSITY</a></p></div>
+                        </td>
+                    </tr>
+                </table>
+			</div>
+		</div>
+	</body>
+</html>
