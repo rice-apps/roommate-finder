@@ -1,5 +1,6 @@
 General to-do items for the project.
 
+-Mobile CSS stylesheets
 -Require only profile creation for those who want to post listings. (Limit barriers to entry by requiring only a Net ID login for joiners)
     -This would of course require some restructuring of the existing application.
 -Consider adding an auto-notification feature on the posting page, where an interested joiner can simply click a link that will automatically forward a notification of interest to the host (via email) containing details about the interested person, using information from their completed profile.

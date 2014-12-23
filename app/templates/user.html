@@ -7,7 +7,7 @@
 		<link href='http://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
 
-        <!--jQuery, required for some functions of Bootstrap-->
+        <!--jQuery-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
         <!--Bootstrap v3, retrieved from a third party CDN-->
@@ -20,15 +20,29 @@
         <link rel="stylesheet" href="../static/css/pace.css">
         <script src="../static/js/splash-fade.js"></script>
 
-        <!--Date Time Picker-->
-        <link rel="stylesheet" href="http://eonasdan.github.io/bootstrap-datetimepicker/content/bootstrap-datetimepicker.css">
-        <script type="text/javascript" src="http://momentjs.com/downloads/moment.js"></script>
-        <script type="text/javascript" src="https://raw.githubusercontent.com/Eonasdan/bootstrap-datetimepicker/master/build/js/bootstrap-datetimepicker.min.js"></script>
+        <!--Fancybox-->
+        <link rel="stylesheet" href="../static/css/fancybox.css?v=2.1.5" type="text/css" media="screen" />
+        <script type="text/javascript" src="../static/js/fancybox.pack.js?v=2.1.5"></script>
 
 		<!--Roommate Finder stylesheet-->
 		<link type="text/css" rel="stylesheet" href="/static/stylesheet.css">
 
         <title>{{ data.name_lowercase }} | roommate finder | rice university</title>
+
+        <!--Attach Fancybox on page load-->
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $(".fancybox").fancybox({
+                helpers: {
+                    overlay: {
+                        css: {
+                            'background': 'rgba(0, 0, 0, 0.7)'
+                        }
+                    }
+                }
+            });
+            });
+        </script>
 
         <!--Override some CSS properties-->
 		<style type="text/css">
@@ -151,9 +165,8 @@
             <table>
                 <tr>
                     <td width="1px" valign="top">
-                        <!--TODO: Fancybox photo popup-->
                         {% if data.profile.photo != None %}
-                            <a href="../photos/{{ data.profile.photo }}"><img class="photo" src="../photos/{{ data.profile.photo }}" /></a>
+                            <a class="fancybox" rel="group" href="../photos/{{ data.profile.photo }}"><img class="photo" src="../photos/{{ data.profile.photo }}" alt="" /></a>
                         {% endif %}
                     </td>
                     <!--Padding between photo and content, if photo exists.-->
