@@ -28,6 +28,7 @@
         <!--Controls fading behavior of text elements-->
         <script type="text/javascript">
             $(document).ready(function () {
+                // UI elements animation
                 setTimeout(function () {
                     document.getElementById("headercontainer").className = "fadein";
                 }, 700);
@@ -44,6 +45,11 @@
                     document.getElementById("footercontainer").className = "fadein";
                 }, 1700);
                 ;
+                // Scroll to top animation
+                $('#scrolltotop').click(function () {
+                    $('html, body').animate({scrollTop: 0}, 400);
+                    return false;
+                });
             });
         </script>
 
@@ -299,7 +305,7 @@
                         <img src="../static/graphics/logo.png" width="300px" height="60px" />
                     </td>
                     <td width="40%" valign="bottom">
-                        <div id="links"><p align="right"><a href="">HOME</a> | <a href="about">ABOUT</a> | <a href="login">LOGIN WITH RICE NETID</a></p></div>
+                        <div id="links"><p align="right"><a id="scrolltotop" href="#">HOME</a> | <a href="about">ABOUT</a> | <a href="login">LOGIN WITH RICE NETID</a></p></div>
                     </td>
                     <td width="10%"></td>
                 </tr>
