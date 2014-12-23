@@ -243,3 +243,9 @@ def compute_age(dob):
 @lm.user_loader
 def load_user(id):
     return Profile.query.get(int(id))
+
+
+# ERROR HANDLERS
+@app.errorhandler(500)
+def page_not_found(e):
+    return app.send_static_file('500.html'), 500
