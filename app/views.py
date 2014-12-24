@@ -42,8 +42,9 @@ def index():
     If not, redirect him/her to the intro page.
     """
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    user = Profile.query.filter_by(net_id=net_id).first()
     if net_id is not None:
-        data = {"net_id": net_id}
+        data = {"net_id": net_id, "profile": user}
         return render_template('search.html', data=data)
     else:
         return app.send_static_file('intro.html')
