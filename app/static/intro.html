@@ -60,8 +60,8 @@
                     // Condition if scrollbar is not at top of page
                     // Header and footer should be opaque
                     // "Scroll to learn more" should not be displayed
-                    $("#headercontainer").css({"background": "#303030"});
-                    $("#footercontainer").css({"background": "#171717"});
+                    $("#headercontainer").css({"background": "#303030", "box-shadow": "0px 0px 10px rgba(0, 0, 0, 0.8)"});
+                    $("#footercontainer").css({"background": "#171717", "box-shadow": "0px 0px 13px rgba(0, 0, 0, 0.65)"});
                     $(".scroll").css({"color": "rgba(0, 0, 0, 0)", "text-shadow": "0px 0px 7px rgba(0, 0, 0, 0)"});
                     $(".scrollarrow").css({"color": "rgba(0, 0, 0, 0)", "text-shadow": "0px 0px 7px rgba(0, 0, 0, 0)"});
                 }
@@ -69,8 +69,8 @@
                     // Condition if the scrollbar is at top of page
                     // Header and footer should be transparent
                     // "Scroll to learn more" should be displayed
-                    $("#headercontainer").css({"background": "rgba(0, 0, 0, 0)"});
-                    $("#footercontainer").css({"background": "rgba(0, 0, 0, 0)"});
+                    $("#headercontainer").css({"background": "rgba(0, 0, 0, 0)", "box-shadow": "0px 0px 10px rgba(0, 0, 0, 0)"});
+                    $("#footercontainer").css({"background": "rgba(0, 0, 0, 0)", "box-shadow": "0px 0px 10px rgba(0, 0, 0, 0)"});
                     $(".scroll").css({"color": "#D1D1D1", "text-shadow": "0px 0px 7px rgba(0, 0, 0, 0.7)"});
                     $(".scrollarrow").css({"color": "#D1D1D1", "text-shadow": "0px 0px 7px rgba(0, 0, 0, 0)"});
                 }
@@ -99,6 +99,7 @@
                 background: rgba(0, 0, 0, 0);
                 z-index: 5;
                 transition: all 0.65s ease;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0);
             }
             #titlecontainer {
                 width: 100%;
@@ -122,6 +123,7 @@
                 bottom: 0;
                 background: rgba(0, 0, 0, 0);
                 transition: all 0.65s ease;
+                box-shadow: 0px 0px 13px rgba(0, 0, 0, 0);
             }
             #footer {
                 margin-top: 15px;

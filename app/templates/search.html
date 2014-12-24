@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="roommateFinder">
 	<head>
     	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
@@ -14,6 +14,15 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+        <!--Pace.js and associated stylesheet-->
+        <script src="../static/js/pace.min.js"></script>
+        <link rel="stylesheet" href="../static/css/pace.css">
+        <script src="../static/js/splash-fade.js"></script>
+
+        <!--Angular.js and controllers-->
+        <script src="../static/js/angular.min.js"></script>
+        <script src="../static/js/search.js"></script>
 
         <!--Fancybox-->
         <link rel="stylesheet" href="../static/css/fancybox.css?v=2.1.5" type="text/css" media="screen" />
@@ -50,16 +59,19 @@
                 margin-left: 10%;
                 margin-right: 10%;
             }
+            table.listing {
+                /*box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);*/
+            }
             .fixed {
                 top: 120px;
                 position: fixed;
                 width: 16%; /* 20% of 80%, since the table width is 20% of the content div which is 80% of the page */
             }
             img.thumbnail {
-                max-height: 100px;
+                max-width: 140px;
             }
             img.preview {
-                max-height: 160px;
+                max-width: 400px;
             }
             p.heading {
                 font-family: 'Oxygen', sans-serif;
@@ -94,7 +106,8 @@
                 font-family: 'Oxygen', sans-serif;
 				font-weight: 300;
 				letter-spacing: 1px;
-				font-size: 14px;
+                line-height: 10px;
+				font-size: 13px;
 				color: #171717;
             }
             p.apartmenttitle {
@@ -108,6 +121,14 @@
             p.apartmentdetails {
                 font-family: 'Oxygen', sans-serif;
 				font-weight: 300;
+				letter-spacing: 1px;
+                line-height: 10px;
+				font-size: 12px;
+				color: #171717;
+            }
+            span.boldapartmentdetails {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 700;
 				letter-spacing: 1px;
                 line-height: 10px;
 				font-size: 12px;
@@ -156,14 +177,20 @@
 	</head>
 
 	<body>
+        <div id="splash" class="visible">
+            <div id="splashlogo">
+                <img src="../static/graphics/logo_text_invert.png" width="600px" height="120px" />
+            </div>
+        </div>
+
 		<div id="headercontainer">
             <table width="100%" height="60px">
                 <tr>
                     <td width="10%"></td>
-                    <td width="40%" valign="middle">
+                    <td width="30%" valign="middle">
                         <a href="../"><img src="../static/graphics/logo.png" width="300px" height="60px" border="0" /></a>
                     </td>
-                    <td width="40%" valign="bottom">
+                    <td width="50%" valign="bottom">
                         <div id="links"><p align="right">WELCOME, {{ data.net_id }} | <a href="/">FIND ROOMMATES</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p></div>
                     </td>
                     <td width="10%"></td>
@@ -175,7 +202,7 @@
             <p class="heading">search for listings</p>
             <p class="subheading">View listings posted by users of Roommate Finder</p>
             <br/><br/><br/>
-            <table width="100%">
+            <table width="100%" ng-controller="listingsControl">
                 <tr>
                     <!--Search tools-->
                     <td width="20%" valign="top">
@@ -183,26 +210,22 @@
                             <p class="sectionheading">SEARCH TOOLS</p>
 
                             <p class="text">Search by keyword:</p>
-                            <input name="search" class="form-control" type="text"/>
+                            <input name="search" class="form-control" type="text" ng-model="query" />
                             <br/>
 
                             <p class="text">Sort by:</p>
-                            <select class="form-control">
-                                <option>None</option>
-                                <option>Date posted</option>
-                                <option>Rent price</option>
-                                <option>Distance from Rice</option>
-                                <option>Property size</option>
-                                <option>Number of roommates needed</option>
+                            <select class="form-control" ng-model="sortOrder">
+                                <option value="timestamp">Date posted</option>
+                                <option value="rent">Rent price</option>
+                                <option value="distance">Distance from Rice</option>
+                                <option value="property_size">Property size</option>
+                                <option value="number_roommates_needed">Number of roommates needed</option>
                             </select>
                             <br/>
 
                             <p class="text">Filters:</p>
-                            <p class="text2"><input type="checkbox" name="petfriendly"> Pet-friendly</p>
-                            <p class="text2"><input type="checkbox" name="petfriendly"> Has gym</p>
-                            <p class="text2"><input type="checkbox" name="petfriendly"> Has pool</p>
-                            <p class="text2"><input type="checkbox" name="petfriendly"> Other things that are important</p>
-                            <p class="text2"><input type="checkbox" name="petfriendly"> That I don't know yet</p>
+                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['gym']"> Has gym</p>
+                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['pool']"> Has pool</p>
                         </div>
                     </td>
                     <td width="5%" valign="top"></td>
@@ -210,53 +233,62 @@
                     <!--Listings-->
                     <td width="30%" valign="top">
                         <p class="sectionheading">LISTINGS</p>
-                        <table>
-                            <tr>
-                                <td valign="top">
-                                    <img class="thumbnail" src="../static/graphics/search.png" />
-                                </td>
-                                <td width="10px"></td>
-                                <td valign="top">
-                                    <p class="apartmenttitle">SAMPLE APARTMENT NAME</p>
-                                    <p class="apartmentdetails">Posted by <a href="/user/kl38">Kevin Lin [kl38]</a></p>
-                                    <p class="apartmentdetails">Distance from Rice: 0.56 mi</p>
-                                    <p class="apartmentdetails">Property size: 700 sq ft</p>
-                                    <p class="apartmentdetails">Seeking 4 roommates</p>
-                                </td>
-                            </tr>
-                        </table>
+                        <div ng-repeat="listing in listings | filter:query | filter:amenitiesFilter() | orderBy:sortOrder">
+                            <a href="javascript:void(0);" ng-click="clicked(listing)">
+                                <table class="listing">
+                                    <tr>
+                                        <td valign="top">
+                                            <img class="thumbnail" ng-src="../photos/listings/{[ listing.photo ]}" />
+                                        </td>
+                                        <td width="10px"></td>
+                                        <td valign="top">
+                                            <p class="apartmenttitle">{[ listing.apartment_name | uppercase ]}</p>
+                                            <p class="apartmentdetails">Posted by <a href="/user/{[ listing.poster_netid ]}">{[ listing.poster_name ]} [{[ listing.poster_netid ]}]</a></p>
+                                            <p class="apartmentdetails">Distance from Rice: <span class="boldapartmentdetails">{[ listing.distance ]} mi</span></p>
+                                            <p class="apartmentdetails">Property size: <span class="boldapartmentdetails">{[ listing.property_size ]} sq ft</span></p>
+                                            <p class="apartmentdetails">Rent: <span class="boldapartmentdetails">${[ listing.rent ]}/month</span></p>
+                                            <p class="apartmentdetails">Seeking <span class="boldapartmentdetails">{[ listing.number_roommates_needed ]}</span> roommates</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </a>
+                            <div style="height:25px;"></div>
+                        </div>
                     </td>
                     <td width="5%" valign="top"></td>
 
                     <!--Listing details-->
                     <td width="40%" valign="top">
                         <p class="sectionheading">LISTING DETAILS</p>
-                        <p class="text"><a href="/listing/ID">See full listing details</a></p>
-                        <!--TODO: Figure out horizontally scrolling images-->
-                        <a class="fancybox" rel="group" href="../photos/listings/something.jpg"><img class="preview" src="../static/graphics/search.png" /></a>
-                        <p class="detailsheading">SAMPLE APARTMENT NAME</p>
-                        <p class="detailssubheading">Posted by <a href="/user/kl38">Kevin Lin [kl38]</a> on 12/23/2014</p>
-                        <br/>
-                        <br/>
-                        <!--TODO: Google Maps API-->
-                        <p class="detailssection">LOCATION</p>
-                        <p class="detailstext">12345 Lane St</p>
-                        <p class="detailstext">Houston, TX 77005</p>
-                        <p class="detailstext">0.65 mi from Rice</p>
-                        <br/>
-                        <p class="detailssection">RENT</p>
-                        <p class="detailstext">$5/month</p>
-                        <p class="detailstext">Additional details</p>
-                        <br/>
-                        <p class="detailssection">ADDITIONAL INFORMATION</p>
-                        <p class="detailstext2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nisi ligula, laoreet sit amet pellentesque et, convallis vel lacus. Vivamus eu diam sit amet est lacinia imperdiet. Phasellus non velit ut nisi tempus gravida. Suspendisse potenti. Quisque gravida vel odio eget aliquet. Suspendisse semper blandit enim ut consectetur. Etiam at lectus at nibh sodales placerat. Curabitur sagittis dui at erat tempor semper. Suspendisse interdum nibh quis vestibulum rhoncus. Curabitur aliquam sagittis velit quis molestie. </p>
-                        <br/>
-                        <p class="detailssection">NEXT STEPS</p>
-                        <!--TODO: New tab for all these links-->
-                        <p class="detailstext"><a href="/listing/ID">View full listing details</a></p>
-                        <p class="detailstext"><a href="/user/kl38">View Kevin's profile</a></p>
-                        <p class="detailstext"><a href="#">Send Kevin a notification that you're interested</a></p>
-                        <p class="detailstext"><a href="mailto:kl38@rice.edu">Email Kevin directly</a></p>
+                        <div ng-repeat="listing in listings" ng-show="showListing(listing)">
+                            <p class="text"><a href="/listing/ID">See full listing details</a></p>
+                            <!--TODO: Figure out horizontally scrolling images-->
+                            <div style="height:25px;"></div>
+                            <a class="fancybox" rel="group" href="../photos/listings/{[ listing.photo ]}"><img class="preview" ng-src="../photos/listings/{[ listing.photo ]}" /></a>
+                            <div style="height:25px;"></div>
+                            <p class="detailsheading">{[ listing.apartment_name | uppercase ]}</p>
+                            <p class="detailssubheading">Posted by <a href="/user/{[ listing.poster_netid ]}">{[ listing.poster_name ]} [{[ listing.poster_netid ]}]</a> on {[ listing.timestamp ]}</p>
+                            <br/>
+                            <br/>
+                            <!--TODO: Google Maps API-->
+                            <p class="detailssection">LOCATION</p>
+                            <p class="detailstext">{[ listing.address_line_1 ]}</p>
+                            <p class="detailstext">{[ listing.address_line_2 ]}</p>
+                            <p class="detailstext">{[ listing.distance ]} mi from Rice</p>
+                            <br/>
+                            <p class="detailssection">RENT</p>
+                            <p class="detailstext">${[ listing.rent ]}/month</p>
+                            <p class="detailstext">{[ listing.rent_details ]}</p>
+                            <br/>
+                            <p class="detailssection">ADDITIONAL INFORMATION</p>
+                            <p class="detailstext2">{[ listing.description ]}</p>
+                            <br/>
+                            <p class="detailssection">NEXT STEPS</p>
+                            <p class="detailstext"><a target="_blank" href="/listing/{[ listing.id ]}">View full listing details</a></p>
+                            <p class="detailstext"><a target="_blank" href="/user/{[ listing.poster_netid ]}">View {[ listing.poster_name ]}'s profile</a></p>
+                            <p class="detailstext"><a href="#">Send {[ listing.poster_name ]} a notification that you're interested</a></p>
+                            <p class="detailstext"><a href="mailto:{[ listing.poster_netid ]}@rice.edu">Email {[ listing.poster_name ]} directly</a></p>
+                        </div>
                     </td>
                 </tr>
             </table>
