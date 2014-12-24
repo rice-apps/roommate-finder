@@ -240,5 +240,9 @@ def load_user(id):
 
 # ERROR HANDLERS
 @app.errorhandler(500)
+def internal_server_error(e):
+    return app.send_static_file('error/500.html'), 500
+
+@app.errorhandler(404)
 def page_not_found(e):
-    return app.send_static_file('500.html'), 500
+    return app.send_static_file('error/404.html'), 404
