@@ -9,71 +9,14 @@ roommateFinder.config(['$interpolateProvider', function ($interpolateProvider) {
 
 
 // Listings controller
-roommateFinder.controller("listingsControl", function ($scope) {
-    // Listings data
-    // For all quantitative values, integers only
-    $scope.listings = [
-        {
-            "id": "1",
-            "apartment_name": "Rice Village",
-            "poster_netid": "kl38",
-            "poster_name": "Kevin Lin",
-            "description": "Excellent apartments!",
-            "address_line_1": "12345 Rice Village Lane",
-            "address_line_2": "Houston, TX 77005",
-            "photo": "disc.png",
-            "distance": "0.65",
-            "rent": "5000",
-            "rent_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            "property_size": "700",
-            "number_roommates_needed": "4",
-            "timestamp": 2,
-            "amenities": {
-                "gym": true,
-                "pool": false
-            }
-        },
-        {
-            "id": "2",
-            "apartment_name": "Kirby apartments",
-            "poster_netid": "dl3",
-            "poster_name": "Dave Lee",
-            "description": "Excellent apartments, but not quite as nice.",
-            "address_line_1": "12345 Kirby Lane",
-            "address_line_2": "Houston, TX 77005",
-            "photo": "computer.jpg",
-            "distance": "0.76",
-            "rent": "8000",
-            "rent_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            "property_size": "300",
-            "number_roommates_needed": "2",
-            "timestamp": 1,
-            "amenities": {
-                "gym": false,
-                "pool": true
-            }
-        },
-        {
-            "id": "3",
-            "apartment_name": "Luxury apartments",
-            "poster_netid": "jd1",
-            "poster_name": "John Doe",
-            "description": "Luxury apartments!",
-            "address_line_1": "12345 Luxury Lane",
-            "address_line_2": "Houston, TX 77005",
-            "photo": "computer.jpg",
-            "distance": "0.1",
-            "rent": "82000",
-            "rent_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            "property_size": "6000",
-            "number_roommates_needed": "9",
-            "timestamp": 4,
-            "amenities": {
-                "gym": true,
-                "pool": true
-            }
-        }
-    ];
+roommateFinder.controller("listingsControl", function($scope, $http) {
+    // Retrieve listings data from database
+    $http.get("/app.db", {"responseType": "arraybuffer"}).success(function(data) {
+        var uInt8Array = new Uint8Array(data);
+        var db = new SQL.Database(uInt8Array);
+        var contents = db.exec("SELECT * FROM listing")[0];
+        $scope.listings = SQLiteToJSON(contents);
+    });
 
     // Sorting order
     $scope.sortOrder = "timestamp";
@@ -94,12 +37,33 @@ roommateFinder.controller("listingsControl", function ($scope) {
 
     // Full listing details show/hide logic
     $scope.selectedID = null;
-
     $scope.clicked = function(listing) {
         $scope.selectedID = listing.id;
     };
-
     $scope.showListing = function(listing) {
         return listing.id == $scope.selectedID;
     };
 });
+
+
+function SQLiteToJSON(arrays) {
+    // As the name implies, takes as input an array-formatted SQLite database and very tediously converts it into a JSON object.
+    // Input is index 0 of the result of SQL.js SELECT query.
+    var result = "[";
+    var columns = arrays.columns;
+    var values = arrays.values;
+    for (var i = 0; i < values.length; i++) {
+        result += "{";
+        for (var j = 0; j < columns.length; j++) {
+            result += "\"" + columns[j] + "\":\"" + values[i][j] + "\"";
+            if (j != columns.length - 1)
+                result += ",";
+        }
+        if (i != values.length - 1)
+            result += "},";
+        else
+            result += "}";
+    }
+    result += "]";
+    return JSON.parse(result);
+}

@@ -20,6 +20,7 @@ UPLOAD_FOLDER = "D:/GitHub/roommate-finder/app/photos"
 app.config['CAS_SERVER'] = 'https://netid.rice.edu'
 app.config['CAS_AFTER_LOGIN'] = 'after_login'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['APP_FOLDER'] = "Z:/RoommateFinder/roommate-finder"  # directory of application on the server - do not change
 app.config['APP_URL'] = 'http://roommatefinder.kevinlin.info'
 app.config.setdefault('CAS_USERNAME_SESSION_KEY', 'CAS_USERNAME')
 
@@ -72,6 +73,15 @@ def photos(filename):
     Proper routing of /photos, the uploaded profile pictures directory.
     """
     return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
+
+
+@app.route('/app.db')
+def database():
+    """
+    URL to get the SQLite database. Required for JS-SQL behavior in search.js.
+    """
+    # TODO: .htaccess, allow only localhost
+    return send_from_directory("C:/Users/Kevin/SkyDrive/Homework/Rice University/Miscellaneous/Rice Apps/roommate-finder", "app.db")
 
 
 @app.route('/after_login', methods=['GET'])
@@ -176,6 +186,7 @@ def my_postings():
         return render_template('my_postings.html', data=data)
     else:
         index()
+
 
 @app.route('/privacy_policy')
 def privacy_policy():
