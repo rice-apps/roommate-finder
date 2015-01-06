@@ -23,13 +23,13 @@ roommateFinder.controller("listingsControl", function($scope, $http) {
 
     // Filtering logic
     // Need an if statement for each amenity. I couldn't figure out a cleaner way to do this.
-    // Entries here must match with those in listing.amenities
+    // Entries here must match with those in listing.amenities_[amenity], where each column amenities_[amenity] in the database is true or false
     $scope.filterByAmenities = {};
     $scope.amenitiesFilter = function () {
         return function (listing) {
-            if ($scope.filterByAmenities["gym"] && $scope.filterByAmenities["gym"] != listing.amenities.gym)
+            if ($scope.filterByAmenities["gym"] && $scope.filterByAmenities["gym"].toString() != listing.amenities_gym)
                 return false;
-            if ($scope.filterByAmenities["pool"] && $scope.filterByAmenities["pool"] != listing.amenities.pool)
+            if ($scope.filterByAmenities["pool"] && $scope.filterByAmenities["pool"].toString() != listing.amenities_pool)
                 return false;
             return true;
         }

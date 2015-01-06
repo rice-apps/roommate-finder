@@ -16,7 +16,7 @@ from app.models import Profile
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'tiff'])
 
 
-@app.route('/createprofile', methods=['POST'])
+@app.route('/create_profile', methods=['POST'])
 def create_user():
     """
     Processes form data in POST request from profile creation page and adds the user to the database table Profile.
@@ -26,7 +26,7 @@ def create_user():
     The actual photo file is stored as app/photos/<hash>.<file_extension>
     """
     # Fields from form
-    fields = ["net_id", "name", "year", "dob", "college", "gender", "bio", "facebook", "facebook_photo"]
+    fields = ["net_id", "account_type", "name", "year", "dob", "college", "gender", "bio", "facebook", "facebook_photo"]
     # Get user-entered values from form
     values = {}
     for field in fields:
@@ -56,11 +56,11 @@ def create_user():
     # Create a new user from the Profile model
     if photo:
         photo_hash = str(hash(photo))
-        user = Profile(values["net_id"], values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"], values["facebook"], photo_hash + "." + file_extension(photo.filename))
+        user = Profile(values["net_id"], values["account_type"].lower(), values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"], values["facebook"], photo_hash + "." + file_extension(photo.filename))
     elif not photo and photo_hash:
-        user = Profile(values["net_id"], values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"], values["facebook"], photo_hash + "." + file_extension(values["facebook_photo"][:values["facebook_photo"].rfind("?")]))
+        user = Profile(values["net_id"], values["account_type"].lower(), values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"], values["facebook"], photo_hash + "." + file_extension(values["facebook_photo"][:values["facebook_photo"].rfind("?")]))
     else:
-        user = Profile(values["net_id"], values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"], values["facebook"])
+        user = Profile(values["net_id"], values["account_type"].lower(), values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"], values["facebook"])
 
     # The user selected a photo of an invalid file extension
     # Redirect the user to an error page
@@ -77,11 +77,10 @@ def create_user():
     db.session.add(user)
     db.session.commit()
 
-    data = {"net_id": values["net_id"], "profile": user, "first_name_lower": values["name"].split()[0].lower(), "first_name": values["name"].split()[0]}
-    return render_template('welcome.html', data=data)
+    return redirect('/get_started')
 
 
-@app.route('/updateprofile', methods=['POST'])
+@app.route('/update_profile', methods=['POST'])
 def update_user():
     """
     Called when the user is modifying is/her account from the My Profile page.
@@ -91,6 +90,7 @@ def update_user():
     user = Profile.query.filter_by(net_id=request.form["net_id"]).first()
     # Update all the columns
     user.name = request.form["name"]
+    user.account_type = request.form["account_type"].lower()
     user.year = request.form["year"]
     user.dob = request.form["dob"]
     user.college = request.form["college"]
@@ -131,7 +131,7 @@ def update_user():
     return render_template('my_profile.html', data=data)
 
 
-@app.route('/deleteprofile', methods=['GET', 'POST'])
+@app.route('/delete_profile', methods=['GET', 'POST'])
 def delete_user():
     """
     Removes the user from the database.

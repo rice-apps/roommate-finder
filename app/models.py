@@ -15,9 +15,11 @@ class Profile(db.Model):
     bio = db.Column(db.String(255))
     facebook = db.Column(db.String(255))
     photo = db.Column(db.String(255))
+    account_type = db.Column(db.String(255))
 
-    def __init__(self, net_id, name, year, dob, college, gender, bio, facebook=None, photo=None):
+    def __init__(self, net_id, account_type, name, year, dob, college, gender, bio, facebook=None, photo=None):
         self.net_id = net_id  # User's Net ID
+        self.account_type = account_type  # Either "filler" or "joiner"
         self.name = name  # Name
         self.year = year  # Class level (freshman, sophomore, ...)
         self.dob = dob  # String representation of birthday (MM/DD/YYYY)

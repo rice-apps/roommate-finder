@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+    	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    	<!--Fonts-->
+		<link href='http://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+
+        <!--jQuery-->
+        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+
+        <!--Bootstrap v3, retrieved from a third party CDN-->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+        <!--Pace.js and associated stylesheet-->
+        <script src="../static/js/pace.min.js"></script>
+        <link rel="stylesheet" href="../static/css/pace.css">
+        <script src="../static/js/splash-fade.js"></script>
+
+        <!--Fancybox-->
+        <link rel="stylesheet" href="../static/css/fancybox.css?v=2.1.5" type="text/css" media="screen" />
+        <script type="text/javascript" src="../static/js/fancybox.pack.js?v=2.1.5"></script>
+
+		<!--Roommate Finder stylesheet-->
+		<link type="text/css" rel="stylesheet" href="/static/stylesheet.css">
+
+        <title>{% if data.listing %}listing {{ data.listing.id }}{% else %}listing not found{% endif %} | roommate finder | rice university</title>
+
+        <!--Attach Fancybox on page load-->
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $(".fancybox").fancybox({
+                helpers: {
+                    overlay: {
+                        css: {
+                            'background': 'rgba(0, 0, 0, 0.7)'
+                        }
+                    }
+                }
+            });
+            });
+        </script>
+
+        <!--Override some CSS properties-->
+		<style type="text/css">
+            body {
+                background: #F5F5F5;
+                margin-top: 180px;
+                margin-bottom: 150px;
+            }
+            #content {
+                margin-left: 10%;
+            }
+            img.photo {
+                max-width: 300px;
+                max-height: 300px;
+            }
+            p.heading {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 700;
+				letter-spacing: 1px;
+                line-height: 70px;
+				font-size: 70px;
+				color: #171717;
+            }
+            p.subheading {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+				font-size: 20px;
+				color: #171717;
+            }
+            p.subheading2 {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 20px;
+				color: #171717;
+            }
+            p.fieldtitle {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 16px;
+				color: #171717;
+            }
+            span.pagesection {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 13px;
+				color: #EDEDED;
+			}
+            span.pagesectionbold {
+				font-family: 'Oxygen', sans-serif;
+				font-weight: 700;
+				letter-spacing: 1px;
+				font-size: 13px;
+				color: #EDEDED;
+			}
+            #connect a:link {
+				color: #17657A;
+				text-decoration: none;
+			}
+			#connect a:hover {
+				color: #318FA8;
+				text-decoration: none;
+				border-bottom: 2px solid #318FA8;
+			}
+			#connect a:visited {
+				color: #17657A;
+				text-decoration: none;
+			}
+			#connect a:active {
+				color: #17657A;
+				text-decoration: none;
+			}
+            #delete a:link {
+				color: #CC2323;
+				text-decoration: none;
+			}
+			#delete a:hover {
+				color: #9E0E0E;
+				text-decoration: none;
+				border-bottom: 2px solid #9E0E0E;
+			}
+			#delete a:visited {
+				color: #CC2323;
+				text-decoration: none;
+			}
+			#delete a:active {
+				color: #CC2323;
+				text-decoration: none;
+			}
+        </style>
+	</head>
+
+	<body>
+        <div id="splash" class="visible">
+            <div id="splashlogo">
+                <img src="../static/graphics/logo_text_invert.png" width="600px" height="120px" />
+            </div>
+        </div>
+
+		<div id="headercontainer">
+            <table width="100%" height="60px">
+                <tr>
+                    <td width="10%"></td>
+                    <td width="40%" valign="middle">
+                        <a href="../"><img src="../static/graphics/logo.png" width="300px" height="60px" border="0" /></a>
+                    </td>
+                    <td width="40%" valign="bottom">
+                        <div id="links"><p align="right">WELCOME, {{ data.profile.name.split(" ")[0] | upper}} | <a href="/">FIND ROOMMATES</a> | <a href="/create_listing">CREATE A NEW LISTING</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p></div>
+                    </td>
+                    <td width="10%"></td>
+                </tr>
+            </table>
+		</div>
+        <div id="headercontainer2">
+			<div id="header">
+                {% if data.listing %}
+            	    <div id="links"><p><a href=""><span class="pagesectionbold">{{ data.listing.apartment_name | upper }} [{{ data.net_id_uppercase }}]</span></a> · <a href="/user/{{ data.poster.net_id }}"><span class="pagesection">POSTED BY {{ data.poster.name | upper }}</span></a></div>
+                {% else %}
+                    <div id="links"><p><a href=""><span class="pagesectionbold">LISTING ID {{ data.id }}</span></a></div>
+                {% endif %}
+			</div>
+		</div>
+
+        <div id="content">
+            {% if data.listing %}
+                <p class="heading">{{ data.listing.apartment_name }}</p>
+                <p class="subheading">POSTED BY {{ data.poster.name }} ON {{ data.listing.timestamp }}</p>
+                <br/><br/>
+                <table>
+                    <tr>
+                        <td width="1px" valign="top">
+                            {% if data.listing.photo != None %}
+                                <a class="fancybox" rel="group" href="../photos/listings/{{ data.listing.photo }}"><img
+                                        class="photo" src="../photos/{{ data.listing.photo }}" alt=""/></a>
+                            {% endif %}
+                        </td>
+                        <!--Padding between photo and content, if photo exists.-->
+                        {% if data.listing.photo != None %}
+                            <td width="70px"></td>
+                        {% endif %}
+                        <td width="300px" valign="top">
+                            <p class="subheading">LISTING DETAILS</p>
+
+                            <p class="fieldtitle">LOCATION</p>
+
+                            <p class="text">{{ data.listing.address_line_1 }}</p>
+                            <p class="text">{{ data.listing.address_line_2 }}</p>
+                            <p class="text">{[ listing.distance ]} mi from Rice</p>
+                            <!--TODO: Google Maps API-->
+                            <br/>
+
+                            <p class="fieldtitle">RENT</p>
+
+                            <p class="text">${{ data.listing.rent }}/month</p>
+                            <p class="text">{{ data.listing.rent_details }}</p>
+                            <br/>
+
+                            <p class="fieldtitle">BIO</p>
+
+                            <p class="text">{{ data.profile.bio }}</p>
+                        </td>
+                        <td width="70px"></td>
+                        <td width="400px">
+                            <p class="subheading">ADDITIONAL INFORMATION</p>
+                            <p class="text">{{ data.listing.additional_information }}</p>
+                        </td>
+                        <td width="70px"></td>
+                        <td width="100px" valign="top">
+                            <p class="subheading">NEXT STEPS</p>
+
+                            <div id="connect">
+                                <p class="text"><a target="_blank" href="/user/{[ listing.poster_netid ]}">View {[ listing.poster_name.split(" ")[0] ]}'s profile</a></p>
+                                <p class="text"><a href="#">Send {[ listing.poster_name.split(" ")[0] ]} a notification that you're interested</a></p>
+                                <p class="text"><a href="mailto:{[ listing.poster_netid ]}@rice.edu">Email {[ listing.poster_name ]} directly</a></p>
+                            </div
+                        </td>
+                    </tr>
+                </table>
+            {% else %}
+                <p class="heading">LISTING {{ data.id | upper }} NOT FOUND</p>
+                <p class="subheading2">Either this listing doesn't exist, or you broke our application. Please <a href="mailto:kevinlin@rice.edu">tell us about it</a>, so that we can get on fixing it.</p>
+            {% endif %}
+        </div>
+
+        <div id="footercontainer">
+			<div id="footer">
+            	<table width="100%">
+                	<tr>
+                    	<td>
+                        	<p class="footer">A PROJECT OF RICE APPS, 2014</p>
+                        </td>
+                        <td>
+                        	<p class="footer" align="right"><a href="/about">ABOUT ROOMMATE FINDER</a> | <a href="/privacy_policy">PRIVACY POLICY</a> | <a href="https://github.com/rice-apps/roommate-finder">GITHUB SOURCE</a> | <a href="http://riceapps.org">RICE APPS</a> | <a href="http://www.rice.edu">RICE UNIVERSITY</a></p>
+                        </td>
+                    </tr>
+                </table>
+			</div>
+		</div>
+	</body>
+</html>
