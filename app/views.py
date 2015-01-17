@@ -52,7 +52,18 @@ def index():
 
 @app.route('/about')
 def about():
-    return app.send_static_file('about.html')
+    """
+    About page. Code below checks if user is logged in and exists in DB.
+    """
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    user = Profile.query.filter_by(net_id=net_id).first()
+    if net_id and user:
+        # Appropriately package the user's data if the user is logged in and has a profile set up
+        data = {"net_id": net_id, "profile": user}
+        return render_template('about.html', data=data)
+    else:
+        # Return the same page, but with null data
+        return render_template('about.html', data={"net_id": None, "profile": None})
 
 
 @app.route('/photos/<path:filename>')
@@ -169,6 +180,21 @@ def my_postings():
     else:
         index()
 
+@app.route('/privacy_policy')
+def privacy_policy():
+    """
+    Privacy policy page.
+    """
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    user = Profile.query.filter_by(net_id=net_id).first()
+    if net_id and user:
+        # Appropriately package the user's data if the user is logged in and has a profile set up
+        data = {"net_id": net_id, "profile": user}
+        return render_template('privacy_policy.html', data=data)
+    else:
+        # Return the same page, but with null data
+        return render_template('privacy_policy.html', data={"net_id": None, "profile": None})
+
 
 @app.route('/user/<path:path>')
 def user_profile(path):
@@ -183,14 +209,9 @@ def user_profile(path):
     user = Profile.query.filter_by(net_id=path).first()
     # Stylistic typographic choices: uppercase and lowercase versions
     # I'm sure there's an easier way to do this
-    data = {}
-    data["profile"] = user
-    data["net_id"] = path
+    data = {"profile": user, "net_id": path, "net_id_uppercase": path.upper(), "net_id_lowercase": path.lower(), "logged_in_net_id": login}
     # Meh; too many net ID's to keep track of...
-    data["logged_in_net_id"] = login
-    if user is not None:
-        data["net_id_uppercase"] = path.upper()
-        data["net_id_lowercase"] = path.lower()
+    if user:
         data["name_uppercase"] = user.name.upper()
         data["name_lowercase"] = user.name.lower()
         data["name_first_uppercase"] = str(user.name).split()[0].upper()
@@ -199,10 +220,7 @@ def user_profile(path):
         data["year_uppercase"] = user.year.upper()
         data["year_lowercase"] = user.year.lower()
         data["age"] = compute_age(user.dob)
-        return render_template('user.html', data=data)
-    else:
-        # If user doesn't exist, profile key will map to None.
-        return render_template('user_not_exists.html', data=data)
+    return render_template('user.html', data=data)
 
 
 def compute_age(dob):
@@ -221,3 +239,9 @@ def compute_age(dob):
 @lm.user_loader
 def load_user(id):
     return Profile.query.get(int(id))
+
+
+# ERROR HANDLERS
+@app.errorhandler(500)
+def page_not_found(e):
+    return app.send_static_file('500.html'), 500
