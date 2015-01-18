@@ -31,6 +31,12 @@ roommateFinder.controller("listingsControl", function($scope, $http) {
                 return false;
             if ($scope.filterByAmenities["pool"] && $scope.filterByAmenities["pool"].toString() != listing.amenities_pool)
                 return false;
+            if ($scope.filterByAmenities["pet_friendly"] && $scope.filterByAmenities["pet_friendly"].toString() != listing.amenities_pet_friendly)
+                return false;
+            if ($scope.filterByAmenities["computer_room"] && $scope.filterByAmenities["computer_room"].toString() != listing.amenities_computer_room)
+                return false;
+            if ($scope.filterByAmenities["trash_pickup_services"] && $scope.filterByAmenities["trash_pickup_services"].toString() != listing.amenities_trash_pickup_services)
+                return false;
             return true;
         }
     };

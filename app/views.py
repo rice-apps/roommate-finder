@@ -45,7 +45,8 @@ def index():
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
     user = Profile.query.filter_by(net_id=net_id).first()
     if net_id is not None and user is not None:
-        return redirect('/search')
+        data = {"net_id": net_id, "profile": user}
+        return render_template('action.html', data=data)
     else:
         return app.send_static_file('intro.html')
 
@@ -205,6 +206,34 @@ def create_listing():
         pass
 
 
+@app.route('/action')
+def action():
+    """
+    Action page.
+    """
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    if net_id is not None:
+        user = Profile.query.filter_by(net_id=net_id).first()
+        data = {"net_id": net_id, "profile": user}
+        return render_template('action.html', data=data)
+    else:
+        index()
+
+
+@app.route('/users')
+def users():
+    """
+    Browse users page.
+    """
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    if net_id is not None:
+        user = Profile.query.filter_by(net_id=net_id).first()
+        data = {"net_id": net_id, "profile": user}
+        return render_template('users_list.html', data=data)
+    else:
+        index()
+
+
 @app.route('/search')
 def search():
     """
@@ -237,6 +266,7 @@ def new_account():
         return render_template("profile_creation.html", data=data)
     else:
         return redirect('/my_profile')
+
 
 @app.route('/my_profile')
 def my_profile():
