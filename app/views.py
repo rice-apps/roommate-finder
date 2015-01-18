@@ -9,7 +9,7 @@ from flask import render_template, session, send_from_directory
 from werkzeug.utils import redirect
 
 from app import app, lm, db
-from app.models import Profile
+from app.models import Profile, Listing
 
 
 # Server upload folder - do not change
@@ -342,12 +342,11 @@ def listing_details(ID):
     if login is None:
         return redirect("/login", code=302)
     # Get the requested listing from the database
-    # listing = Listing.query.filter_by(id=ID).first()
-    listing = None
+    listing = Listing.query.filter_by(id=ID).first()
     if not listing:
         error = "This listing doesn't exist!"
     else:
-        poster = Profile.query.filter_by(net_id=listing.net_id).first()
+        poster = Profile.query.filter_by(net_id=listing.poster_netid).first()
     data = {"net_id": login, "profile": user, "id": ID, "listing": listing, "error": error, "poster": poster}
     return render_template('listing_detail.html', data=data)
 
