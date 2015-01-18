@@ -9,7 +9,7 @@ from flask import render_template, session, request
 import requests
 from werkzeug.utils import secure_filename, redirect
 
-from app import app, db
+from app import app, db, email
 from app.models import Profile
 
 
@@ -76,6 +76,9 @@ def create_user():
     # Add this new user to the database
     db.session.add(user)
     db.session.commit()
+
+    # Send him or her a welcome email
+    email.welcome_email(values["net_id"])
 
     return redirect('/get_started')
 

@@ -14,12 +14,7 @@ app.config["MAIL_USERNAME"] = "roommatefinder@kevinlin.info"
 app.config["MAIL_PASSWORD"] = "riceapps"
 
 
-@app.route('/email_test')
-def email_test():
-    welcome_email("kl38", "contact@kevinlin.info")
-
-
-def welcome_email(net_id, recipient):
+def welcome_email(net_id):
     """
     Welcome email sent to the user after he/she first creates an account.
 
@@ -28,7 +23,8 @@ def welcome_email(net_id, recipient):
     recipient: Email address of the recipient
     """
     user = Profile.query.filter_by(net_id=net_id).first()
-    msg = Message("Welcome to Roommate Finder.", sender=("Rice Roommate Finder", "roommatefinder@rice.edu"), recipients=[recipient])
+    msg = Message("Welcome to Roommate Finder.", sender=("Rice Roommate Finder", "roommatefinder@rice.edu"))
+    msg.add_recipient((user.name, "" + net_id + "@rice.edu"))
     msg.html = """
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" ng-app="roommateFinder">
