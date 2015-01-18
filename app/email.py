@@ -14,6 +14,11 @@ app.config["MAIL_USERNAME"] = "roommatefinder@kevinlin.info"
 app.config["MAIL_PASSWORD"] = "riceapps"
 
 
+@app.route('/email_test')
+def email_test():
+    welcome_email("kl38", "contact@kevinlin.info")
+
+
 def welcome_email(net_id, recipient):
     """
     Welcome email sent to the user after he/she first creates an account.
