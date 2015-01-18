@@ -166,7 +166,7 @@ def interest_notification(joiner_netid, poster_netid, listing_id):
     listing = Listing.query.filter_by(id=listing_id).first()
 
     # Message sent to poster
-    poster_msg = Message("Roommate Finder - someone is interested!", sender=("Rice Roommate Finder", "roommatefinder@rice.edu"), reply_to="" + joiner_netid + "@rice.edu")
+    poster_msg = Message("Roommate Finder - Someone is interested!", sender=("Rice Roommate Finder", "roommatefinder@rice.edu"), reply_to="" + joiner_netid + "@rice.edu")
     poster_msg.add_recipient((poster.name, "" + poster_netid + "@rice.edu"))
     poster_msg.html = """
 <!DOCTYPE html>
@@ -262,7 +262,7 @@ def interest_notification(joiner_netid, poster_netid, listing_id):
                     <p class="subheading">Someone wants to let you know that they're interested in one of your listings.</p>
                     <br/><br/>
                     <div class="link">
-                        <p class="text"><a href="http://roommatefinder.riceapps.org/user/""" + joiner_netid + """">""" + joiner.name + " [" + joiner_netid + "] " + """</a> sent you a notification that he or she is interested in your listing <a href="http://roommatefinder.riceapps.org/listing/""" + listing_id + """">""" + listing.apartment_name + """</a> that you posted on """ + listing.timestamp + """.</p>
+                        <p class="text"><a href="http://roommatefinder.riceapps.org/user/""" + joiner_netid + """">""" + joiner.name + " [" + joiner_netid + "]" + """</a> sent you a notification that he or she is interested in your listing <a href="http://roommatefinder.riceapps.org/listing/""" + listing_id + """">""" + listing.apartment_name + """</a> that you posted on """ + listing.timestamp + """.</p>
                     </div>
                     <br/>
                     <p class="text">We'll let you two take care of things from here. You can simply reply to this email, and it will be delivered to """ + joiner.name.split(" ")[0] + """'s Rice email address.</p>
@@ -284,7 +284,7 @@ def interest_notification(joiner_netid, poster_netid, listing_id):
     """
 
     # Message sent to joiner
-    joiner_msg = Message("Roommate Finder - you've sent " + poster.name.split(" ")[0] + " a notification of interest", sender=("Rice Roommate Finder", "roommatefinder@rice.edu"))
+    joiner_msg = Message("Roommate Finder - You've sent " + poster.name.split(" ")[0] + " a notification of interest", sender=("Rice Roommate Finder", "roommatefinder@rice.edu"))
     joiner_msg.add_recipient((joiner.name, "" + joiner_netid + "@rice.edu"))
     joiner_msg.html = """
 <!DOCTYPE html>
@@ -380,7 +380,7 @@ def interest_notification(joiner_netid, poster_netid, listing_id):
                     <p class="subheading">This email confirms that we've sent """ + poster.name.split(" ")[0] + """ a notification that you're interested in one of his or her listings. Here's a copy of the notification we sent """ + poster.name.split(" ")[0] + """:</p>
                     <br/><br/>
                     <div class="link">
-                        <p class="text"><a href="http://roommatefinder.riceapps.org/user/""" + joiner_netid + """">""" + joiner.name + " [" + joiner_netid + "] " + """</a> sent you a notification that he or she is interested in your listing <a href="http://roommatefinder.riceapps.org/listing/""" + listing_id + """">""" + listing.apartment_name + """</a> that you posted on """ + listing.timestamp + """.</p>
+                        <p class="text"><a href="http://roommatefinder.riceapps.org/user/""" + joiner_netid + """">""" + joiner.name + " [" + joiner_netid + "]" + """</a> sent you a notification that he or she is interested in your listing <a href="http://roommatefinder.riceapps.org/listing/""" + listing_id + """">""" + listing.apartment_name + """</a> that you posted on """ + listing.timestamp + """.</p>
                     </div>
                     <br/>
                     <p class="text">We'll let you two take care of things from here. You can simply reply to this email, and it will be delivered to """ + joiner.name.split(" ")[0] + """'s Rice email address.</p>
