@@ -166,9 +166,9 @@ def interest_notification(joiner_netid, poster_netid, listing_id):
     listing = Listing.query.filter_by(id=listing_id).first()
 
     # Message sent to poster
-    msg = Message("Roommate Finder - someone is interested!", sender=("Rice Roommate Finder", "roommatefinder@rice.edu"), reply_to="" + joiner_netid + "@rice.edu")
-    msg.add_recipient((poster.name, "" + poster_netid + "@rice.edu"))
-    msg.html = """
+    poster_msg = Message("Roommate Finder - someone is interested!", sender=("Rice Roommate Finder", "roommatefinder@rice.edu"), reply_to="" + joiner_netid + "@rice.edu")
+    poster_msg.add_recipient((poster.name, "" + poster_netid + "@rice.edu"))
+    poster_msg.html = """
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" ng-app="roommateFinder">
     <head>
@@ -284,9 +284,9 @@ def interest_notification(joiner_netid, poster_netid, listing_id):
     """
 
     # Message sent to joiner
-    msg = Message("Roommate Finder - you've sent " + poster.name.split(" ")[0] + " a notification of interest", sender=("Rice Roommate Finder", "roommatefinder@rice.edu"))
-    msg.add_recipient((joiner.name, "" + joiner_netid + "@rice.edu"))
-    msg.html = """
+    joiner_msg = Message("Roommate Finder - you've sent " + poster.name.split(" ")[0] + " a notification of interest", sender=("Rice Roommate Finder", "roommatefinder@rice.edu"))
+    joiner_msg.add_recipient((joiner.name, "" + joiner_netid + "@rice.edu"))
+    joiner_msg.html = """
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" ng-app="roommateFinder">
     <head>
@@ -400,3 +400,6 @@ def interest_notification(joiner_netid, poster_netid, listing_id):
     </body>
 </html>
     """
+
+    mail.send(poster_msg)
+    mail.send(joiner_msg)
