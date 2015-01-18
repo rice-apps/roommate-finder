@@ -114,10 +114,10 @@ def welcome_email(net_id, recipient):
     <body>
         <table>
             <tr>
-                <td width="15%"></td>
-                <td width="70%">
+                <td width="20%"></td>
+                <td width="60%">
                     <br/><br/>
-                    <img src="http://roommatefinder.riceapps.org/static/graphics/logo.png" width="375px" height="75px" style="height: 75px; width: 375px;" />
+                    <img src="http://roommatefinder.riceapps.org/static/graphics/logo_email.png" width="375px" height="75px" style="height: 75px; width: 375px;" />
                     <br/><br/><br/>
                     <p class="heading">Hey """ + user.name.split(" ")[0] + """.</p>
                     <p class="subheading">Welcome to Roommate Finder.</p>
@@ -143,8 +143,7 @@ def welcome_email(net_id, recipient):
                     </div>
                     <br/><br/><br/><br/><br/>
                 </td>
-                <td width="15%"></td>
-                <td width="15%"></td>
+                <td width="20%"></td>
             </tr>
         </table>
     </body>
