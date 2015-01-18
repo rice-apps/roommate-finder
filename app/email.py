@@ -46,12 +46,6 @@ def welcome_email(net_id, recipient):
             }
             body {
                 background-color: #1F2021;
-                margin-top: 40px;
-                margin-bottom: 60px;
-            }
-            #content {
-                margin-left: 10%;
-                margin-right: 10%;
             }
             p.heading {
                 font-family: 'Oxygen', sans-serif;
@@ -118,28 +112,41 @@ def welcome_email(net_id, recipient):
         </style>
     </head>
     <body>
-        <div id="content" class="link">
-            <img src="http://roommatefinder.riceapps.org/static/graphics/logo.png" width="375px" height="75px" />
-            <br/><br/><br/>
-            <p class="heading">Hey """ + user.name.split(" ")[0] + """.</p>
-            <p class="subheading">Welcome to Roommate Finder.</p>
-            <br/><br/>
-            <p class="text">Roommate Finder is designed to ease the process of finding off campus roommates. Thanks for joining, and we hope you find it useful.</p>
-            <br/>
-            <p class="text">Here are some helpful links to help you get started:</p>
-            <p class="text"><a href="http://roommatefinder.riceapps.org/search">Browse posted listings</a> - Look at listings that others have already posted on Roommate Finder.</p>
-            <p class="text"><a href="http://roommatefinder.riceapps.org/create_listing">Post a listing</a> - Have an apartment or planning to rent one? Create a Craigslist-style listing to see if others want to join you.</p>
-            <p class="text"><a href="http://roommatefinder.riceapps.org/users">Browse other users</a> - See other users of Roommate Finder, and possibly get in touch with someone you think you'd like to share an apartment with.</p>
-            <p class="text"><a href="http://roommatefinder.riceapps.org/my_profile">Edit your profile</a> - Link your Facebook account or add/edit your profile information. We encourage you to be as detailed as you can!</p>
-            <br/>
-            <p class="text">Don't hesistate to <a href="mailto:kevinlin@rice.edu">email us</a> if you have any questions.</p>
-            <br/>
-            <p class="text">Sincerely,</p>
-            <p class="text">The Roommate Finder team, Rice Apps</p>
-            <br/><br/><br/><br/>
-            <p class="footer">ROOMATE FINDER, A PROJECT OF RICE APPS, 2015</p>
-            <p class="footer footerlink"><a href="http://roommatefinder.riceapps.org/about">ABOUT</a> | <a href="http://roommatefinder.riceapps.org/privacy_policy">PRIVACY POLICY</a> | <a href="mailto:kevinlin@rice.edu">CONTACT</a></p>
-        </div>
+        <table>
+            <tr>
+                <td width="15%"></td>
+                <td width="70%">
+                    <br/><br/>
+                    <img src="http://roommatefinder.riceapps.org/static/graphics/logo.png" width="375px" height="75px" style="height: 75px; width: 375px;" />
+                    <br/><br/><br/>
+                    <p class="heading">Hey """ + user.name.split(" ")[0] + """.</p>
+                    <p class="subheading">Welcome to Roommate Finder.</p>
+                    <br/><br/>
+                    <p class="text">Roommate Finder is designed to ease the process of finding off campus roommates. Thanks for joining, and we hope you find it useful.</p>
+                    <br/>
+                    <div class="link">
+                        <p class="text">Here are some helpful links to help you get started:</p>
+                        <p class="text"><a href="http://roommatefinder.riceapps.org/search">Browse posted listings</a> - Look at listings that others have already posted on Roommate Finder.</p>
+                        <p class="text"><a href="http://roommatefinder.riceapps.org/create_listing">Post a listing</a> - Have an apartment or planning to rent one? Create a Craigslist-style listing to see if others want to join you.</p>
+                        <p class="text"><a href="http://roommatefinder.riceapps.org/users">Browse other users</a> - See other users of Roommate Finder, and possibly get in touch with someone you think you'd like to share an apartment with.</p>
+                        <p class="text"><a href="http://roommatefinder.riceapps.org/my_profile">Edit your profile</a> - Link your Facebook account or add/edit your profile information. We encourage you to be as detailed as you can!</p>
+                        <br/>
+                        <p class="text">Don't hesistate to <a href="mailto:kevinlin@rice.edu">email us</a> if you have any questions.</p>
+                    </div>
+                    <br/>
+                    <p class="text">Sincerely,</p>
+                    <p class="text">The Roommate Finder team, Rice Apps</p>
+                    <br/><br/><br/>
+                    <p class="footer">ROOMATE FINDER, A PROJECT OF RICE APPS, 2015</p>
+                    <div class="footerlink">
+                        <p class="footer"><a href="http://roommatefinder.riceapps.org/about">ABOUT</a> | <a href="http://roommatefinder.riceapps.org/privacy_policy">PRIVACY POLICY</a> | <a href="mailto:kevinlin@rice.edu">CONTACT</a></p>
+                    </div>
+                    <br/><br/><br/><br/><br/>
+                </td>
+                <td width="15%"></td>
+                <td width="15%"></td>
+            </tr>
+        </table>
     </body>
 </html>
     """
