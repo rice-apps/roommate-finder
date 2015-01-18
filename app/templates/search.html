@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="roommateFinder">
 	<head>
     	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
@@ -8,40 +8,73 @@
 		<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
 
         <!--jQuery, required for some functions of Bootstrap-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
 
         <!--Bootstrap v3, retrieved from a third party CDN-->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 
-        <!--Date Time Picker-->
-        <link rel="stylesheet" href="http://eonasdan.github.io/bootstrap-datetimepicker/content/bootstrap-datetimepicker.css">
-        <script type="text/javascript" src="http://momentjs.com/downloads/moment.js"></script>
-        <script type="text/javascript" src="https://raw.githubusercontent.com/Eonasdan/bootstrap-datetimepicker/master/build/js/bootstrap-datetimepicker.min.js"></script>
+        <!--Pace.js and associated stylesheet-->
+        <script src="../static/js/pace.min.js"></script>
+        <link rel="stylesheet" href="../static/css/pace.css">
+        <script src="../static/js/splash-fade.js"></script>
+
+        <!--SQL.js, for interaction between AngularJS and the SQLite database-->
+        <script src="../static/js/SQL.js"></script>
+
+        <!--Angular.js and controllers-->
+        <script src="../static/js/angular.min.js"></script>
+        <script src="../static/js/search.js"></script>
+
+        <!--Fancybox-->
+        <link rel="stylesheet" href="../static/css/fancybox.css?v=2.1.5" type="text/css" media="screen" />
+        <script type="text/javascript" src="../static/js/fancybox.pack.js?v=2.1.5"></script>
 
 		<!--Roommate Finder stylesheet-->
 		<link type="text/css" rel="stylesheet" href="static/stylesheet.css">
 
-        <title>my profile | roommate finder | rice university</title>
+        <title>find roommates | roommate finder | rice university</title>
+
+        <!--Controls position-fixing the search tools section after scrolling a certain amount-->
+        <script type="text/javascript">
+            $(window).scroll(function () {
+                var scrollPosition = 170; // hard-coded
+                if ($(this).scrollTop() > scrollPosition) {
+                    // Fix the position of the div
+                    $("#searchtools").addClass("fixed");
+                }
+                else {
+                    // "Unfix" the position of the div
+                    $("#searchtools").removeClass("fixed");
+                }
+            });
+        </script>
 
         <!--Override some CSS properties-->
 		<style type="text/css">
             body {
                 background: #F5F5F5;
-                margin-top: 150px;
+                margin-top: 110px;
                 margin-bottom: 150px;
             }
             #content {
                 margin-left: 10%;
+                margin-right: 10%;
             }
-            #preview {
-                max-width: 150px;
-                max-height: 150px;
+            table.listing {
+                /*box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);*/
+            }
+            .fixed {
+                top: 120px;
+                position: fixed;
+                width: 16%; /* 20% of 80%, since the table width is 20% of the content div which is 80% of the page */
+            }
+            img.thumbnail {
+                max-width: 140px;
             }
             img.preview {
-                max-width: 150px;
-                max-height: 150px;
+                max-width: 400px;
             }
             p.heading {
                 font-family: 'Oxygen', sans-serif;
@@ -58,81 +91,110 @@
 				font-size: 20px;
 				color: #171717;
             }
-            p.fieldname {
-				font-family: 'Oxygen', sans-serif;
-				font-weight: 300;
-				letter-spacing: 1px;
-                line-height: 1px;
-				font-size: 14px;
-				color: #171717;
-			}
-            p.button {
-				font-family: 'Oxygen', sans-serif;
+            p.sectionheading {
+                font-family: 'Oswald', sans-serif;
 				font-weight: 400;
 				letter-spacing: 1px;
-                line-height: 18px;
-				font-size: 20px;
-				color: #EDEDED;
-			}
-            p.delete {
+				font-size: 16px;
+				color: #171717;
+            }
+            p.text {
                 font-family: 'Oxygen', sans-serif;
 				font-weight: 300;
+				letter-spacing: 1px;
+				font-size: 17px;
+				color: #171717;
+            }
+            p.text2 {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+                line-height: 10px;
+				font-size: 13px;
+				color: #171717;
+            }
+            p.apartmenttitle {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 700;
+				letter-spacing: 1px;
+                line-height: 15px;
+				font-size: 18px;
+				color: #171717;
+            }
+            p.apartmentdetails {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 300;
+				letter-spacing: 1px;
+                line-height: 10px;
 				font-size: 12px;
-				color: #CC2323;
+				color: #171717;
             }
-            #delete a:link {
-				color: #CC2323;
-				text-decoration: none;
-			}
-			#delete a:hover {
-				color: #9E0E0E;
-				text-decoration: none;
-				border-bottom: 2px solid #9E0E0E;
-			}
-			#delete a:visited {
-				color: #CC2323;
-				text-decoration: none;
-			}
-			#delete a:active {
-				color: #CC2323;
-				text-decoration: none;
-			}
+            span.boldapartmentdetails {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 700;
+				letter-spacing: 1px;
+                line-height: 10px;
+				font-size: 12px;
+				color: #171717;
+            }
+            p.detailsheading {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 700;
+				letter-spacing: 1px;
+                line-height: 15px;
+				font-size: 24px;
+				color: #171717;
+            }
+            p.detailssubheading {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+                line-height: 15px;
+				font-size: 14px;
+				color: #171717;
+            }
+            p.detailssection {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+                line-height: 16px;
+				font-size: 16px;
+				color: #171717;
+            }
+            p.detailstext {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+                line-height: 12px;
+				font-size: 13px;
+				color: #171717;
+            }
+            p.detailstext2 {
+                font-family: 'Oxygen', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+				font-size: 13px;
+				color: #171717;
+            }
         </style>
-
-        <!--Javascript-->
-        <script type="text/javascript">
-            function handleFiles(files) {
-                // Get existing image, if exists
-                var oldImage = document.getElementById("preview");
-                // Remove it from the div (so to replace it with the new image)
-                while (oldImage.firstChild) {
-                    oldImage.removeChild(oldImage.firstChild);
-                }
-                // Get the image selected by the user
-                var file = files[0];
-                var img = document.createElement("img");
-                img.classList.add("preview");
-                img.file = file;
-                // Add it to the div preview
-                preview.appendChild(img); // Assuming that "preview" is a the div output where the content will be displayed.
-                // Load image
-                var reader = new FileReader();
-                reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
-                reader.readAsDataURL(file);
-            }
-        </script>
 	</head>
 
 	<body>
+        <div id="splash" class="visible">
+            <div id="splashlogo">
+                <img src="../static/graphics/logo_text_invert.png" width="600px" height="120px" />
+            </div>
+        </div>
+
 		<div id="headercontainer">
             <table width="100%" height="60px">
                 <tr>
                     <td width="10%"></td>
-                    <td width="40%" valign="middle">
+                    <td width="30%" valign="middle">
                         <a href="../"><img src="../static/graphics/logo.png" width="300px" height="60px" border="0" /></a>
                     </td>
-                    <td width="40%" valign="bottom">
-                        <div id="links"><p align="right">WELCOME, {{ data.net_id }} | <a href="/">FIND ROOMMATES</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p></div>
+                    <td width="50%" valign="bottom">
+                        <div id="links"><p align="right">WELCOME, {{ data.profile.name.split(" ")[0] | upper}} | <a href="/">FIND ROOMMATES</a> | <a href="/create_listing">CREATE A NEW LISTING</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p></div>
                     </td>
                     <td width="10%"></td>
                 </tr>
@@ -140,9 +202,102 @@
 		</div>
 
         <div id="content">
-            <p class="heading">you're already logged in</p>
-            <p class="subheading">temporarily, go to /logout to log out</p>
-            <br/><br/>
+            <p class="heading">search for listings</p>
+            <p class="subheading">View listings posted by users of Roommate Finder</p>
+            <br/><br/><br/>
+            <table width="100%" ng-controller="listingsControl">
+                <tr>
+                    <!--Search tools-->
+                    <td width="20%" valign="top">
+                        <div id="searchtools">
+                            <p class="sectionheading">SEARCH TOOLS</p>
+
+                            <p class="text">Search by keyword:</p>
+                            <input name="search" class="form-control" type="text" ng-model="query" />
+                            <br/>
+
+                            <p class="text">Sort by:</p>
+                            <select class="form-control" ng-model="sortOrder">
+                                <option value="timestamp">Date posted</option>
+                                <option value="rent">Rent price</option>
+                                <option value="distance">Distance from Rice</option>
+                                <option value="property_size">Property size</option>
+                                <option value="number_roommates_needed">Number of roommates needed</option>
+                            </select>
+                            <br/>
+
+                            <p class="text">Filters:</p>
+                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['gym']"> Has gym</p>
+                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['pool']"> Has pool</p>
+                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['pet_friendly']"> Pet friendly</p>
+                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['computer_room']"> Has computer room(s)</p>
+                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['trash_pickup_services']"> Has trash pickup services</p>
+                        </div>
+                    </td>
+                    <td width="5%" valign="top"></td>
+
+                    <!--Listings-->
+                    <td width="30%" valign="top">
+                        <p class="sectionheading">LISTINGS</p>
+                        <div ng-repeat="listing in listings | filter:query | filter:amenitiesFilter() | orderBy:sortOrder">
+                            <a href="javascript:void(0);" ng-click="clicked(listing)">
+                                <table class="listing">
+                                    <tr>
+                                        <td valign="top">
+                                            <img class="thumbnail" ng-src="../photos/listings/{[ listing.photo ]}" />
+                                        </td>
+                                        <td width="10px"></td>
+                                        <td valign="top">
+                                            <p class="apartmenttitle">{[ listing.apartment_name | uppercase ]}</p>
+                                            <p class="apartmentdetails">Posted by <a href="/user/{[ listing.poster_netid ]}">{[ listing.poster_name ]} [{[ listing.poster_netid ]}]</a></p>
+                                            <p class="apartmentdetails">Distance from Rice: <span class="boldapartmentdetails">{[ listing.distance ]} mi</span></p>
+                                            <p class="apartmentdetails">Property size: <span class="boldapartmentdetails">{[ listing.property_size ]} sq ft</span></p>
+                                            <p class="apartmentdetails">Rent: <span class="boldapartmentdetails">${[ listing.rent ]}/month</span></p>
+                                            <p class="apartmentdetails">Seeking <span class="boldapartmentdetails">{[ listing.number_roommates_needed ]}</span> roommates</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </a>
+                            <div style="height:25px;"></div>
+                        </div>
+                    </td>
+                    <td width="5%" valign="top"></td>
+
+                    <!--Listing details-->
+                    <td width="40%" valign="top">
+                        <p class="sectionheading">LISTING DETAILS</p>
+                        <div ng-repeat="listing in listings" ng-show="showListing(listing)">
+                            <p class="text"><a href="/listing/{[ listing.id ]}">See full listing details</a></p>
+                            <!--TODO: Figure out horizontally scrolling images-->
+                            <div style="height:25px;"></div>
+                            <a class="fancybox" rel="group" href="../photos/listings/{[ listing.photo ]}"><img class="preview" ng-src="../photos/listings/{[ listing.photo ]}" /></a>
+                            <div style="height:25px;"></div>
+                            <p class="detailsheading">{[ listing.apartment_name | uppercase ]}</p>
+                            <p class="detailssubheading">Posted by <a href="/user/{[ listing.poster_netid ]}">{[ listing.poster_name ]} [{[ listing.poster_netid ]}]</a> on {[ listing.timestamp ]}</p>
+                            <br/>
+                            <br/>
+                            <!--TODO: Google Maps API-->
+                            <p class="detailssection">LOCATION</p>
+                            <p class="detailstext">{[ listing.address_line_1 ]}</p>
+                            <p class="detailstext">{[ listing.address_line_2 ]}</p>
+                            <p class="detailstext">{[ listing.distance ]} mi from Rice</p>
+                            <br/>
+                            <p class="detailssection">RENT</p>
+                            <p class="detailstext">${[ listing.rent ]}/month</p>
+                            <p class="detailstext">{[ listing.rent_details ]}</p>
+                            <br/>
+                            <p class="detailssection">ADDITIONAL INFORMATION</p>
+                            <p class="detailstext2">{[ listing.description ]}</p>
+                            <br/>
+                            <p class="detailssection">NEXT STEPS</p>
+                            <p class="detailstext"><a target="_blank" href="/listing/{[ listing.id ]}">View full listing details</a></p>
+                            <p class="detailstext"><a target="_blank" href="/user/{[ listing.poster_netid ]}">View {[ listing.poster_name.split(" ")[0] ]}'s profile</a></p>
+                            <p class="detailstext"><a href="#">Send {[ listing.poster_name.split(" ")[0] ]} a notification that you're interested</a></p>
+                            <p class="detailstext"><a href="mailto:{[ listing.poster_netid ]}@rice.edu">Email {[ listing.poster_name.split(" ")[0] ]} directly</a></p>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <div id="footercontainer">

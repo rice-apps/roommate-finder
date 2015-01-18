@@ -27,7 +27,7 @@
 		<!--Roommate Finder stylesheet-->
 		<link type="text/css" rel="stylesheet" href="/static/stylesheet.css">
 
-        <title>{% if data.profile %}{{ data.name_lowercase }}{% else %}user not found{% endif %} | roommate finder | rice university</title>
+        <title>{% if data.listing %}listing {{ data.listing.id }}{% else %}listing not found{% endif %} | roommate finder | rice university</title>
 
         <!--Attach Fancybox on page load-->
         <script type="text/javascript">
@@ -153,7 +153,7 @@
                         <a href="../"><img src="../static/graphics/logo.png" width="300px" height="60px" border="0" /></a>
                     </td>
                     <td width="40%" valign="bottom">
-                        <div id="links"><p align="right">WELCOME, {{ data.net_id }} | <a href="/">FIND ROOMMATES</a> | <a href="/create_listing">CREATE A NEW LISTING</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p></div>
+                        <div id="links"><p align="right">WELCOME, {{ data.profile.name.split(" ")[0] | upper}} | <a href="/">FIND ROOMMATES</a> | <a href="/create_listing">CREATE A NEW LISTING</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p></div>
                     </td>
                     <td width="10%"></td>
                 </tr>
@@ -161,42 +161,46 @@
 		</div>
         <div id="headercontainer2">
 			<div id="header">
-                {% if data.profile %}
-            	    <div id="links"><p><a href=""><span class="pagesectionbold">{{ data.name_uppercase }} [{{ data.net_id_uppercase }}]</span></a> · <a href="mailto:{{ data.net_id_lowercase }}@rice.edu"><span class="pagesection">EMAIL {{ data.name_first_uppercase }}</span></a>{% if data.profile.facebook %} · <a href="https://www.facebook.com/{{ data.profile.facebook }}"><span class="pagesection">GO TO {{ data.name_first_uppercase }}'S FACEBOOK PROFILE</span></a>{% endif %}</div>
+                {% if data.listing %}
+            	    <div id="links"><p><a href=""><span class="pagesectionbold">{{ data.listing.apartment_name | upper }} [{{ data.net_id_uppercase }}]</span></a> · <a href="/user/{{ data.poster.net_id }}"><span class="pagesection">POSTED BY {{ data.poster.name | upper }}</span></a></div>
                 {% else %}
-                    <div id="links"><p><a href=""><span class="pagesectionbold">{{ data.net_id_uppercase }}</span></a> · <a href="mailto:{{ data.net_id_lowercase }}@rice.edu"><span class="pagesection">EMAIL {{ data.net_id_uppercase }}</span></a></div>
+                    <div id="links"><p><a href=""><span class="pagesectionbold">LISTING ID {{ data.id }}</span></a></div>
                 {% endif %}
 			</div>
 		</div>
 
         <div id="content">
-            {% if data.profile %}
-                <p class="heading">{{ data.name_uppercase }}</p>
-                <p class="subheading">{{ data.year_uppercase }}, {{ data.college_uppercase }}</p>
+            {% if data.listing %}
+                <p class="heading">{{ data.listing.apartment_name }}</p>
+                <p class="subheading">POSTED BY {{ data.poster.name }} ON {{ data.listing.timestamp }}</p>
                 <br/><br/>
                 <table>
                     <tr>
                         <td width="1px" valign="top">
-                            {% if data.profile.photo != None %}
-                                <a class="fancybox" rel="group" href="../photos/{{ data.profile.photo }}"><img
-                                        class="photo" src="../photos/{{ data.profile.photo }}" alt=""/></a>
+                            {% if data.listing.photo != None %}
+                                <a class="fancybox" rel="group" href="../photos/listings/{{ data.listing.photo }}"><img
+                                        class="photo" src="../photos/{{ data.listing.photo }}" alt=""/></a>
                             {% endif %}
                         </td>
                         <!--Padding between photo and content, if photo exists.-->
-                        {% if data.profile.photo != None %}
+                        {% if data.listing.photo != None %}
                             <td width="70px"></td>
                         {% endif %}
-                        <td width="500px" valign="top">
-                            <p class="subheading">PROFILE</p>
+                        <td width="300px" valign="top">
+                            <p class="subheading">LISTING DETAILS</p>
 
-                            <p class="fieldtitle">AGE</p>
+                            <p class="fieldtitle">LOCATION</p>
 
-                            <p class="text">{{ data.age }}</p>
+                            <p class="text">{{ data.listing.address_line_1 }}</p>
+                            <p class="text">{{ data.listing.address_line_2 }}</p>
+                            <p class="text">{[ listing.distance ]} mi from Rice</p>
+                            <!--TODO: Google Maps API-->
                             <br/>
 
-                            <p class="fieldtitle">GENDER</p>
+                            <p class="fieldtitle">RENT</p>
 
-                            <p class="text">{{ data.profile.gender }}</p>
+                            <p class="text">${{ data.listing.rent }}/month</p>
+                            <p class="text">{{ data.listing.rent_details }}</p>
                             <br/>
 
                             <p class="fieldtitle">BIO</p>
@@ -204,24 +208,25 @@
                             <p class="text">{{ data.profile.bio }}</p>
                         </td>
                         <td width="70px"></td>
-                        <td width="300px" valign="top">
-                            <p class="subheading">CONNECT WITH {{ data.name_first_uppercase }}</p>
+                        <td width="400px">
+                            <p class="subheading">ADDITIONAL INFORMATION</p>
+                            <p class="text">{{ data.listing.additional_information }}</p>
+                        </td>
+                        <td width="70px"></td>
+                        <td width="100px" valign="top">
+                            <p class="subheading">NEXT STEPS</p>
 
-                            <div id="connect"><p class="text"><a
-                                    href="mailto:{{ data.net_id_lowercase }}@rice.edu">{{ data.net_id_lowercase }}@rice.edu</a>
-                            </p></div>
-                            {% if data.profile.facebook %}
-                                <div id="connect"><p class="text"><a
-                                        href="https://www.facebook.com/{{ data.profile.facebook }}">Facebook profile</a>
-                                </p></div>
-                            {% endif %}
+                            <div id="connect">
+                                <p class="text"><a target="_blank" href="/user/{[ listing.poster_netid ]}">View {[ listing.poster_name.split(" ")[0] ]}'s profile</a></p>
+                                <p class="text"><a href="#">Send {[ listing.poster_name.split(" ")[0] ]} a notification that you're interested</a></p>
+                                <p class="text"><a href="mailto:{[ listing.poster_netid ]}@rice.edu">Email {[ listing.poster_name ]} directly</a></p>
+                            </div
                         </td>
                     </tr>
                 </table>
             {% else %}
-                <p class="heading">USER {{ data.net_id_uppercase }} NOT FOUND</p>
-                <p class="subheading2">Either this person doesn't exist, or doesn't have a profile set up on Roommate
-                    Finder.</p>
+                <p class="heading">LISTING {{ data.id | upper }} NOT FOUND</p>
+                <p class="subheading2">Either this listing doesn't exist, or you broke our application. Please <a href="mailto:kevinlin@rice.edu">tell us about it</a>, so that we can get on fixing it.</p>
             {% endif %}
         </div>
 

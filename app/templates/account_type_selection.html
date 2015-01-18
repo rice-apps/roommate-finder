@@ -23,7 +23,7 @@
 		<!--Roommate Finder stylesheet-->
 		<link type="text/css" rel="stylesheet" href="../static/stylesheet.css">
         
-        <title>roommate finder | rice university</title>
+        <title>welcome | roommate finder | rice university</title>
 
         <!--Controls fading behavior of text elements-->
         <script type="text/javascript">
@@ -104,12 +104,11 @@
             #titlecontainer {
                 width: 100%;
                 height: 100vh;
-                margin-right: 10%;
             }
             #title {
                 margin-left: 10%;
                 margin-right: 10%;
-                padding-top: 15%;
+                padding-top: 10%;
             }
             #scroll {
                 position: absolute;
@@ -140,12 +139,30 @@
                 color: #EDEDED;
                 text-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
             }
+            p.subtitle {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 400;
+                letter-spacing: 2px;
+                line-height: 50px;
+                font-size: 60px;
+                color: #C9C9C9;
+                text-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+            }
             p.block {
                 font-family: 'Oxygen', sans-serif;
                 font-weight: 300;
                 letter-spacing: 2px;
                 line-height: 35px;
                 font-size: 30px;
+                color: #EDEDED;
+                text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            }
+            p.subblock {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 300;
+                letter-spacing: 2px;
+                line-height: 25px;
+                font-size: 18px;
                 color: #EDEDED;
                 text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
             }
@@ -307,7 +324,7 @@
                         <img src="../static/graphics/logo.png" width="300px" height="60px" />
                     </td>
                     <td width="40%" valign="bottom">
-                        <div id="links"><p align="right"><a id="scrolltotop" href="#">HOME</a> | <a href="about">ABOUT</a> | <a href="login">LOGIN WITH RICE NETID</a></p></div>
+                        <div id="links"><p align="right">WELCOME, {{ data.first_name | upper }} | <a href="/">HOME</a> | <a href="about">ABOUT</a></p></div>
                     </td>
                     <td width="10%"></td>
                 </tr>
@@ -316,90 +333,35 @@
 
         <div id="titlecontainer">
             <div id="title" class="hidden">
+                {% if data.first_name %}
+                    <p class="title" align="center">Hi {{ data.first_name }}.</p>
+                {% else %}
+                    <p class="title" align="center">Hi there.</p>
+                {% endif %}
+                <p class="subtitle" align="center">Welcome to Roommate Finder.</p>
+                <br/><br/><br/><br/>
+                <p class="block" align="center">Are you a filler or a joiner?</p>
+                <br/><br/>
                 <table width="100%">
                     <tr>
-                        <td width="50%" valign="middle">
-                            <p class="title">RICE</p>
-                            <p class="title">ROOMMATE</p>
-                            <p class="title">FINDER</p>
+                        <td width="20%"></td>
+                        <td width="20%" valign="top">
+                            <p class="block" align="center"><a href="/new_account">Filler</a></p>
+                            <p class="subblock" align="center">You already have an apartment, and you're looking for roommates to join you.</p>
                         </td>
-                        <td width="10%"></td>
-                        <td width="40%" valign="middle">
-                            <p class="block">Introducing Roommate Finder, the easy solution for students to find roommates at Rice University.</p>
-                            <br/>
-                            <p class="block">All you need is your Net ID.</p>
-                            <p class="block"><a href="/login">Get started now</a></p>
+                        <td width="20%"></td>
+                        <td width="20%" valign="top">
+                            <p class="block" align="center"><a href="/get_started">Joiner</a></p>
+                            <p class="subblock" align="center">You're looking to join someone who's looking for roommates.</p>
                         </td>
+                        <td width="20%"></td>
                     </tr>
                 </table>
             </div>
         </div>
 
         <div id="scroll" class="hidden">
-            <p align="center" class="scroll">SCROLL DOWN TO LEARN MORE</p>
-            <div class="rotate"><p align="center" class="scrollarrow">«</p></div>
-        </div>
-
-        <div id="contentcontainer">
-            <div id="block1">
-                <div style="height:100px;"></div>
-                <table width="100%">
-                    <tr>
-                        <td width="10%"></td>
-                        <td width="40%">
-                            <img src="http://www.cloudflaremanager.com/resources/graphics/compressed/introduction_2.png" height="300px">
-                        </td>
-                        <td width="50%" valign="top">
-                            <div class="blocktextright">
-                                <p class="blockheading">FINDING ROOMMATES IS EASY.</p>
-                                <br/>
-                                <p class="blocktext">Whether you're looking for an apartment or looking for roommates to fill your apartment, the Rice Roommate Finder web app makes it easy to find the perfect group of people. And best of all, it's totally free.</p>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div id="block2">
-                <div style="height:100px;"></div>
-                <div class="blocktextleft">
-                    <p class="blockheading2">SEARCH FOR ROOMMATES.</p>
-                    <br/>
-                    <p class="blocktext2">Looking to move off campus and need roommates? Search through postings of apartments other Rice students are trying to fill.</p>
-                </div>
-            </div>
-            <div id="block1">
-                <div style="height:100px;"></div>
-                <table width="100%">
-                    <tr>
-                        <td width="10%"></td>
-                        <td width="40%">
-                            <img src="http://www.cloudflaremanager.com/resources/graphics/compressed/introduction_2.png" height="300px">
-                        </td>
-                        <td width="50%" valign="top">
-                            <div class="blocktextright">
-                                <p class="blockheading">FILL YOUR APARTMENT.</p>
-                                <br/>
-                                <p class="blocktext">Need to fill your new apartment rent with roommates? Create public postings advertising your apartment--viewable only by Rice students.</p>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div id="block3">
-                <div style="height:100px;"></div>
-                <div class="blocktextleft">
-                    <p class="blockheading2">FOR RICE STUDENTS, BY RICE STUDENTS.</p>
-                    <br/>
-                    <p class="blocktext2">We're students, just like you. And we know that it can be difficult to find the right roommates. Roommate Finder solves that problem--it's made by Rice students, for Rice students.</p>
-                </div>
-            </div>
-            <div id="block4">
-                <div style="height:100px;"></div>
-                <center>
-                    <p class="subgetstarted">WHAT ARE YOU WAITING FOR?</p>
-                    <p class="getstarted"><a href="/login">Get started now</a></p>
-                </center>
-            </div>
+            <p align="center" class="subblock">Not sure? Don't worry, you can change these settings later.</p>
         </div>
 
 		<div id="footercontainer" class="hidden">

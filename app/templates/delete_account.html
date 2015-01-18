@@ -8,7 +8,7 @@
 		<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
 
         <!--jQuery, required for some functions of Bootstrap-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
 
         <!--Bootstrap v3, retrieved from a third party CDN-->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
@@ -171,7 +171,7 @@
             <p class="text">Note that you won't be able to retrieve your profile data or your postings after you delete your account.</p>
             <br/>
             <div id="delete">
-                <p class="delete"><a onclick="return confirmAction()" href="/deleteprofile?net_id={{ data.net_id }}">delete my account</a></p>
+                <p class="delete"><a onclick="return confirmAction()" href="/delete_profile?net_id={{ data.net_id }}">delete my account</a></p>
             </div>
         </div>
 

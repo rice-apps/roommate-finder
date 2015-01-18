@@ -241,6 +241,7 @@
             }
         </script>
 
+        <!--Custom Facebook integration functions-->
         <script type="text/javascript">
             // As the name implies, this is an onclick handler for pulling the user's profile image from Facebook.
             function getFacebookProfilePicture() {
@@ -267,9 +268,9 @@
             function disconnectFacebook() {
                     document.getElementById("facebook").value = "";
                     document.getElementById("facebooklogin").innerHTML = "<p class=\"facebook\">You've unlinked your Facebook account. Make sure to update your profile to save these changes.</p>";
-                    /*FB.logout(function (response) {
+                    FB.logout(function (response) {
                         console.log("Facebook logout success. Full response: " + JSON.stringify(response))
-                    });*/
+                    });
                     document.getElementById("getfacebookpicture").className = "hidden";
                 }
         </script>
@@ -278,6 +279,75 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 $('#dob').tooltip({'trigger': 'focus', 'title': 'We require your date of birth in order to determine your age. It will be hidden to other users.'});
+            });
+        </script>
+
+        <!--Filler/joiner radio button selector-->
+        <script type="text/javascript">
+            $(function (ready) {
+                $(document).ready(function () {
+                    {% if data.profile.account_type == "filler" %}
+                        $("#radiofiller").prop("checked", true);
+                        // Change asterisks
+                        document.getElementById("yearheader").innerHTML = "Year*";
+                        document.getElementById("dobheader").innerHTML = "Date of birth*";
+                        document.getElementById("genderheader").innerHTML = "Gender*";
+                        document.getElementById("collegeheader").innerHTML = "College*";
+
+                        // Change required attribute
+                        document.getElementById("year").required = true;
+                        document.getElementById("dob").required = true;
+                        document.getElementById("gender").required = true;
+                        document.getElementById("college").required = true;
+                    {% else %}
+                        $("#radiojoiner").prop("checked", true);
+                        // Change asterisks
+                        document.getElementById("yearheader").innerHTML = "Year";
+                        document.getElementById("dobheader").innerHTML = "Date of birth";
+                        document.getElementById("genderheader").innerHTML = "Gender";
+                        document.getElementById("collegeheader").innerHTML = "College";
+
+                        // Change required attribute
+                        document.getElementById("year").required = false;
+                        document.getElementById("dob").required = false;
+                        document.getElementById("gender").required = false;
+                        document.getElementById("college").required = false;
+                    {% endif %}
+                });
+            });
+        </script>
+
+        <!--Filler/joiner radio button event listeners-->
+        <script type="text/javascript">
+            $(function(ready) {
+                $(document).ready(function () {
+                    $("#radiojoiner").change(function () {
+                        // Change asterisks
+                        document.getElementById("yearheader").innerHTML = "Year";
+                        document.getElementById("dobheader").innerHTML = "Date of birth";
+                        document.getElementById("genderheader").innerHTML = "Gender";
+                        document.getElementById("collegeheader").innerHTML = "College";
+
+                        // Change required attribute
+                        document.getElementById("year").required = false;
+                        document.getElementById("dob").required = false;
+                        document.getElementById("gender").required = false;
+                        document.getElementById("college").required = false;
+                    });
+                    $("#radiofiller").change(function () {
+                        // Change asterisks
+                        document.getElementById("yearheader").innerHTML = "Year*";
+                        document.getElementById("dobheader").innerHTML = "Date of birth*";
+                        document.getElementById("genderheader").innerHTML = "Gender*";
+                        document.getElementById("collegeheader").innerHTML = "College*";
+
+                        // Change required attribute
+                        document.getElementById("year").required = true;
+                        document.getElementById("dob").required = true;
+                        document.getElementById("gender").required = true;
+                        document.getElementById("college").required = true;
+                    });
+                });
             });
         </script>
 
@@ -305,7 +375,7 @@
                         <a href="../"><img src="../static/graphics/logo.png" width="300px" height="60px" border="0" /></a>
                     </td>
                     <td width="40%" valign="bottom">
-                        <div id="links"><p align="right">WELCOME, {{ data.net_id }} | <a href="/">FIND ROOMMATES</a> | <a href="/create_listing">CREATE A NEW LISTING</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p></div>
+                        <div id="links"><p align="right">WELCOME, {{ data.profile.name.split(" ")[0] | upper}} | <a href="/">FIND ROOMMATES</a> | <a href="/create_listing">CREATE A NEW LISTING</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p></div>
                     </td>
                     <td width="10%"></td>
                 </tr>
@@ -324,12 +394,21 @@
             {% if data.error %}
                 <p class="error">{{ data.error }}</p><br/><br/>
             {% endif %}
-            <form action="/updateprofile" method="POST" enctype="multipart/form-data">
+            <form action="/update_profile" method="POST" enctype="multipart/form-data">
                 <div id="facebooklogin">
                     <p class="facebook">You can optionally log in with Facebook to connect your Facebook account. This makes it easier for potential roommates to communicate with you.</p>
                     <div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="false" onlogin="checkLoginState();"></div>
                 </div>
                 <table width="60%">
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">Account type*</p>
+                        </td>
+                        <td>
+                            <input id="radiofiller" type="radio" name="account_type" value="Filler" checked> Filler &nbsp;&nbsp;&nbsp;&nbsp;
+                            <input id="radiojoiner" type="radio" name="account_type" value="Joiner"> Joiner<br/><br/>
+                        </td>
+                    </tr>
                     <tr>
                         <td width="150px" valign="middle">
                             <p class="fieldname">Net ID*</p>
@@ -360,10 +439,10 @@
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Year*</p>
+                            <p id="yearheader" class="fieldname">Year*</p>
                         </td>
                         <td>
-                            <select class="form-control" type="text" name="year" autocomplete="off">
+                            <select class="form-control" type="text" id="year" name="year" autocomplete="off">
                                 <option {% if data.profile.year == "Freshman" %}selected{% endif %}>Freshman</option>
                                 <option {% if data.profile.year == "Sophomore" %}selected{% endif %}>Sophomore</option>
                                 <option {% if data.profile.year == "Junior" %}selected{% endif %}>Junior</option>
@@ -375,7 +454,7 @@
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Date of birth*</p>
+                            <p id="dobheader" class="fieldname">Date of birth*</p>
                         </td>
                         <td>
                             <div class="form-group">
@@ -396,7 +475,7 @@
                     <tr height="10px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Gender*</p>
+                            <p id="genderheader" class="fieldname">Gender*</p>
                         </td>
                         <td>
                             <select class="form-control" type="text" id="gender" name="gender" required>
@@ -409,22 +488,22 @@
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">College*</p>
+                            <p id="collegeheader" class="fieldname">College*</p>
                         </td>
                         <td>
-                            <select class="form-control" type="text" name="college" autocomplete="off" required>
-                                <option {% if "Baker" in data.profile.college %}selected{% endif %}>Baker</option>
-                                <option {% if "Brown" in data.profile.college %}selected{% endif %}>Brown</option>
-                                <option {% if "Duncan" in data.profile.college %}selected{% endif %}>Duncan</option>
-                                <option {% if "Hanszen" in data.profile.college %}selected{% endif %}>Hanszen</option>
-                                <option {% if "Jones" in data.profile.college %}selected{% endif %}>Jones</option>
-                                <option {% if "Lovett" in data.profile.college %}selected{% endif %}>Lovett</option>
-                                <option {% if "Martel" in data.profile.college %}selected{% endif %}>Martel</option>
-                                <option {% if "McMurtry" in data.profile.college %}selected{% endif %}>McMurtry</option>
-                                <option {% if "Sid Richardson" in data.profile.college %}selected{% endif %}>Sid Richardson</option>
-                                <option {% if "Wiess" in data.profile.college %}selected{% endif %}>Wiess</option>
-                                <option {% if "Will Rice" in data.profile.college %}selected{% endif %}>Will Rice</option>
-                                <option {% if data.profile.college == "" or data.college == None %}selected{% endif %}>N/A</option>
+                            <select class="form-control" type="text" id="college" name="college" autocomplete="off" required>
+                                <option {% if data.profile.college != None and "Baker" in data.profile.college %}selected{% endif %}>Baker</option>
+                                <option {% if data.profile.college != None and "Brown" in data.profile.college %}selected{% endif %}>Brown</option>
+                                <option {% if data.profile.college != None and "Duncan" in data.profile.college %}selected{% endif %}>Duncan</option>
+                                <option {% if data.profile.college != None and "Hanszen" in data.profile.college %}selected{% endif %}>Hanszen</option>
+                                <option {% if data.profile.college != None and "Jones" in data.profile.college %}selected{% endif %}>Jones</option>
+                                <option {% if data.profile.college != None and "Lovett" in data.profile.college %}selected{% endif %}>Lovett</option>
+                                <option {% if data.profile.college != None and "Martel" in data.profile.college %}selected{% endif %}>Martel</option>
+                                <option {% if data.profile.college != None and "McMurtry" in data.profile.college %}selected{% endif %}>McMurtry</option>
+                                <option {% if data.profile.college != None and "Sid Richardson" in data.profile.college %}selected{% endif %}>Sid Richardson</option>
+                                <option {% if data.profile.college != None and "Wiess" in data.profile.college %}selected{% endif %}>Wiess</option>
+                                <option {% if data.profile.college != None and "Will Rice" in data.profile.college %}selected{% endif %}>Will Rice</option>
+                                <option {% if data.profile.college != None and data.profile.college == "" or data.college == None %}selected{% endif %}>N/A</option>
                             </select>
                         </td>
                     </tr>
@@ -443,7 +522,7 @@
                             <p class="fieldname">Photo (optional)</p>
                         </td>
                         <td>
-                            <div id="preview">{% if data.profile.photo != "" or data.profile.photo != None %}<a href="photos/{{ data.profile.photo }}"><img class="preview" src="photos/{{ data.profile.photo }}" /></a>{% endif %}</div>
+                            <div id="preview">{% if data.profile.photo != None %}<a href="photos/{{ data.profile.photo }}"><img class="preview" src="photos/{{ data.profile.photo }}" /></a>{% endif %}</div>
                             <br/>
                             <input type="file" id="photo_upload" name="photo" onchange="handleFiles(this.files)">
                             <br/>
