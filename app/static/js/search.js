@@ -16,13 +16,14 @@ roommateFinder.controller("listingsControl", function($scope, $http) {
         var listings_data = db.exec("SELECT * FROM listing")[0];
         var preferences_data = db.exec("SELECT * FROM preferences")[0];
         $scope.listings = SQLiteToJSON(listings_data);
-        $scope.preferences = SQLiteToJSON(preferences_data);
-        if ($scope.preferences != null)
-            $scope.preferences = $scope.preferences[0];
+        $scope.preferences = SQLiteToJSON(preferences_data)[0];
 
         // Sorting order
-        if ($scope.preferences != null)
+        if ($scope.preferences.sorting_preference != "null") {  // Even null is a string
             $scope.sortOrder = $scope.preferences.sorting_preference;
+            if ($scope.preferences.sorting_preference == "size")
+                $scope.sortOrder = "property_size";  // -.- lack of consistency on my part
+        }
         else
             $scope.sortOrder = "timestamp";
 
@@ -30,7 +31,6 @@ roommateFinder.controller("listingsControl", function($scope, $http) {
         // Entries here must match with those in listing.amenities_[amenity], where each column amenities_[amenity] in the database is true or false
         $scope.filterByAmenities = {"gym": $scope.preferences.amenities_gym == "true", "pool": $scope.preferences.amenities_pool == "true", "pet_friendly": $scope.preferences.amenities_pet_friendly == "true", "computer_room": $scope.preferences.amenities_computer_room == "true", "trash_pickup_services": $scope.preferences.amenities_trash_pickup_services == "true"};
         $scope.amenitiesFilter = function () {
-        console.log($scope.filterByAmenities);
         return function (listing) {
             if ($scope.filterByAmenities["gym"] && $scope.filterByAmenities["gym"].toString() != listing.amenities_gym)
                 return false;
@@ -46,8 +46,6 @@ roommateFinder.controller("listingsControl", function($scope, $http) {
         }
     };
     });
-
-
 
     // Full listing details show/hide logic
     $scope.selectedID = null;

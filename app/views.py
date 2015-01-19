@@ -180,7 +180,9 @@ def get_started():
         # database. Fillers are required to go through the entire process of filling out a profile.
         (name, year, college) = get_user_details(net_id)
         user = Profile(net_id, "joiner", name, year.capitalize(), None, college, None, None)
+        prefs = Preferences(net_id, None, "false", "false", "false", "false", "false")
         db.session.add(user)
+        db.session.add(prefs)
         db.session.commit()
 
     # Do this again since a user might have been just added
@@ -278,7 +280,8 @@ def my_profile():
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
     if net_id is not None:
         user = Profile.query.filter_by(net_id=net_id).first()
-        data = {"net_id": net_id, "profile": user}
+        prefs = Preferences.query.filter_by(net_id=net_id).first()
+        data = {"net_id": net_id, "profile": user, "preferences": prefs}
         return render_template('my_profile.html', data=data)
     else:
         index()
