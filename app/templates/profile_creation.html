@@ -23,7 +23,7 @@
         <script src="../static/js/splash-fade.js"></script>
 
         <!--Date Time Picker-->
-        <link rel="stylesheet" href="http://eonasdan.github.io/bootstrap-datetimepicker/content/bootstrap-datetimepicker.css">
+        <link rel="stylesheet" href="../static/css/bootstrap-datetimepicker.css">
         <script type="text/javascript" src="http://momentjs.com/downloads/moment.js"></script>
         <script type="text/javascript" src="../static/js/bootstrap-datetimepicker.min.js"></script>
 
@@ -72,6 +72,13 @@
 				font-weight: 300;
 				letter-spacing: 1px;
 				font-size: 20px;
+				color: #171717;
+            }
+            p.sectionheading {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+				font-size: 19px;
 				color: #171717;
             }
             p.error {
@@ -271,10 +278,10 @@
             <table width="100%" height="60px">
                 <tr>
                     <td width="10%"></td>
-                    <td width="40%" valign="middle">
+                    <td width="30%" valign="middle">
                         <a href="../"><img src="../static/graphics/logo.png" width="300px" height="60px" border="0" /></a>
                     </td>
-                    <td width="40%" valign="bottom">
+                    <td width="50%" valign="bottom">
                         <div id="links"><p align="right">WELCOME, {{ data.first_name | upper }} | <a href="/search">FIND ROOMMATES</a> | <a href="/create_listing">CREATE A NEW LISTING</a> | <a href="/logout">LOGOUT</a></p></div>
                     </td>
                     <td width="10%"></td>
@@ -285,10 +292,19 @@
         <div id="content">
             <p class="heading">Welcome to Roommate Finder.</p>
             <p class="subheading">Let's create your profile</p>
-            <br/><br/>
+            <br/><br/><br/>
             {% if data.error %}
                 <p class="error">{{ data.error }}</p><br/><br/>
             {% endif %}
+            <p class="sectionheading">PROFILE INFORMATION</p>
+            <table width="60%">
+                <tr>
+                    <td>
+                        <p class="text">Enter your profile information here. We strongly recommend you fill this out with as much detail as possible, so that it is easier for potential roommates to find you. Fields marked with an asterisk are required.</p>
+                    </td>
+                </tr>
+            </table>
+            <br/>
             <form action="/create_profile" method="POST" enctype="multipart/form-data">
                 <div id="facebooklogin">
                     <p class="facebook">You can optionally log in with Facebook to connect your Facebook account. This makes it easier for potential roommates to communicate with you.</p>
@@ -420,6 +436,42 @@
                             <div id="preview"></div>
                             <br/>
                             <input type="file" name="photo" onchange="handleFiles(this.files)">
+                        </td>
+                    </tr>
+                </table>
+                <br/><br/><br/>
+                <p class="sectionheading">DEFAULT SEARCH PREFERENCES (OPTIONAL)</p>
+                <table width="60%">
+                    <tr>
+                        <td>
+                            <p class="text">You can set default sorting and filtering preferences here if you like. These options only affect the default display of information in the <a href="/">main search interface</a>.</p>
+                        </td>
+                    </tr>
+                </table>
+                <br/>
+                <table width="60%">
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="text">Sorting preference</p>
+                        </td>
+                        <td>
+                            <p class="text">This will set the default sorting order for apartment listings.</p>
+                            <input type="radio" name="sorting_preference" value="distance"> Distance<br/>
+                            <input type="radio" name="sorting_preference" value="rent"> Rent price<br/>
+                            <input type="radio" name="sorting_preference" value="size"> Property size<br/><br/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="text">Filtering preference</p>
+                        </td>
+                        <td>
+                            <p class="text">This will set the default filtering options for apartment listings. Leave all unchecked to have no filters (e.g. default to display all listings).</p>
+                            <input type="checkbox" name="filtering_preference_gym" value="gym"> Has gym<br/>
+                            <input type="checkbox" name="filtering_preference_pool" value="pool"> Has pool<br/>
+                            <input type="checkbox" name="filtering_preference_pet_friendly" value="pet_friendly"> Is pet friendly<br/>
+                            <input type="checkbox" name="filtering_preference_computer_room" value="computer_room"> Has computer room(s)<br/>
+                            <input type="checkbox" name="filtering_preference_trash_pickup_services" value="trash_pickup_services"> Has trash pickup services<br/><br/>
                         </td>
                     </tr>
                 </table>

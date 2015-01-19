@@ -52,7 +52,7 @@ class Listing(db.Model):
     property_size = db.Column(db.Integer)
     number_roommates_needed = db.Column(db.Integer)
     timestamp = db.Column(db.String(255))
-    amenities_gym = db.Column(db.String(255))
+    amenities_gym = db.Column(db.String(64))
     amenities_pool = db.Column(db.String(64))
     amenities_pet_friendly = db.Column(db.String(64))
     amenities_computer_room = db.Column(db.String(64))
@@ -67,12 +67,13 @@ class Listing(db.Model):
         self.address_line_1 = address_line_1  # Address lines
         self.address_line_2 = address_line_2
         self.photo = photo  # Name of the photo, stored in /photos/listings
-        self.distance = distance
-        self.rent = rent
-        self.rent_details = rent_details
-        self.property_size = property_size
-        self.number_roommates_needed = number_roommates_needed
-        self.timestamp = timestamp
+        self.distance = distance  # Distance of apartment from Rice
+        self.rent = rent  # Monthly rent
+        self.rent_details = rent_details  # Elaboration on monthly rent
+        self.property_size = property_size  # Size of property, in sq ft
+        self.number_roommates_needed = number_roommates_needed  # Number of roommates the filler needs
+        self.timestamp = timestamp  # When the listing was posted
+        # Filter conditions
         self.amenities_gym = has_gym
         self.amenities_pool = has_pool
         self.amenities_pet_friendly = is_pet_friendly
@@ -80,4 +81,32 @@ class Listing(db.Model):
         self.amenities_trash_pickup_services = has_trash_pickup_services
 
     def __repr__(self):
-        return '<Listing %r>' % self.net_id
+        return '<Listing %r>' % self.id
+
+
+class Preferences(db.Model):
+    """
+    Database model storing user apartment preferences that are selected on account creation.
+    """
+    # Columns for preferences table
+    net_id = db.Column(db.String(64), primary_key=True, unique=True, index=True)
+    # Default sorting preference
+    sorting_preference = db.Column(db.String(64))
+    # Amenities pre-checked preferences
+    amenities_gym = db.Column(db.String(64))
+    amenities_pool = db.Column(db.String(64))
+    amenities_pet_friendly = db.Column(db.String(64))
+    amenities_computer_room = db.Column(db.String(64))
+    amenities_trash_pickup_services = db.Column(db.String(64))
+
+    def __init__(self, net_id, sorting_preference, has_gym, has_pool, is_pet_friendly, has_computer_room, has_trash_pickup_services):
+        self.net_id = net_id
+        self.sorting_preference = sorting_preference  # One of "distance", "rent", "size"
+        self.amenities_gym = has_gym
+        self.amenities_pool = has_pool
+        self.amenities_pet_friendly = is_pet_friendly
+        self.amenities_computer_room = has_computer_room
+        self.amenities_trash_pickup_services = has_trash_pickup_services
+
+    def __repr__(self):
+        return '<Preferences %r>' % self.net_id

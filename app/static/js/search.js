@@ -12,20 +12,25 @@ roommateFinder.config(['$interpolateProvider', function ($interpolateProvider) {
 roommateFinder.controller("listingsControl", function($scope, $http) {
     // Retrieve listings data from database
     $http.get("/app.db", {"responseType": "arraybuffer"}).success(function(data) {
-        var uInt8Array = new Uint8Array(data);
-        var db = new SQL.Database(uInt8Array);
-        var contents = db.exec("SELECT * FROM listing")[0];
-        $scope.listings = SQLiteToJSON(contents);
-    });
+        var db = new SQL.Database(new Uint8Array(data));
+        var listings_data = db.exec("SELECT * FROM listing")[0];
+        var preferences_data = db.exec("SELECT * FROM preferences")[0];
+        $scope.listings = SQLiteToJSON(listings_data);
+        $scope.preferences = SQLiteToJSON(preferences_data);
+        if ($scope.preferences != null)
+            $scope.preferences = $scope.preferences[0];
 
-    // Sorting order
-    $scope.sortOrder = "timestamp";
+        // Sorting order
+        if ($scope.preferences != null)
+            $scope.sortOrder = $scope.preferences.sorting_preference;
+        else
+            $scope.sortOrder = "timestamp";
 
-    // Filtering logic
-    // Need an if statement for each amenity. I couldn't figure out a cleaner way to do this.
-    // Entries here must match with those in listing.amenities_[amenity], where each column amenities_[amenity] in the database is true or false
-    $scope.filterByAmenities = {};
-    $scope.amenitiesFilter = function () {
+        // Filtering logic
+        // Entries here must match with those in listing.amenities_[amenity], where each column amenities_[amenity] in the database is true or false
+        $scope.filterByAmenities = {"gym": $scope.preferences.amenities_gym == "true", "pool": $scope.preferences.amenities_pool == "true", "pet_friendly": $scope.preferences.amenities_pet_friendly == "true", "computer_room": $scope.preferences.amenities_computer_room == "true", "trash_pickup_services": $scope.preferences.amenities_trash_pickup_services == "true"};
+        $scope.amenitiesFilter = function () {
+        console.log($scope.filterByAmenities);
         return function (listing) {
             if ($scope.filterByAmenities["gym"] && $scope.filterByAmenities["gym"].toString() != listing.amenities_gym)
                 return false;
@@ -40,6 +45,9 @@ roommateFinder.controller("listingsControl", function($scope, $http) {
             return true;
         }
     };
+    });
+
+
 
     // Full listing details show/hide logic
     $scope.selectedID = null;

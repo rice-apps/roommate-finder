@@ -9,7 +9,7 @@ from flask import render_template, session, send_from_directory
 from werkzeug.utils import redirect
 
 from app import app, lm, db
-from app.models import Profile, Listing
+from app.models import Profile, Listing, Preferences
 
 
 # Server upload folder - do not change
@@ -80,7 +80,6 @@ def database():
     """
     URL to get the SQLite database. Required for JS-SQL behavior in search.js.
     """
-    # TODO: .htaccess, allow only localhost
     return send_from_directory("D:/GitHub/roommate-finder", "app.db")
 
 
@@ -244,7 +243,8 @@ def search():
 
     if net_id is not None:
         user = Profile.query.filter_by(net_id=net_id).first()
-        data = {"net_id": net_id, "profile": user}
+        preferences = Preferences.query.filter_by(net_id=net_id).first()
+        data = {"net_id": net_id, "profile": user, "preferences": preferences}
         return render_template('search.html', data=data)
     else:
         index()
@@ -257,6 +257,8 @@ def new_account():
     """
     # User Net ID
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    if net_id is None:
+        return redirect('/login')
     # Check if the user exists.
     user = Profile.query.filter_by(net_id=net_id).first()
     if user is None:

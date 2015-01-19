@@ -10,7 +10,7 @@ import requests
 from werkzeug.utils import secure_filename, redirect
 
 from app import app, db, email
-from app.models import Profile
+from app.models import Profile, Preferences
 
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'tiff'])
@@ -32,6 +32,13 @@ def create_user():
     for field in fields:
         values[field] = request.form[field]
     photo_hash = None
+
+    # Store search preferences for user
+    preference_fields = ["filtering_preference_gym", "filtering_preference_pool", "filtering_preference_pet_friendly", "filtering_preference_computer_room", "filtering_preference_trash_pickup_services"]
+    filtering_preferences = [request.form.get(pref, None) is not None for pref in preference_fields]
+    prefs = Preferences(values["net_id"], request.form["sorting_preference"], str(filtering_preferences[0]).lower(), str(filtering_preferences[1]).lower(), str(filtering_preferences[2]).lower(), str(filtering_preferences[3]).lower(), str(filtering_preferences[4]).lower())
+    db.session.add(prefs)
+    db.session.commit()
 
     # Check for Facebook account connection: if the user connected an account, then the ID is a string of
     # numbers without spaces; otherwise, it's just the placeholder text, which should be None
@@ -78,7 +85,10 @@ def create_user():
     db.session.commit()
 
     # Send him or her a welcome email
-    email.welcome_email(values["net_id"])
+    try:
+        email.welcome_email(values["net_id"])
+    except:
+        print("Failed to send email. This error is expected if you are in a local development environment.")
 
     return redirect('/get_started')
 
