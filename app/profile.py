@@ -108,7 +108,7 @@ def update_user():
     user.year = request.form["year"]
     user.dob = request.form["dob"]
     user.college = request.form["college"]
-    user.gender = request.form["gender"]
+    user.gender = request.form.get("gender", None)
     user.bio = request.form["bio"]
     user.facebook = request.form["facebook"]
 

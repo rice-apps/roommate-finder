@@ -28,6 +28,15 @@
 		<!--Roommate Finder stylesheet-->
 		<link type="text/css" rel="stylesheet" href="../static/stylesheet.css">
 
+        <!--Deselect gender value if null in database (i.e. joiner)-->
+        {% if not data.profile.gender %}
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    document.getElementById("gender").selectedIndex = -1;
+                });
+            </script>
+        {% endif %}
+
         <title>my profile | roommate finder | rice university</title>
 
         <!--Override some CSS properties-->

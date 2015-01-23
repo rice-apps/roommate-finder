@@ -115,9 +115,6 @@ def after_login():
     # User Net ID
     login = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
 
-    # Dictionary of values to pass
-    data = {"net_id": login}
-
     # Try to find Net ID in database
     user = Profile.query.filter_by(net_id=login).first()
     if user is None:
@@ -127,8 +124,7 @@ def after_login():
     else:
         # User does exist in DB
         # Redirect user to main page
-        data["profile"] = user
-        return render_template('my_profile.html', data=data)
+        return redirect('/my_profile')
 
 
 def get_user_details(net_id):
