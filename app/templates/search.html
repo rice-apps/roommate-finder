@@ -219,19 +219,19 @@
                             <p class="text">Sort by:</p>
                             <select class="form-control" ng-model="sortOrder">
                                 <option value="timestamp">Date posted</option>
-                                <option value="rent">Rent price</option>
-                                <option value="distance">Distance from Rice</option>
-                                <option value="property_size">Property size</option>
+                                <option value="rent" {% if data.preferences.sorting_preference == "rent" %}selected{% endif %}>Rent price</option>
+                                <option value="distance" {% if data.preferences.sorting_preference == "distance" %}selected{% endif %}>Distance from Rice</option>
+                                <option value="property_size" {% if data.preferences.sorting_preference == "size" %}selected{% endif %}>Property size</option>
                                 <option value="number_roommates_needed">Number of roommates needed</option>
                             </select>
                             <br/>
 
                             <p class="text">Filters:</p>
-                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['gym']"> Has gym</p>
-                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['pool']"> Has pool</p>
-                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['pet_friendly']"> Pet friendly</p>
-                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['computer_room']"> Has computer room(s)</p>
-                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['trash_pickup_services']"> Has trash pickup services</p>
+                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['gym']" {% if data.preferences.amenities_gym == "true" %}checked{% endif %}> Has gym</p>
+                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['pool']" {% if data.preferences.amenities_pool == "true" %}checked{% endif %}> Has pool</p>
+                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['pet_friendly']" {% if data.preferences.amenities_pet_friendly == "true" %}checked{% endif %}> Pet friendly</p>
+                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['computer_room']" {% if data.preferences.amenities_computer_room == "true" %}checked{% endif %}> Has computer room(s)</p>
+                            <p class="text2"><input type="checkbox" ng-model="filterByAmenities['trash_pickup_services']" {% if data.preferences.amenities_trash_pickup_services == "true" %}checked{% endif %}> Has trash pickup services</p>
                         </div>
                     </td>
                     <td width="5%" valign="top"></td>

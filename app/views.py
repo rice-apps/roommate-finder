@@ -9,7 +9,7 @@ from flask import render_template, session, send_from_directory
 from werkzeug.utils import redirect
 
 from app import app, lm, db
-from app.models import Profile, Listing
+from app.models import Profile, Listing, Preferences
 
 
 # Server upload folder - do not change
@@ -80,7 +80,6 @@ def database():
     """
     URL to get the SQLite database. Required for JS-SQL behavior in search.js.
     """
-    # TODO: .htaccess, allow only localhost
     return send_from_directory("D:/GitHub/roommate-finder", "app.db")
 
 
@@ -116,9 +115,6 @@ def after_login():
     # User Net ID
     login = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
 
-    # Dictionary of values to pass
-    data = {"net_id": login}
-
     # Try to find Net ID in database
     user = Profile.query.filter_by(net_id=login).first()
     if user is None:
@@ -128,8 +124,7 @@ def after_login():
     else:
         # User does exist in DB
         # Redirect user to main page
-        data["profile"] = user
-        return render_template('my_profile.html', data=data)
+        return redirect('/my_profile')
 
 
 def get_user_details(net_id):
@@ -181,7 +176,9 @@ def get_started():
         # database. Fillers are required to go through the entire process of filling out a profile.
         (name, year, college) = get_user_details(net_id)
         user = Profile(net_id, "joiner", name, year.capitalize(), None, college, None, None)
+        prefs = Preferences(net_id, None, "false", "false", "false", "false", "false")
         db.session.add(user)
+        db.session.add(prefs)
         db.session.commit()
 
     # Do this again since a user might have been just added
@@ -244,7 +241,8 @@ def search():
 
     if net_id is not None:
         user = Profile.query.filter_by(net_id=net_id).first()
-        data = {"net_id": net_id, "profile": user}
+        preferences = Preferences.query.filter_by(net_id=net_id).first()
+        data = {"net_id": net_id, "profile": user, "preferences": preferences}
         return render_template('search.html', data=data)
     else:
         index()
@@ -257,6 +255,8 @@ def new_account():
     """
     # User Net ID
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    if net_id is None:
+        return redirect('/login')
     # Check if the user exists.
     user = Profile.query.filter_by(net_id=net_id).first()
     if user is None:
@@ -276,7 +276,8 @@ def my_profile():
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
     if net_id is not None:
         user = Profile.query.filter_by(net_id=net_id).first()
-        data = {"net_id": net_id, "profile": user}
+        prefs = Preferences.query.filter_by(net_id=net_id).first()
+        data = {"net_id": net_id, "profile": user, "preferences": prefs}
         return render_template('my_profile.html', data=data)
     else:
         index()
