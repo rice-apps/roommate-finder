@@ -28,15 +28,6 @@
 		<!--Roommate Finder stylesheet-->
 		<link type="text/css" rel="stylesheet" href="../static/stylesheet.css">
 
-        <!--Deselect gender value if null in database (i.e. joiner)-->
-        {% if not data.profile.gender %}
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    document.getElementById("gender").selectedIndex = -1;
-                });
-            </script>
-        {% endif %}
-
         <title>my profile | roommate finder | rice university</title>
 
         <!--Override some CSS properties-->
@@ -420,122 +411,143 @@
             </table>
             <br/>
             <form action="/update_profile" method="POST" enctype="multipart/form-data" autocomplete="off">
-                <div id="facebooklogin">
-                    <p class="facebook">You can optionally log in with Facebook to connect your Facebook account. This makes it easier for potential roommates to communicate with you.</p>
-                    <div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="false" onlogin="checkLoginState();"></div>
-                </div>
+
                 <table width="60%">
-                    <tr>
-                        <td width="150px" valign="middle">
-                            <p class="fieldname">Account type*</p>
-                        </td>
-                        <td>
-                            <input id="radiofiller" type="radio" name="account_type" value="Filler" checked> Filler &nbsp;&nbsp;&nbsp;&nbsp;
-                            <input id="radiojoiner" type="radio" name="account_type" value="Joiner"> Joiner<br/><br/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td width="150px" valign="middle">
-                            <p class="fieldname">Net ID*</p>
-                        </td>
-                        <td>
-                            <input class="form-control" type="text" name="net_id" value="{{ data.profile.net_id }}" readonly>
-                        </td>
-                    </tr>
+
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Facebook ID</p>
+                            <p class="fieldname">Apartment name*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="text" id="facebook" name="facebook" {% if data.profile.facebook %}value="{{ data.profile.facebook }}"{% endif %} placeholder="Log in with Facebook to connect your account" readonly>
-                            <div class="hidden"><input class="form-control" type="text" id="facebook_photo" name="facebook_photo" readonly></div>
+                            <input class="form-control" type="text" id="apartment_name" name="apartment_name" value="{{ data.listing.apartment_name }}" required>
                         </td>
                     </tr>
+
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Name*</p>
+                            <p class="fieldname">Address line 1*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="text" id="name" name="name" value="{{ data.profile.name }}" required>
+                            <input class="form-control" type="text" id="address_line_1" name="address_line_1" value="{{ data.listing.address_line_1 }}" required>
                         </td>
                     </tr>
+
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p id="yearheader" class="fieldname">Year*</p>
+                            <p class="fieldname">Address line 2*</p>
                         </td>
                         <td>
-                            <select class="form-control" type="text" id="year" name="year" autocomplete="off">
-                                <option {% if data.profile.year == "Freshman" %}selected{% endif %}>Freshman</option>
-                                <option {% if data.profile.year == "Sophomore" %}selected{% endif %}>Sophomore</option>
-                                <option {% if data.profile.year == "Junior" %}selected{% endif %}>Junior</option>
-                                <option {% if data.profile.year == "Senior" %}selected{% endif %}>Senior</option>
-                                <option>Other (graduate student, fifth year student, etc.)</option>
-                            </select>
+                            <input class="form-control" type="text" id="address_line_2" name="address_line_2" value="{{ data.listing.address_line_2 }}" required>
                         </td>
                     </tr>
+
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p id="dobheader" class="fieldname">Date of birth*</p>
+                            <p class="fieldname">Distance (miles)*</p>
                         </td>
                         <td>
-                            <div class="form-group">
-                                <div class='input-group date' id='datetimepicker1'>
-                                    <input type='text' class="form-control" id="dob" name="dob" placeholder="MM/DD/YYYY" {% if data.profile.dob %}value="{{ data.profile.dob }}"{% endif %} required>
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                    <script type="text/javascript">
-                                        $(function () {
-				                            $('#datetimepicker1').datetimepicker({
-					                        pickTime: false
-				                        });
-			                        });
-                                    </script>
-                                </div>
-                            </div>
+                            <input class="form-control" type="number" id="address_line_2" name="address_line_2" value="{{ data.listing.distance }}" required>
                         </td>
                     </tr>
-                    <tr height="10px"></tr>
-                    <tr>
-                        <td width="150px" valign="middle">
-                            <p id="genderheader" class="fieldname">Gender*</p>
-                        </td>
-                        <td>
-                            <select class="form-control" type="text" id="gender" name="gender" required>
-                                <option {% if data.profile.gender == "Male" %}selected{% endif %}>Male</option>
-                                <option {% if data.profile.gender == "Female" %}selected{% endif %}>Female</option>
-                                <option {% if data.profile.gender == "Other" %}selected{% endif %}>Other</option>
-                            </select>
-                        </td>
-                    </tr>
+
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p id="collegeheader" class="fieldname">College*</p>
+                            <p class="fieldname">Rent ($/month)*</p>
                         </td>
                         <td>
-                            <select class="form-control" type="text" id="college" name="college" autocomplete="off" required>
-                                <option {% if data.profile.college != None and "Baker" in data.profile.college %}selected{% endif %}>Baker</option>
-                                <option {% if data.profile.college != None and "Brown" in data.profile.college %}selected{% endif %}>Brown</option>
-                                <option {% if data.profile.college != None and "Duncan" in data.profile.college %}selected{% endif %}>Duncan</option>
-                                <option {% if data.profile.college != None and "Hanszen" in data.profile.college %}selected{% endif %}>Hanszen</option>
-                                <option {% if data.profile.college != None and "Jones" in data.profile.college %}selected{% endif %}>Jones</option>
-                                <option {% if data.profile.college != None and "Lovett" in data.profile.college %}selected{% endif %}>Lovett</option>
-                                <option {% if data.profile.college != None and "Martel" in data.profile.college %}selected{% endif %}>Martel</option>
-                                <option {% if data.profile.college != None and "McMurtry" in data.profile.college %}selected{% endif %}>McMurtry</option>
-                                <option {% if data.profile.college != None and "Sid Richardson" in data.profile.college %}selected{% endif %}>Sid Richardson</option>
-                                <option {% if data.profile.college != None and "Wiess" in data.profile.college %}selected{% endif %}>Wiess</option>
-                                <option {% if data.profile.college != None and "Will Rice" in data.profile.college %}selected{% endif %}>Will Rice</option>
-                                <option {% if data.profile.college != None and data.profile.college == "" or data.college == None %}selected{% endif %}>N/A</option>
-                            </select>
+                            <input class="form-control" type="number" id="address_line_2" name="address_line_2" value="{{ data.listing.distance }}" required>
                         </td>
                     </tr>
+
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Bio (optional)</p>
+                            <p class="fieldname">Rent details (optional)*</p>
+                        </td>
+                        <td>
+                            <input class="form-control" type="text" id="rent_details" name="rent_details" value="{{ data.listing.rent_details }}">
+                        </td>
+                    </tr>
+
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">Property size (sq ft)*</p>
+                        </td>
+                        <td>
+                            <input class="form-control" type="number" id="property_size" name="property_size" value="{{ data.listing.property_size }}" required>
+                        </td>
+                    </tr>
+
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname"># of roomies needed*</p>
+                        </td>
+                        <td>
+                            <input class="form-control" type="number" id="number_roommates_needed" name="number_roommates_needed" value="{{ data.listing.number_roommates_needed }}" required>
+                        </td>
+                    </tr>
+
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">Has gym*</p>
+                        </td>
+                        <td>
+                            <input type="checkbox" ng-model="filterByAmenities['gym']" {% if data.preferences.amenities_gym == "true" %}checked{% endif %}>
+                        </td>
+                    </tr>
+
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">Has pool*</p>
+                        </td>
+                        <td>
+                            <input type="checkbox" ng-model="filterByAmenities['pool']" {% if data.preferences.amenities_pool == "true" %}checked{% endif %}>
+                        </td>
+                    </tr>
+
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">Pet friendly*</p>
+                        </td>
+                        <td>
+                            <input type="checkbox" ng-model="filterByAmenities['pet_friendly']" {% if data.preferences.amenities_pet_friendly == "true" %}checked{% endif %}>
+                        </td>
+                    </tr>
+
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">Has computer room(s)*</p>
+                        </td>
+                        <td>
+                            <input type="checkbox" ng-model="filterByAmenities['computer_room']" {% if data.preferences.amenities_computer_room == "true" %}checked{% endif %}>
+                        </td>
+                    </tr>
+
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="200px" valign="middle">
+                            <p class="fieldname">Has trash pickup services*</p>
+                        </td>
+                        <td>
+                            <input type="checkbox" ng-model="filterByAmenities['trash_pickup_services']" {% if data.preferences.amenities_trash_pickup_services == "true" %}checked{% endif %}>
+                        </td>
+                    </tr>
+
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="170px" valign="middle">
+                            <p class="fieldname">Description (optional)</p>
                         </td>
                         <td>
                             <textarea class="form-control" name="bio" {% if not data.error %}placeholder="Write a short description of yourself. What's your major? How late do you sleep? Do you like quiet or noise?"{% endif %} rows="3">{% if data.error %}{{ data.profile.bio }}{% endif %}</textarea>

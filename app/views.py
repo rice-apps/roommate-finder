@@ -4,13 +4,12 @@
 
 import urllib2
 import time
-import datetime
 
 from flask import render_template, session, send_from_directory
 from werkzeug.utils import redirect
 
 from app import app, lm, db
-from app.models import Profile, Post
+from app.models import Profile, Listing, Preferences
 
 
 # Server upload folder - do not change
@@ -21,6 +20,7 @@ UPLOAD_FOLDER = "D:/GitHub/roommate-finder/app/photos"
 app.config['CAS_SERVER'] = 'https://netid.rice.edu'
 app.config['CAS_AFTER_LOGIN'] = 'after_login'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['APP_FOLDER'] = "Z:/RoommateFinder/roommate-finder"  # directory of application on the server - do not change
 app.config['APP_URL'] = 'http://roommatefinder.kevinlin.info'
 app.config.setdefault('CAS_USERNAME_SESSION_KEY', 'CAS_USERNAME')
 
@@ -39,13 +39,14 @@ def add_header(response):
 @app.route('/', methods=['GET'])
 def index():
     """
-    First check if the user is logged in. If so, redirect him/her to the main search page.
+    First check if the user is logged in. If so, and he/she has an account, redirect him/her to the main search page.
     If not, redirect him/her to the intro page.
     """
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
-    if net_id is not None:
-        data = {"net_id": net_id}
-        return render_template('search.html', data=data)
+    user = Profile.query.filter_by(net_id=net_id).first()
+    if net_id is not None and user is not None:
+        data = {"net_id": net_id, "profile": user}
+        return render_template('action.html', data=data)
     else:
         return app.send_static_file('intro.html')
 
@@ -74,31 +75,56 @@ def photos(filename):
     return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
 
-@app.route('/after_login', methods=['GET'])
-def after_login():
+@app.route('/app.db')
+def database():
+    """
+    URL to get the SQLite database. Required for JS-SQL behavior in search.js.
+    """
+    return send_from_directory("D:/GitHub/roommate-finder", "app.db")
+
+
+@app.route('/welcome')
+def welcome():
+    """
+    First ensure that there is a valid CAS login. Then, present the user with a page allowing him/her to select
+    filler or joiner status.
+    """
     # User Net ID
     login = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
-    net_id = login
 
-    # Dictionary of values to pass
-    data = {"net_id": login}
+    # Check if there is even someone logged in
+    if login is None:
+        return redirect("/login")
+
+    # Check if the user exists in the database. If so, the user shouldn't even be here
+    user = Profile.query.filter_by(net_id=login).first()
+    if user is not None:
+        return redirect("/my_profile")
+
+    # Get user details from Rice public directory
+    (name, year, college) = get_user_details(login)
+    data = {"net_id": login, "name": name, "first_name": name.split(" ")[0], "year": year, "college": college}
+    return render_template("account_type_selection.html", data=data)
+
+
+@app.route('/after_login', methods=['GET'])
+def after_login():
+    """
+    If the user doesn't yet exist in the database, show the welcome screen. Otherwise, show the My Account interface.
+    """
+    # User Net ID
+    login = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
 
     # Try to find Net ID in database
     user = Profile.query.filter_by(net_id=login).first()
     if user is None:
         # User doesn't exist in DB
-        # Get user details from Rice public directory
-        (name, year, college) = get_user_details(login)
-        data["name"] = name
-        data["year"] = year
-        data["college"] = college
-        # Redirect the user to the profile creation page
-        return render_template('profile_creation.html', data=data)
+        # Redirect the user to the main welcome page
+        return redirect("/welcome")
     else:
         # User does exist in DB
         # Redirect user to main page
-        data["profile"] = user
-        return render_template('my_profile.html', data=data)
+        return redirect('/my_profile')
 
 
 def get_user_details(net_id):
@@ -135,6 +161,113 @@ def get_user_details(net_id):
     return name, year, college
 
 
+@app.route('/get_started')
+def get_started():
+    """
+    Welcome to Roommate Finder; here's how to get started.
+    """
+    # User Net ID
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    user = Profile.query.filter_by(net_id=net_id).first()
+
+    if user is None:
+        # The user might have been taken here from the welcome page, if he/she chose to be a joiner. In this case,
+        # create a profile for the user with only the name field filled out, so that he/she has a profile in the
+        # database. Fillers are required to go through the entire process of filling out a profile.
+        (name, year, college) = get_user_details(net_id)
+        user = Profile(net_id, "joiner", name, year.capitalize(), None, college, None, None)
+        prefs = Preferences(net_id, None, "false", "false", "false", "false", "false")
+        db.session.add(user)
+        db.session.add(prefs)
+        db.session.commit()
+
+    # Do this again since a user might have been just added
+    user = Profile.query.filter_by(net_id=net_id).first()
+
+    if net_id is not None and user is not None:
+        data = {"net_id": net_id, "profile": user}
+        return render_template('welcome.html', data=data)
+
+
+@app.route('/create_listing')
+def create_listing():
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    user = Profile.query.filter_by(net_id=net_id).first()
+    if net_id and user:
+        if user.account_type == "joiner":
+            return render_template("create_new_listing_error.html", data={"profile": user})
+        # do something useful here
+        pass
+    else:
+        # error out
+        pass
+
+
+@app.route('/action')
+def action():
+    """
+    Action page.
+    """
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    if net_id is not None:
+        user = Profile.query.filter_by(net_id=net_id).first()
+        data = {"net_id": net_id, "profile": user}
+        return render_template('action.html', data=data)
+    else:
+        index()
+
+
+@app.route('/users')
+def users():
+    """
+    Browse users page.
+    """
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    if net_id is not None:
+        user = Profile.query.filter_by(net_id=net_id).first()
+        data = {"net_id": net_id, "profile": user}
+        return render_template('users_list.html', data=data)
+    else:
+        index()
+
+
+@app.route('/search')
+def search():
+    """
+    Main search interface.
+    """
+    # User Net ID
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+
+    if net_id is not None:
+        user = Profile.query.filter_by(net_id=net_id).first()
+        preferences = Preferences.query.filter_by(net_id=net_id).first()
+        data = {"net_id": net_id, "profile": user, "preferences": preferences}
+        return render_template('search.html', data=data)
+    else:
+        index()
+
+
+@app.route('/new_account')
+def new_account():
+    """
+    Renders template for UI for creating a new profile.
+    """
+    # User Net ID
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    if net_id is None:
+        return redirect('/login')
+    # Check if the user exists.
+    user = Profile.query.filter_by(net_id=net_id).first()
+    if user is None:
+        # Get user details from Rice public directory
+        (name, year, college) = get_user_details(net_id)
+        data = {"net_id": net_id, "name": name, "first_name": name.split(" ")[0], "year": year, "college": college}
+        return render_template("profile_creation.html", data=data)
+    else:
+        return redirect('/my_profile')
+
+
 @app.route('/my_profile')
 def my_profile():
     """
@@ -143,7 +276,8 @@ def my_profile():
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
     if net_id is not None:
         user = Profile.query.filter_by(net_id=net_id).first()
-        data = {"net_id": net_id, "profile": user}
+        prefs = Preferences.query.filter_by(net_id=net_id).first()
+        data = {"net_id": net_id, "profile": user, "preferences": prefs}
         return render_template('my_profile.html', data=data)
     else:
         index()
@@ -173,12 +307,11 @@ def my_postings():
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
     if net_id is not None:
         user = Profile.query.filter_by(net_id=net_id).first()
-        posts = user.posts.all()
-        print("posts gathered: " + str(len(posts)))
-        data = {"net_id": net_id, "profile": user, "posts": posts}
+        data = {"net_id": net_id, "profile": user}
         return render_template('my_postings.html', data=data)
     else:
         index()
+
 
 @app.route('/privacy_policy')
 def privacy_policy():
@@ -196,6 +329,29 @@ def privacy_policy():
         return render_template('privacy_policy.html', data={"net_id": None, "profile": None})
 
 
+@app.route('/listing/<path:ID>')
+def listing_details(ID):
+    """
+    Handles routing of /listing/ID (returns that listing's full detail page)
+    """
+    # Initialize a null error and listing poster
+    error = None
+    poster = None
+    # Get the currently logged in user
+    login = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    user = Profile.query.filter_by(net_id=login).first()
+    if login is None:
+        return redirect("/login", code=302)
+    # Get the requested listing from the database
+    listing = Listing.query.filter_by(id=ID).first()
+    if not listing:
+        error = "This listing doesn't exist!"
+    else:
+        poster = Profile.query.filter_by(net_id=listing.poster_netid).first()
+    data = {"net_id": login, "profile": user, "id": ID, "listing": listing, "error": error, "poster": poster}
+    return render_template('listing_detail.html', data=data)
+
+
 @app.route('/user/<path:path>')
 def user_profile(path):
     """
@@ -209,7 +365,8 @@ def user_profile(path):
     user = Profile.query.filter_by(net_id=path).first()
     # Stylistic typographic choices: uppercase and lowercase versions
     # I'm sure there's an easier way to do this
-    data = {"profile": user, "net_id": path, "net_id_uppercase": path.upper(), "net_id_lowercase": path.lower(), "logged_in_net_id": login}
+    data = {"profile": user, "net_id": path, "net_id_uppercase": path.upper(), "net_id_lowercase": path.lower(),
+            "logged_in_net_id": login}
     # Meh; too many net ID's to keep track of...
     if user:
         data["name_uppercase"] = user.name.upper()
@@ -227,13 +384,17 @@ def compute_age(dob):
     """
     Given a MM/DD/YYYY formatted date of birth, calculate current age (relative to now, of course).
     """
-    birth_date = dob.split("/")
-    age = int(time.strftime("%Y")) - int(birth_date[2])
-    if int(time.strftime("%m"))/float(birth_date[0]) < 1:
-        age -= 1
-    if int(time.strftime("%m")) == int(birth_date[0]) and int(time.strftime("%d")) < int(birth_date[1]):
-        age -= 1
-    return age
+    # Try-catch here because the user might be a joiner and thus might not have filled out their DOB.
+    try:
+        birth_date = dob.split("/")
+        age = int(time.strftime("%Y")) - int(birth_date[2])
+        if int(time.strftime("%m")) / float(birth_date[0]) < 1:
+            age -= 1
+        if int(time.strftime("%m")) == int(birth_date[0]) and int(time.strftime("%d")) < int(birth_date[1]):
+            age -= 1
+        return age
+    except:
+        return "N/A"
 
 
 @lm.user_loader
@@ -243,5 +404,10 @@ def load_user(id):
 
 # ERROR HANDLERS
 @app.errorhandler(500)
+def internal_server_error(e):
+    return app.send_static_file('error/500.html'), 500
+
+
+@app.errorhandler(404)
 def page_not_found(e):
-    return app.send_static_file('500.html'), 500
+    return app.send_static_file('error/404.html'), 404

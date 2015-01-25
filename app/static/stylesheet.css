@@ -41,8 +41,9 @@
     position: fixed;
     top: 0;
     background: #303030;
-    z-index: 5;
+    z-index: 6;
     transition: all 0.65s ease;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
 }
 
 #headercontainer2 {
@@ -52,6 +53,7 @@
     top: 60px;
     background: #17657A;
     z-index: 5;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
 }
 
 #header {

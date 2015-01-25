@@ -3,3 +3,4 @@ requests
 werkzeug
 Flask-CAS
 Flask-WTF
+flask-mail

@@ -9,14 +9,14 @@ from flask import render_template, session, request
 import requests
 from werkzeug.utils import secure_filename, redirect
 
-from app import app, db
-from app.models import Profile
+from app import app, db, email
+from app.models import Profile, Preferences
 
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'tiff'])
 
 
-@app.route('/createprofile', methods=['POST'])
+@app.route('/create_profile', methods=['POST'])
 def create_user():
     """
     Processes form data in POST request from profile creation page and adds the user to the database table Profile.
@@ -26,12 +26,19 @@ def create_user():
     The actual photo file is stored as app/photos/<hash>.<file_extension>
     """
     # Fields from form
-    fields = ["net_id", "name", "year", "dob", "college", "gender", "bio", "facebook", "facebook_photo"]
+    fields = ["net_id", "account_type", "name", "year", "dob", "college", "gender", "bio", "facebook", "facebook_photo"]
     # Get user-entered values from form
     values = {}
     for field in fields:
         values[field] = request.form[field]
     photo_hash = None
+
+    # Store search preferences for user
+    preference_fields = ["filtering_preference_gym", "filtering_preference_pool", "filtering_preference_pet_friendly", "filtering_preference_computer_room", "filtering_preference_trash_pickup_services"]
+    filtering_preferences = [request.form.get(pref, None) is not None for pref in preference_fields]
+    prefs = Preferences(values["net_id"], request.form.get("sorting_preference", None), str(filtering_preferences[0]).lower(), str(filtering_preferences[1]).lower(), str(filtering_preferences[2]).lower(), str(filtering_preferences[3]).lower(), str(filtering_preferences[4]).lower())
+    db.session.add(prefs)
+    db.session.commit()
 
     # Check for Facebook account connection: if the user connected an account, then the ID is a string of
     # numbers without spaces; otherwise, it's just the placeholder text, which should be None
@@ -56,11 +63,11 @@ def create_user():
     # Create a new user from the Profile model
     if photo:
         photo_hash = str(hash(photo))
-        user = Profile(values["net_id"], values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"], values["facebook"], photo_hash + "." + file_extension(photo.filename))
+        user = Profile(values["net_id"], values["account_type"].lower(), values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"], values["facebook"], photo_hash + "." + file_extension(photo.filename))
     elif not photo and photo_hash:
-        user = Profile(values["net_id"], values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"], values["facebook"], photo_hash + "." + file_extension(values["facebook_photo"][:values["facebook_photo"].rfind("?")]))
+        user = Profile(values["net_id"], values["account_type"].lower(), values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"], values["facebook"], photo_hash + "." + file_extension(values["facebook_photo"][:values["facebook_photo"].rfind("?")]))
     else:
-        user = Profile(values["net_id"], values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"], values["facebook"])
+        user = Profile(values["net_id"], values["account_type"].lower(), values["name"], values["year"], values["dob"], values["college"], values["gender"], values["bio"], values["facebook"])
 
     # The user selected a photo of an invalid file extension
     # Redirect the user to an error page
@@ -77,11 +84,16 @@ def create_user():
     db.session.add(user)
     db.session.commit()
 
-    data = {"net_id": values["net_id"], "profile": user, "first_name_lower": values["name"].split()[0].lower(), "first_name": values["name"].split()[0]}
-    return render_template('welcome.html', data=data)
+    # Send him or her a welcome email
+    try:
+        email.welcome_email(values["net_id"])
+    except:
+        print("Failed to send email. This error is expected if you are in a local development environment.")
+
+    return redirect('/get_started')
 
 
-@app.route('/updateprofile', methods=['POST'])
+@app.route('/update_profile', methods=['POST'])
 def update_user():
     """
     Called when the user is modifying is/her account from the My Profile page.
@@ -89,14 +101,26 @@ def update_user():
     """
     # Retrieve the user by net ID from the database
     user = Profile.query.filter_by(net_id=request.form["net_id"]).first()
-    # Update all the columns
+
+    # Update all the profile columns
     user.name = request.form["name"]
+    user.account_type = request.form["account_type"].lower()
     user.year = request.form["year"]
     user.dob = request.form["dob"]
     user.college = request.form["college"]
-    user.gender = request.form["gender"]
+    user.gender = request.form.get("gender", None)
     user.bio = request.form["bio"]
     user.facebook = request.form["facebook"]
+
+    # Update all the preferences columns
+    prefs = Preferences.query.filter_by(net_id=request.form["net_id"]).first()
+    prefs.sorting_preference = request.form.get("sorting_preference", None)
+    prefs.amenities_gym = str(request.form.get("filtering_preference_gym", None) is not None).lower()
+    prefs.amenities_pool = str(request.form.get("filtering_preference_pool", None) is not None).lower()
+    prefs.amenities_pet_friendly = str(request.form.get("filtering_preference_pet_friendly", None) is not None).lower()
+    prefs.amenities_computer_room = str(request.form.get("filtering_preference_computer_room", None) is not None).lower()
+    prefs.amenities_trash_pickup_services = str(request.form.get("filtering_preference_trash_pickup_services", None) is not None).lower()
+
 
     try:
         facebook_photo = requests.get(request.form["facebook_photo"])
@@ -125,13 +149,13 @@ def update_user():
 
     # Commit the changes
     db.session.merge(user)
+    db.session.merge(prefs)
     db.session.commit()
-    # Pass along the data after refresh
-    data = {"net_id": user.net_id, "profile": user}
-    return render_template('my_profile.html', data=data)
+
+    return redirect('/my_profile')
 
 
-@app.route('/deleteprofile', methods=['GET', 'POST'])
+@app.route('/delete_profile', methods=['GET', 'POST'])
 def delete_user():
     """
     Removes the user from the database.
@@ -143,7 +167,9 @@ def delete_user():
     # This is a pretty lame security measure in all truth
     if session.get(app.config['CAS_USERNAME_SESSION_KEY'], None) == net_id:
         user = Profile.query.filter_by(net_id=net_id).first()
+        prefs = Preferences.query.filter_by(net_id=net_id).first()
         db.session.delete(user)
+        db.session.delete(prefs)
         db.session.commit()
     # Logout the session after profile deletion.
     return redirect("/logout", code=302)
