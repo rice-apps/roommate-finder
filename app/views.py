@@ -4,18 +4,22 @@
 
 import urllib2
 import time
+import datetime
 
-from flask import render_template, session, send_from_directory
+from flask import render_template, session, send_from_directory, request
+import unicodedata
 from werkzeug.utils import redirect
 
 from app import app, lm, db
-from app.models import Profile, Listing, Preferences
+from app.models import Profile, Listing, Preferences, Photo
 
 
 # Server upload folder - do not change
 # UPLOAD_FOLDER = "Z:/RoommateFinder/roommate-finder/app/photos"
 # Local dev environment upload folder - change as necessary
-UPLOAD_FOLDER = "D:/GitHub/roommate-finder/app/photos"
+from app.profile import file_extension
+
+UPLOAD_FOLDER = "/Users/fdrozdowski/GitHub/roommate-finder/app/photos"
 
 app.config['CAS_SERVER'] = 'https://netid.rice.edu'
 app.config['CAS_AFTER_LOGIN'] = 'after_login'
@@ -197,7 +201,8 @@ def create_listing():
         if user.account_type == "joiner":
             return render_template("create_new_listing_error.html", data={"profile": user})
         # do something useful here
-        pass
+        data = {"net_id": net_id, "profile": user}
+        return render_template("listing_creation.html", data = data)
     else:
         # error out
         pass
@@ -276,7 +281,7 @@ def my_profile():
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
     if net_id is not None:
         user = Profile.query.filter_by(net_id=net_id).first()
-        prefs = Preferences.query.filter_by(net_id=net_id).first()
+        prefs = Preferences.query.filter_by(net_id=net_id)
         data = {"net_id": net_id, "profile": user, "preferences": prefs}
         return render_template('my_profile.html', data=data)
     else:
@@ -305,9 +310,13 @@ def my_postings():
     Yet to be implemented.
     """
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+
     if net_id is not None:
         user = Profile.query.filter_by(net_id=net_id).first()
-        data = {"net_id": net_id, "profile": user}
+        listings = Listing.query.filter_by(net_id=net_id).all()
+        print listings
+
+        data = {"net_id": net_id, "profile": user, "listings": listings}
         return render_template('my_postings.html', data=data)
     else:
         index()
@@ -411,3 +420,5 @@ def internal_server_error(e):
 @app.errorhandler(404)
 def page_not_found(e):
     return app.send_static_file('error/404.html'), 404
+
+

@@ -289,41 +289,6 @@
             });
         </script>
 
-        <!--Filler/joiner radio button selector-->
-        <script type="text/javascript">
-            $(function (ready) {
-                $(document).ready(function () {
-                    {% if data.profile.account_type == "filler" %}
-                        $("#radiofiller").prop("checked", true);
-                        // Change asterisks
-                        document.getElementById("yearheader").innerHTML = "Year*";
-                        document.getElementById("dobheader").innerHTML = "Date of birth*";
-                        document.getElementById("genderheader").innerHTML = "Gender*";
-                        document.getElementById("collegeheader").innerHTML = "College*";
-
-                        // Change required attribute
-                        document.getElementById("year").required = true;
-                        document.getElementById("dob").required = true;
-                        document.getElementById("gender").required = true;
-                        document.getElementById("college").required = true;
-                    {% else %}
-                        $("#radiojoiner").prop("checked", true);
-                        // Change asterisks
-                        document.getElementById("yearheader").innerHTML = "Year";
-                        document.getElementById("dobheader").innerHTML = "Date of birth";
-                        document.getElementById("genderheader").innerHTML = "Gender";
-                        document.getElementById("collegeheader").innerHTML = "College";
-
-                        // Change required attribute
-                        document.getElementById("year").required = false;
-                        document.getElementById("dob").required = false;
-                        document.getElementById("gender").required = false;
-                        document.getElementById("college").required = false;
-                    {% endif %}
-                });
-            });
-        </script>
-
         <!--Filler/joiner radio button event listeners-->
         <script type="text/javascript">
             $(function(ready) {
@@ -358,13 +323,6 @@
             });
         </script>
 
-        {% if data.profile.facebook %}
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    document.getElementById("facebooklogin").innerHTML = "<div id=\"darklink\"><p class=\"facebook\">You've connected your Facebook account! If you want to disconnect your Facebook account, <a onclick=\"disconnectFacebook();\" href=\"javascript:void(0);\">click here</a>.</p></div>";
-                });
-            </script>
-        {% endif %}
 	</head>
 
 	<body>
@@ -373,6 +331,12 @@
                 <img src="../static/graphics/logo_text_invert.png" width="600px" height="120px" />
             </div>
         </div>
+
+        <div id="headercontainer2">
+			<div id="header">
+            	<div id="links"><p><a href="/my_profile"><span class="pagesectionbold">MY PROFILE</span></a> · <a href="/my_postings"><span class="pagesection">MY POSTINGS</span></a> · <a href="/delete_account"><span class="pagesection">DELETE MY ACCOUNT</span></a></p></div>
+			</div>
+		</div>
 
 		<div id="headercontainer">
             <table width="100%" height="60px">
@@ -388,29 +352,19 @@
                 </tr>
             </table>
 		</div>
-        <div id="headercontainer2">
-			<div id="header">
-            	<div id="links"><p><a href="/my_profile"><span class="pagesectionbold">MY PROFILE</span></a> · <a href="/my_postings"><span class="pagesection">MY POSTINGS</span></a> · <a href="/delete_account"><span class="pagesection">DELETE MY ACCOUNT</span></a></p></div>
-			</div>
-		</div>
 
         <div id="content">
-            <p class="heading">my profile</p>
-            <div id="darklink"><p class="subheading">Edit your profile (<a href="/user/{{ data.profile.net_id }}">View your public profile</a>)</p></div>
-            <br/><br/><br/>
-            {% if data.error %}
-                <p class="error">{{ data.error }}</p><br/><br/>
-            {% endif %}
-            <p class="sectionheading">PROFILE INFORMATION</p>
+
+            <p class="sectionheading">CREATE NEW LISTING</p>
             <table width="60%">
                 <tr>
                     <td>
-                        <p class="text">Enter your profile information here. We strongly recommend you fill this out with as much detail as possible, so that it is easier for potential roommates to find you. Fields marked with an asterisk are required.</p>
+                        <p class="text">Enter the following information about your apartment. Fields marked with an asterisk are required.</p>
                     </td>
                 </tr>
             </table>
             <br/>
-            <form action="/update_profile" method="POST" enctype="multipart/form-data" autocomplete="off">
+            <form action="/new_listing" method="POST" enctype="multipart/form-data" autocomplete="off">
 
                 <table width="60%">
 
@@ -420,7 +374,7 @@
                             <p class="fieldname">Apartment name*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="text" id="apartment_name" name="apartment_name" value="{{ data.listing.apartment_name }}" required>
+                            <input class="form-control" type="text" id="apartment_name" name="apartment_name" required>
                         </td>
                     </tr>
 
@@ -430,7 +384,7 @@
                             <p class="fieldname">Address line 1*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="text" id="address_line_1" name="address_line_1" value="{{ data.listing.address_line_1 }}" required>
+                            <input class="form-control" type="text" id="address_line_1" name="address_line_1" required>
                         </td>
                     </tr>
 
@@ -440,7 +394,7 @@
                             <p class="fieldname">Address line 2*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="text" id="address_line_2" name="address_line_2" value="{{ data.listing.address_line_2 }}" required>
+                            <input class="form-control" type="text" id="address_line_2" name="address_line_2" required>
                         </td>
                     </tr>
 
@@ -450,7 +404,7 @@
                             <p class="fieldname">Distance (miles)*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="number" id="address_line_2" name="address_line_2" value="{{ data.listing.distance }}" required>
+                            <input class="form-control" type="number" id="distance" name="distance" required>
                         </td>
                     </tr>
 
@@ -460,17 +414,17 @@
                             <p class="fieldname">Rent ($/month)*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="number" id="address_line_2" name="address_line_2" value="{{ data.listing.distance }}" required>
+                            <input class="form-control" type="number" id="rent" name="rent" required>
                         </td>
                     </tr>
 
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Rent details (optional)*</p>
+                            <p class="fieldname">Rent details (optional)</p>
                         </td>
                         <td>
-                            <input class="form-control" type="text" id="rent_details" name="rent_details" value="{{ data.listing.rent_details }}">
+                            <input class="form-control" type="text" id="rent_details" name="rent_details">
                         </td>
                     </tr>
 
@@ -480,17 +434,17 @@
                             <p class="fieldname">Property size (sq ft)*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="number" id="property_size" name="property_size" value="{{ data.listing.property_size }}" required>
+                            <input class="form-control" type="number" id="property_size" name="property_size" required>
                         </td>
                     </tr>
 
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname"># of roomies needed*</p>
+                            <p class="fieldname">Num of roomies needed*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="number" id="number_roommates_needed" name="number_roommates_needed" value="{{ data.listing.number_roommates_needed }}" required>
+                            <input class="form-control" type="number" id="number_roommates_needed" name="number_roommates_needed" required>
                         </td>
                     </tr>
 
@@ -500,7 +454,8 @@
                             <p class="fieldname">Has gym*</p>
                         </td>
                         <td>
-                            <input type="checkbox" ng-model="filterByAmenities['gym']" {% if data.preferences.amenities_gym == "true" %}checked{% endif %}>
+                            <input type="checkbox" value ="on" id="amenities_gym" name="amenities_gym">
+                            <input type="hidden" value="off" name="amenities_gym">
                         </td>
                     </tr>
 
@@ -510,7 +465,8 @@
                             <p class="fieldname">Has pool*</p>
                         </td>
                         <td>
-                            <input type="checkbox" ng-model="filterByAmenities['pool']" {% if data.preferences.amenities_pool == "true" %}checked{% endif %}>
+                            <input type="checkbox" value ="on" id="amenities_pool" name="amenities_pool">
+                            <input type="hidden" value="off" name="amenities_pool">
                         </td>
                     </tr>
 
@@ -520,7 +476,8 @@
                             <p class="fieldname">Pet friendly*</p>
                         </td>
                         <td>
-                            <input type="checkbox" ng-model="filterByAmenities['pet_friendly']" {% if data.preferences.amenities_pet_friendly == "true" %}checked{% endif %}>
+                            <input type="checkbox" value ="on" id="amenities_pet_friendly" name="amenities_pet_friendly">
+                            <input type="hidden" value="off" name="amenities_pet_friendly">
                         </td>
                     </tr>
 
@@ -530,7 +487,8 @@
                             <p class="fieldname">Has computer room(s)*</p>
                         </td>
                         <td>
-                            <input type="checkbox" ng-model="filterByAmenities['computer_room']" {% if data.preferences.amenities_computer_room == "true" %}checked{% endif %}>
+                            <input type="checkbox" value ="on" id="amenities_computer_room" name="amenities_computer_room">
+                            <input type="hidden" value="off" name="amenities_computer_room">
                         </td>
                     </tr>
 
@@ -540,7 +498,20 @@
                             <p class="fieldname">Has trash pickup services*</p>
                         </td>
                         <td>
-                            <input type="checkbox" ng-model="filterByAmenities['trash_pickup_services']" {% if data.preferences.amenities_trash_pickup_services == "true" %}checked{% endif %}>
+                            <input type="checkbox" value ="on" id="amenities_trash_pickup_services" name="amenities_trash_pickup_services">
+                            <input type="hidden" value="off" name="amenities_trash_pickup_services">
+                        </td>
+                    </tr>
+
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">Photos (optional)</p>
+                        </td>
+                        <td>
+                            <div id="preview"></div>
+                            <br/>
+                            <input type="file" name="photos[]" onchange="handleFiles(this.files)" multiple>
                         </td>
                     </tr>
 
@@ -550,63 +521,14 @@
                             <p class="fieldname">Description (optional)</p>
                         </td>
                         <td>
-                            <textarea class="form-control" name="bio" {% if not data.error %}placeholder="Write a short description of yourself. What's your major? How late do you sleep? Do you like quiet or noise?"{% endif %} rows="3">{% if data.error %}{{ data.profile.bio }}{% endif %}</textarea>
+                            <textarea class="form-control" name="description" rows="3"></textarea>
                         </td>
                     </tr>
-                    <tr height="20px"></tr>
-                    <tr>
-                        <td width="150px" valign="middle">
-                            <p class="fieldname">Photo (optional)</p>
-                        </td>
-                        <td>
-                            <div id="preview">{% if data.profile.photo != None %}<a href="photos/{{ data.profile.photo }}"><img class="preview" src="photos/{{ data.profile.photo }}" /></a>{% endif %}</div>
-                            <br/>
-                            <input type="file" id="photo_upload" name="photo" onchange="handleFiles(this.files)">
-                            <br/>
-                            <div id="darklink"><div id="getfacebookpicture" class="{% if data.profile.facebook %}visible{% else %}hidden{% endif %}"><p class="text"><a onclick="getFacebookProfilePicture();" href="javascript:void(0);">Pull profile picture from Facebook</a></p></div></div>
-                        </td>
-                    </tr>
+
                 </table>
-                <br/><br/><br/>
-                <p class="sectionheading">DEFAULT SEARCH PREFERENCES (OPTIONAL)</p>
-                <table width="60%">
-                    <tr>
-                        <td>
-                            <div id="darklink">
-                                <p class="text">You can set default sorting and filtering preferences here if you like. These options only affect the default display of information in the <a href="/">main search interface</a>.</p>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-                <br/>
-                <table width="60%">
-                    <tr>
-                        <td width="150px" valign="middle">
-                            <p class="text">Sorting preference</p>
-                        </td>
-                        <td>
-                            <p class="text">This will set the default sorting order for apartment listings.</p>
-                            <input type="radio" name="sorting_preference" value="distance" {% if data.preferences.sorting_preference == "distance" %}checked{% endif %}> Distance<br/>
-                            <input type="radio" name="sorting_preference" value="rent" {% if data.preferences.sorting_preference == "rent" %}checked{% endif %}> Rent price<br/>
-                            <input type="radio" name="sorting_preference" value="size" {% if data.preferences.sorting_preference == "size" %}checked{% endif %}> Property size<br/><br/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td width="150px" valign="middle">
-                            <p class="text">Filtering preference</p>
-                        </td>
-                        <td>
-                            <p class="text">This will set the default filtering options for apartment listings. Leave all unchecked to have no filters (e.g. default to display all listings).</p>
-                            <input type="checkbox" name="filtering_preference_gym" value="gym" {% if data.preferences.amenities_gym == "true" %}checked{% endif %}> Has gym<br/>
-                            <input type="checkbox" name="filtering_preference_pool" value="pool" {% if data.preferences.amenities_pool == "true" %}checked{% endif %}> Has pool<br/>
-                            <input type="checkbox" name="filtering_preference_pet_friendly" value="pet_friendly" {% if data.preferences.amenities_pet_friendly == "true" %}checked{% endif %}> Is pet friendly<br/>
-                            <input type="checkbox" name="filtering_preference_computer_room" value="computer_room" {% if data.preferences.amenities_computer_room == "true" %}checked{% endif %}> Has computer room(s)<br/>
-                            <input type="checkbox" name="filtering_preference_trash_pickup_services" value="trash_pickup_services" {% if data.preferences.amenities_trash_pickup_services == "true" %}checked{% endif %}> Has trash pickup services<br/><br/>
-                        </td>
-                    </tr>
-                </table>
+
                 <br/><br/>
-                <button type="submit" class="btn btn-primary btn-lg" name="my-form"><p class="button">update profile</p></button>
+                <button type="submit" class="btn btn-primary btn-lg" name="my-form"><p class="button">post listing</p></button>
             </form>
         </div>
 
