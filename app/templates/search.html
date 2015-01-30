@@ -290,6 +290,9 @@
                             <p class="detailstext2">{[ listing.description ]}</p>
                             <br/>
                             <p class="detailssection">YELP REVIEWS</p>
+                            <img ng-src="{[ listing.review_rating ]}" />
+                            <p class="detailstext2">{[ listing.review_snippet ]}</p>
+                            <p class="detailstext2"><a target="_blank" href="{[ listing.review_url ]}">View more reviews on Yelp</a></p>
                             <br/>
                             <p class="detailssection">NEXT STEPS</p>
                             <p class="detailstext"><a target="_blank" href="/listing/{[ listing.id ]}">View full listing details</a></p>

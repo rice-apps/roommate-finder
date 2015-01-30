@@ -178,8 +178,8 @@
                     <tr>
                         <td width="1px" valign="top">
                             {% if data.listing.photo != None %}
-                                <a class="fancybox" rel="group" href="../photos/listings/{{ data.listing.photo }}"><img
-                                        class="photo" src="../photos/{{ data.listing.photo }}" alt=""/></a>
+                                <a class="fancybox" rel="group" href="/photos/listings/{{ data.listing.photo }}"><img
+                                        class="photo" src="/photos/listings/{{ data.listing.photo }}" alt=""/></a>
                             {% endif %}
                         </td>
                         <!--Padding between photo and content, if photo exists.-->
@@ -215,7 +215,7 @@
                         <td width="70px"></td>
                         <td width="400px" valign="top">
                             <p class="subheading">ADDITIONAL INFORMATION</p>
-                            <p class="text">{{ data.listing.additional_information }}</p>
+                            <p class="text">{{ data.listing.description }}</p>
                         </td>
                         <td width="70px"></td>
                         <td width="400px" valign="top">

@@ -52,6 +52,7 @@ class Listing(db.Model):
     property_size = db.Column(db.Integer)
     number_roommates_needed = db.Column(db.Integer)
     timestamp = db.Column(db.String(255))
+    review_url = db.Column(db.String(255))
     review_rating = db.Column(db.String(255))
     review_snippet = db.Column(db.String(255))
     amenities_gym = db.Column(db.String(64))

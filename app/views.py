@@ -16,7 +16,7 @@ from app.models import Profile, Listing, Preferences
 # Server upload folder - do not change
 # UPLOAD_FOLDER = "Z:/RoommateFinder/roommate-finder/app/photos"
 # Local dev environment upload folder - change as necessary
-UPLOAD_FOLDER = "D:/GitHub/roommate-finder"
+UPLOAD_FOLDER = "D:/GitHub/roommate-finder/app/photos"
 
 app.config['CAS_SERVER'] = 'https://netid.rice.edu'
 app.config['CAS_AFTER_LOGIN'] = 'after_login'
@@ -252,14 +252,15 @@ def search():
 def get_yelp_reviews(address):
     """
     Gets the Yelp rating and review for the business located at the passed address.
-    Returns a 2-length tuple of (rating image url, review snippet)
+    Returns a 3-length tuple of (business url, rating image url, review snippet)
 
     Example input: "6100 Main St, Houston, TX, 77005"
-    Example output: ("http://yelp.com/image/for/5/star.png", "Fantastic school!")
+    Example output: ("http://www.yelp.com/biz/rice-university", "http://yelp.com/image/for/5/star.png", "Fantastic school!")
     """
+    url = str(reviews.search("", address)["businesses"][0]["url"])
     rating = str(reviews.search("", address)["businesses"][0]["rating_img_url"])
     review_snippet = str(reviews.search("", address)["businesses"][0]["snippet_text"])
-    return (rating, review_snippet)
+    return (url, rating, review_snippet)
 
 
 @app.route('/new_account')
