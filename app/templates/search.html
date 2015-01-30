@@ -276,24 +276,20 @@
                             <p class="detailssubheading">Posted by <a href="/user/{[ listing.poster_netid ]}">{[ listing.poster_name ]} [{[ listing.poster_netid ]}]</a> on {[ listing.timestamp ]}</p>
                             <br/>
                             <br/>
-                            <iframe
-                            width="600"
-                            height="450"
-                            frameborder="0" style="border:0"
-                            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyChrd2_zI_bHbhUnyw1P7-e8wf2Rq9uiiQ
-                                &q={[listing.address_line_1]} {[listing.address_line_2]}">
-                            </iframe>
                             <p class="detailssection">LOCATION</p>
                             <p class="detailstext">{[ listing.address_line_1 ]}</p>
                             <p class="detailstext">{[ listing.address_line_2 ]}</p>
                             <p class="detailstext">{[ listing.distance ]} mi from Rice</p>
-                            <br/>
+                            <iframe width="100%" height="400px" frameborder="0" style="border:0" ng-src="{[ getMapUrl(listing.address_line_1 + ', ' + listing.address_2) ]}"></iframe>
+                            <br/><br/>
                             <p class="detailssection">RENT</p>
                             <p class="detailstext">${[ listing.rent ]}/month</p>
                             <p class="detailstext2">{[ listing.rent_details ]}</p>
                             <br/>
                             <p class="detailssection">ADDITIONAL INFORMATION</p>
                             <p class="detailstext2">{[ listing.description ]}</p>
+                            <br/>
+                            <p class="detailssection">YELP REVIEWS</p>
                             <br/>
                             <p class="detailssection">NEXT STEPS</p>
                             <p class="detailstext"><a target="_blank" href="/listing/{[ listing.id ]}">View full listing details</a></p>

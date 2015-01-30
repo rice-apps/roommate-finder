@@ -16,12 +16,12 @@ from app.models import Profile, Listing, Preferences
 # Server upload folder - do not change
 # UPLOAD_FOLDER = "Z:/RoommateFinder/roommate-finder/app/photos"
 # Local dev environment upload folder - change as necessary
-UPLOAD_FOLDER = "D:/GitHub/roommate-finder/app/photos"
+UPLOAD_FOLDER = "C:/Users/Kevin/Work Folders/OneDrive/Homework/Rice University/Miscellaneous/Rice Apps/roommate-finder"
 
 app.config['CAS_SERVER'] = 'https://netid.rice.edu'
 app.config['CAS_AFTER_LOGIN'] = 'after_login'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['APP_FOLDER'] = "Z:/RoommateFinder/roommate-finder"  # directory of application on the server - do not change
+app.config['APP_FOLDER'] = "C:/Users/Kevin/Work Folders/OneDrive/Homework/Rice University/Miscellaneous/Rice Apps/roommate-finder"  # directory of application on the server - do not change
 app.config['APP_URL'] = 'http://roommatefinder.kevinlin.info'
 app.config.setdefault('CAS_USERNAME_SESSION_KEY', 'CAS_USERNAME')
 
@@ -81,7 +81,7 @@ def database():
     """
     URL to get the SQLite database. Required for JS-SQL behavior in search.js.
     """
-    return send_from_directory("D:/GitHub/roommate-finder", "app.db")
+    return send_from_directory(app.config["APP_FOLDER"], "app.db")
 
 
 @app.route('/welcome')
@@ -244,18 +244,11 @@ def search():
         user = Profile.query.filter_by(net_id=net_id).first()
         preferences = Preferences.query.filter_by(net_id=net_id).first()
         listings = Listing.query.all()
-        id = str(reviews.search("","6100 Main street")["businesses"][1]["id"])
-        #rating = reviews.get_business(id)["rating"]
-        #snippet = reviews.get_business(id)["snippet_text"]
-        review_dict = {}
+        review_information = {}
         for listing in listings:
-            id = listing.id
-            rating = reviews.get_business(id)['rating']
-            snippet = reviews.get_business(id)["snippet_text"]
-            #id = str(reviews.search("","6100 Main street")["businesses"][1]["id"])
-
-            review_dict[id] = {'rating':rating, 'snippet':snippet}
-        data = {"net_id": net_id, "profile": user, "preferences": preferences}
+            business_id = str(reviews.search("", listing.address_line_1 + ", " + listing.address_line_2)["businesses"][1]["id"])
+            review_information[listing.id] = {"rating": str(reviews.get_business(business_id)["rating"]), "snippet": str(reviews.get_business(business_id)["snippet_text"])}
+        data = {"net_id": net_id, "profile": user, "preferences": preferences, "review_information": review_information}
         return render_template('search.html', data=data)
     else:
         index()
@@ -361,7 +354,7 @@ def listing_details(ID):
         error = "This listing doesn't exist!"
     else:
         poster = Profile.query.filter_by(net_id=listing.poster_netid).first()
-    data = {"net_id": login, "profile": user, "id": ID, "listing": listing, "error": error, "poster": poster}
+    data = {"net_id": login, "profile": user, "id": ID, "listing": listing, "error": error, "poster": poster, "address": listing.address_line_1 + ", " + listing.address_line_2}
     return render_template('listing_detail.html', data=data)
 
 
