@@ -246,8 +246,7 @@ def search():
         listings = Listing.query.all()
         review_information = {}
         for listing in listings:
-            business_id = str(reviews.search("", listing.address_line_1 + ", " + listing.address_line_2)["businesses"][1]["id"])
-            review_information[listing.id] = {"rating": str(reviews.get_business(business_id)["rating"]), "snippet": str(reviews.get_business(business_id)["snippet_text"])}
+            review_information[listing.id] = {"rating": str(reviews.search("", listing.address_line_1 + ", " + listing.address_line_2)["businesses"][0]["rating_img_url"]), "snippet": str(reviews.search("", listing.address_line_1 + ", " + listing.address_line_2)["businesses"][0]["snippet_text"])}
         data = {"net_id": net_id, "profile": user, "preferences": preferences, "review_information": review_information}
         return render_template('search.html', data=data)
     else:
