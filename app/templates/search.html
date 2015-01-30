@@ -276,7 +276,13 @@
                             <p class="detailssubheading">Posted by <a href="/user/{[ listing.poster_netid ]}">{[ listing.poster_name ]} [{[ listing.poster_netid ]}]</a> on {[ listing.timestamp ]}</p>
                             <br/>
                             <br/>
-                            <!--TODO: Google Maps API-->
+                            <iframe
+                            width="600"
+                            height="450"
+                            frameborder="0" style="border:0"
+                            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyChrd2_zI_bHbhUnyw1P7-e8wf2Rq9uiiQ
+                                &q={[listing.address_line_1]} {[listing.address_line_2]}">
+                            </iframe>
                             <p class="detailssection">LOCATION</p>
                             <p class="detailstext">{[ listing.address_line_1 ]}</p>
                             <p class="detailstext">{[ listing.address_line_2 ]}</p>

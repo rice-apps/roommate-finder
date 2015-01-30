@@ -4,6 +4,7 @@
 
 import urllib2
 import time
+import reviews
 
 from flask import render_template, session, send_from_directory
 from werkzeug.utils import redirect
@@ -242,6 +243,18 @@ def search():
     if net_id is not None:
         user = Profile.query.filter_by(net_id=net_id).first()
         preferences = Preferences.query.filter_by(net_id=net_id).first()
+        listings = Listing.query.all()
+        id = str(reviews.search("","6100 Main street")["businesses"][1]["id"])
+        #rating = reviews.get_business(id)["rating"]
+        #snippet = reviews.get_business(id)["snippet_text"]
+        review_dict = {}
+        for listing in listings:
+            id = listing.id
+            rating = reviews.get_business(id)['rating']
+            snippet = reviews.get_business(id)["snippet_text"]
+            #id = str(reviews.search("","6100 Main street")["businesses"][1]["id"])
+
+            review_dict[id] = {'rating':rating, 'snippet':snippet}
         data = {"net_id": net_id, "profile": user, "preferences": preferences}
         return render_template('search.html', data=data)
     else:
