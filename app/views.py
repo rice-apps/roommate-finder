@@ -16,12 +16,12 @@ from app.models import Profile, Listing, Preferences
 # Server upload folder - do not change
 # UPLOAD_FOLDER = "Z:/RoommateFinder/roommate-finder/app/photos"
 # Local dev environment upload folder - change as necessary
-UPLOAD_FOLDER = "C:/Users/Kevin/Work Folders/OneDrive/Homework/Rice University/Miscellaneous/Rice Apps/roommate-finder"
+UPLOAD_FOLDER = "D:/GitHub/roommate-finder"
 
 app.config['CAS_SERVER'] = 'https://netid.rice.edu'
 app.config['CAS_AFTER_LOGIN'] = 'after_login'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['APP_FOLDER'] = "C:/Users/Kevin/Work Folders/OneDrive/Homework/Rice University/Miscellaneous/Rice Apps/roommate-finder"  # directory of application on the server - do not change
+app.config['APP_FOLDER'] = "D:/GitHub/roommate-finder"  # directory of application on the server - do not change
 app.config['APP_URL'] = 'http://roommatefinder.kevinlin.info'
 app.config.setdefault('CAS_USERNAME_SESSION_KEY', 'CAS_USERNAME')
 
@@ -243,14 +243,23 @@ def search():
     if net_id is not None:
         user = Profile.query.filter_by(net_id=net_id).first()
         preferences = Preferences.query.filter_by(net_id=net_id).first()
-        listings = Listing.query.all()
-        review_information = {}
-        for listing in listings:
-            review_information[listing.id] = {"rating": str(reviews.search("", listing.address_line_1 + ", " + listing.address_line_2)["businesses"][0]["rating_img_url"]), "snippet": str(reviews.search("", listing.address_line_1 + ", " + listing.address_line_2)["businesses"][0]["snippet_text"])}
-        data = {"net_id": net_id, "profile": user, "preferences": preferences, "review_information": review_information}
+        data = {"net_id": net_id, "profile": user, "preferences": preferences}
         return render_template('search.html', data=data)
     else:
         index()
+
+
+def get_yelp_reviews(address):
+    """
+    Gets the Yelp rating and review for the business located at the passed address.
+    Returns a 2-length tuple of (rating image url, review snippet)
+
+    Example input: "6100 Main St, Houston, TX, 77005"
+    Example output: ("http://yelp.com/image/for/5/star.png", "Fantastic school!")
+    """
+    rating = str(reviews.search("", address)["businesses"][0]["rating_img_url"])
+    review_snippet = str(reviews.search("", address)["businesses"][0]["snippet_text"])
+    return (rating, review_snippet)
 
 
 @app.route('/new_account')

@@ -280,7 +280,7 @@
                             <p class="detailstext">{[ listing.address_line_1 ]}</p>
                             <p class="detailstext">{[ listing.address_line_2 ]}</p>
                             <p class="detailstext">{[ listing.distance ]} mi from Rice</p>
-                            <iframe width="100%" height="400px" frameborder="0" style="border:0" ng-src="{[ getMapUrl(listing.address_line_1 + ', ' + listing.address_2) ]}"></iframe>
+                            <iframe width="100%" height="400px" frameborder="0" style="border:0" ng-src="{[ getMapUrl(listing.address_line_1 + listing.address_line_2) ]}"></iframe>
                             <br/><br/>
                             <p class="detailssection">RENT</p>
                             <p class="detailstext">${[ listing.rent ]}/month</p>
