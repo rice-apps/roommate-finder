@@ -4,6 +4,7 @@
 
 import urllib2
 import time
+import reviews
 
 from flask import render_template, session, send_from_directory
 from werkzeug.utils import redirect
@@ -20,7 +21,7 @@ UPLOAD_FOLDER = "D:/GitHub/roommate-finder/app/photos"
 app.config['CAS_SERVER'] = 'https://netid.rice.edu'
 app.config['CAS_AFTER_LOGIN'] = 'after_login'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['APP_FOLDER'] = "Z:/RoommateFinder/roommate-finder"  # directory of application on the server - do not change
+app.config['APP_FOLDER'] = "D:/GitHub/roommate-finder"  # directory of application on the server - do not change
 app.config['APP_URL'] = 'http://roommatefinder.kevinlin.info'
 app.config.setdefault('CAS_USERNAME_SESSION_KEY', 'CAS_USERNAME')
 
@@ -80,7 +81,7 @@ def database():
     """
     URL to get the SQLite database. Required for JS-SQL behavior in search.js.
     """
-    return send_from_directory("D:/GitHub/roommate-finder", "app.db")
+    return send_from_directory(app.config["APP_FOLDER"], "app.db")
 
 
 @app.route('/welcome')
@@ -248,6 +249,20 @@ def search():
         index()
 
 
+def get_yelp_reviews(address):
+    """
+    Gets the Yelp rating and review for the business located at the passed address.
+    Returns a 3-length tuple of (business url, rating image url, review snippet)
+
+    Example input: "6100 Main St, Houston, TX, 77005"
+    Example output: ("http://www.yelp.com/biz/rice-university", "http://yelp.com/image/for/5/star.png", "Fantastic school!")
+    """
+    url = str(reviews.search("", address)["businesses"][0]["url"])
+    rating = str(reviews.search("", address)["businesses"][0]["rating_img_url"])
+    review_snippet = str(reviews.search("", address)["businesses"][0]["snippet_text"])
+    return (url, rating, review_snippet)
+
+
 @app.route('/new_account')
 def new_account():
     """
@@ -348,7 +363,7 @@ def listing_details(ID):
         error = "This listing doesn't exist!"
     else:
         poster = Profile.query.filter_by(net_id=listing.poster_netid).first()
-    data = {"net_id": login, "profile": user, "id": ID, "listing": listing, "error": error, "poster": poster}
+    data = {"net_id": login, "profile": user, "id": ID, "listing": listing, "error": error, "poster": poster, "address": listing.address_line_1 + ", " + listing.address_line_2}
     return render_template('listing_detail.html', data=data)
 
 

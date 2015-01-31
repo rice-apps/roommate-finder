@@ -52,13 +52,16 @@ class Listing(db.Model):
     property_size = db.Column(db.Integer)
     number_roommates_needed = db.Column(db.Integer)
     timestamp = db.Column(db.String(255))
+    review_url = db.Column(db.String(255))
+    review_rating = db.Column(db.String(255))
+    review_snippet = db.Column(db.String(255))
     amenities_gym = db.Column(db.String(64))
     amenities_pool = db.Column(db.String(64))
     amenities_pet_friendly = db.Column(db.String(64))
     amenities_computer_room = db.Column(db.String(64))
     amenities_trash_pickup_services = db.Column(db.String(64))
 
-    def __init__(self, id, apartment_name, poster_netid, poster_name, description, address_line_1, address_line_2, photo, distance, rent, rent_details, property_size, number_roommates_needed, timestamp, has_gym, has_pool, is_pet_friendly, has_computer_room, has_trash_pickup_services):
+    def __init__(self, id, apartment_name, poster_netid, poster_name, description, address_line_1, address_line_2, photo, distance, rent, rent_details, property_size, number_roommates_needed, timestamp, review_rating, review_snippet, has_gym, has_pool, is_pet_friendly, has_computer_room, has_trash_pickup_services):
         self.id = id  # ID of the listing (used for /listing/ID)
         self.apartment_name = apartment_name  # Name of the apartment
         self.poster_netid = poster_netid  # Net ID of the listing poster
@@ -73,6 +76,8 @@ class Listing(db.Model):
         self.property_size = property_size  # Size of property, in sq ft
         self.number_roommates_needed = number_roommates_needed  # Number of roommates the filler needs
         self.timestamp = timestamp  # When the listing was posted
+        self.review_rating = review_rating  # URL of the Yelp rating image
+        self.review_snippet = review_snippet  # Snippet of the most recent Yelp review
         # Filter conditions
         self.amenities_gym = has_gym
         self.amenities_pool = has_pool
