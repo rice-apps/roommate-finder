@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" ng-app="roommateFinder">
 	<head>
+        <link rel="icon" type="image/png" href="../static/graphics/favicon.ico">
+
     	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     	<!--Fonts-->
@@ -268,7 +270,6 @@
                         <p class="sectionheading">LISTING DETAILS</p>
                         <div ng-repeat="listing in listings" ng-show="showListing(listing)">
                             <p class="text"><a href="/listing/{[ listing.id ]}">See full listing details</a></p>
-                            <!--TODO: Figure out horizontally scrolling images-->
                             <div style="height:25px;"></div>
                             <a class="fancybox" rel="group" href="../photos/listings/{[ listing.photo ]}"><img class="preview" ng-src="../photos/listings/{[ listing.photo ]}" /></a>
                             <div style="height:25px;"></div>

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
+        <link rel="icon" type="image/png" href="../static/graphics/favicon.ico">
+
     	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     	<!--Fonts-->
@@ -15,10 +17,14 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 
-        <!--Date Time Picker-->
-        <link rel="stylesheet" href="http://eonasdan.github.io/bootstrap-datetimepicker/content/bootstrap-datetimepicker.css">
-        <script type="text/javascript" src="http://momentjs.com/downloads/moment.js"></script>
-        <script type="text/javascript" src="https://raw.githubusercontent.com/Eonasdan/bootstrap-datetimepicker/master/build/js/bootstrap-datetimepicker.min.js"></script>
+        <!--Fancybox-->
+        <link rel="stylesheet" href="../static/css/fancybox.css?v=2.1.5" type="text/css" media="screen" />
+        <script type="text/javascript" src="../static/js/fancybox.pack.js?v=2.1.5"></script>
+
+        <!--Pace.js and associated stylesheet-->
+        <script src="../static/js/pace.min.js"></script>
+        <link rel="stylesheet" href="../static/css/pace.css">
+        <script src="../static/js/splash-fade.js"></script>
 
 		<!--Roommate Finder stylesheet-->
 		<link type="text/css" rel="stylesheet" href="static/stylesheet.css">
@@ -39,9 +45,8 @@
                 max-width: 150px;
                 max-height: 150px;
             }
-            img.preview {
-                max-width: 150px;
-                max-height: 150px;
+            img.thumbnail {
+                max-width: 140px;
             }
             p.heading {
                 font-family: 'Oxygen', sans-serif;
@@ -58,14 +63,20 @@
 				font-size: 20px;
 				color: #171717;
             }
-            p.fieldname {
+            p.text {
 				font-family: 'Oxygen', sans-serif;
 				font-weight: 300;
 				letter-spacing: 1px;
-                line-height: 1px;
 				font-size: 14px;
 				color: #171717;
 			}
+            p.sectionheading {
+                font-family: 'Oswald', sans-serif;
+				font-weight: 400;
+				letter-spacing: 1px;
+				font-size: 19px;
+				color: #171717;
+            }
             p.button {
 				font-family: 'Oxygen', sans-serif;
 				font-weight: 400;
@@ -86,6 +97,7 @@
 				letter-spacing: 1px;
 				font-size: 13px;
 				color: #EDEDED;
+                text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4)
 			}
             span.pagesectionbold {
 				font-family: 'Oxygen', sans-serif;
@@ -93,6 +105,7 @@
 				letter-spacing: 1px;
 				font-size: 13px;
 				color: #EDEDED;
+                text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4)
 			}
             #delete a:link {
 				color: #CC2323;
@@ -112,18 +125,30 @@
 				text-decoration: none;
 			}
         </style>
+
+        <script type="text/javascript">
+            function confirmAction(){
+                return confirm("Are you sure you want to delete this listing?");
+            }
+        </script>
 	</head>
 
 	<body>
+        <div id="splash" class="visible">
+            <div id="splashlogo">
+                <img src="../static/graphics/logo_text_invert.png" width="600px" height="120px" />
+            </div>
+        </div>
+
 		<div id="headercontainer">
             <table width="100%" height="60px">
                 <tr>
                     <td width="10%"></td>
-                    <td width="40%" valign="middle">
+                    <td width="30%" valign="middle">
                         <a href="../"><img src="../static/graphics/logo.png" width="300px" height="60px" border="0" /></a>
                     </td>
-                    <td width="40%" valign="bottom">
-                        <div id="links"><p align="right">WELCOME, {{ data.net_id }} | <a href="/search">FIND ROOMMATES</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p></div>
+                    <td width="50%" valign="bottom">
+                        <div id="links"><p align="right">WELCOME, {{ data.profile.name.split(" ")[0] | upper}} | <a href="/search">FIND ROOMMATES</a> | <a href="/create_listing">CREATE A NEW LISTING</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p></div>
                     </td>
                     <td width="10%"></td>
                 </tr>
@@ -138,8 +163,161 @@
         <div id="content">
             <p class="heading">my postings</p>
             <p class="subheading">View, edit, and delete your postings</p>
-            <br/><br/>
+            <br/><br/><br/>
+            {% for listing in data.listings %}
+                <p class="sectionheading">{{ listing.apartment_name | upper}}</p>
+                <table width="60%">
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="text">Address</p>
+                        </td>
+                        <td>
+                            <p class="text"> {{ listing.address_line_1 }} </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="150px" valign="middle">
 
+                        </td>
+                        <td>
+                            <p class="text"> {{ listing.address_line_2 }} </p>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="text">Distance from Rice</p>
+                        </td>
+                        <td>
+                            <p class="text">{{ listing.distance }} mi</p>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="text">Rent ($/month)</p>
+                        </td>
+                        <td>
+                            <p class="text">{{ listing.rent }}</p>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="text">Rent details</p>
+                        </td>
+                        <td>
+                            <p class="text">{{ listing.rent_details }}</p>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="text">Property size</p>
+                        </td>
+                        <td>
+                            <p class="text">{{ listing.property_size }} sq ft</p>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="text">Number of roommates seeking</p>
+                        </td>
+                        <td>
+                            <p class="text">{{ listing.number_roommates_needed }}</p>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="text">Has gym</p>
+                        </td>
+                        <td>
+                            <input type="checkbox" onclick="return false" {% if listing.amenities_gym == "true" %}checked{% endif %}>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="text">Has pool</p>
+                        </td>
+                        <td>
+                            <input type="checkbox" onclick="return false" {% if listing.amenities_pool == "true" %}checked{% endif %}>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="text">Pet friendly</p>
+                        </td>
+                        <td>
+                            <input type="checkbox" onclick="return false" {% if listing.amenities_pet_friendly == "true" %}checked{% endif %}>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="text">Has computer room(s)</p>
+                        </td>
+                        <td>
+                            <input type="checkbox" onclick="return false" {% if listing.amenities_computer_room == "true" %}checked{% endif %}>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="200px" valign="middle">
+                            <p class="text">Has trash pickup services</p>
+                        </td>
+                        <td>
+                            <input type="checkbox" onclick="return false" {% if listing.amenities_trash_pickup_services == "true" %}checked{% endif %}>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="text">Photos</p>
+                        </td>
+                        <td>
+                            <div id="preview">
+                            </div>
+                            <br/>
+
+                            <div class="row">
+                                {% for photo in listing.photos %}
+                                    <div class="col-xs-6 col-md-3">
+                                        <a class="fancybox" rel="group" href="/photos/listings/{{ photo.hash }}">
+                                            <img src="/photos/listings/{{ photo.hash }}" class="thumbnail" class="img-responsive">
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="170px" valign="middle">
+                            <p class="text">Description</p>
+                        </td>
+                        <td>
+                            <p class="text"> {{ listing.description }} </p>
+                        </td>
+                    </tr>
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="170px" valign="middle">
+                        </td>
+                        <th colspan="4">
+                            <button type="button" class="btn btn-primary" onclick="location.href='/listing/{{ listing.id }}'">View</button>
+                            <button type="button" class="btn btn-primary" onclick="location.href='/edit_listing/{{ listing.id }}'">Edit</button>
+                            <a onclick="return confirmAction()" href="/delete_listing?listing_id={{ listing.id }}">
+                                <button type="button" class="btn btn-primary">Delete</button>
+                            </a>
+                        </th>
+                    </tr>
+                </table>
+                <br/><br/><br/>
+            {% endfor %}
         </div>
 
         <div id="footercontainer">

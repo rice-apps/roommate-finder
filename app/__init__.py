@@ -16,4 +16,4 @@ lm = LoginManager()
 lm.init_app(app)
 lm.login_view = 'login'
 
-from app import views, models, profile, email, reviews
+from app import views, models, profile, email, reviews, listing, universal

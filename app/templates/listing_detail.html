@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
+        <link rel="icon" type="image/png" href="../static/graphics/favicon.ico">
+
     	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     	<!--Fonts-->
@@ -20,6 +22,9 @@
         <link rel="stylesheet" href="../static/css/pace.css">
         <script src="../static/js/splash-fade.js"></script>
 
+        <!--Font Awesome-->
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
         <!--Fancybox-->
         <link rel="stylesheet" href="../static/css/fancybox.css?v=2.1.5" type="text/css" media="screen" />
         <script type="text/javascript" src="../static/js/fancybox.pack.js?v=2.1.5"></script>
@@ -27,7 +32,7 @@
 		<!--Roommate Finder stylesheet-->
 		<link type="text/css" rel="stylesheet" href="/static/stylesheet.css">
 
-        <title>{% if data.listing %}listing {{ data.listing.id }}{% else %}listing not found{% endif %} | roommate finder | rice university</title>
+        <title>{% if data.listing %}{{ data.listing.apartment_name | lower }}{% else %}listing not found{% endif %} | roommate finder | rice university</title>
 
         <!--Attach Fancybox on page load-->
         <script type="text/javascript">
@@ -48,7 +53,7 @@
 		<style type="text/css">
             body {
                 background: #F5F5F5;
-                margin-top: 180px;
+                margin-top: 160px;
                 margin-bottom: 150px;
             }
             #content {
@@ -65,6 +70,13 @@
                 line-height: 70px;
 				font-size: 70px;
 				color: #171717;
+            }
+            p.goback {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 400;
+                letter-spacing: 1px;
+                font-size: 12px;
+                color: #3B3B3B;
             }
             p.subheading {
                 font-family: 'Oswald', sans-serif;
@@ -93,6 +105,7 @@
 				letter-spacing: 1px;
 				font-size: 13px;
 				color: #EDEDED;
+                text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4)
 			}
             span.pagesectionbold {
 				font-family: 'Oxygen', sans-serif;
@@ -100,23 +113,7 @@
 				letter-spacing: 1px;
 				font-size: 13px;
 				color: #EDEDED;
-			}
-            #connect a:link {
-				color: #17657A;
-				text-decoration: none;
-			}
-			#connect a:hover {
-				color: #318FA8;
-				text-decoration: none;
-				border-bottom: 2px solid #318FA8;
-			}
-			#connect a:visited {
-				color: #17657A;
-				text-decoration: none;
-			}
-			#connect a:active {
-				color: #17657A;
-				text-decoration: none;
+                text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4)
 			}
             #delete a:link {
 				color: #CC2323;
@@ -133,6 +130,23 @@
 			}
 			#delete a:active {
 				color: #CC2323;
+				text-decoration: none;
+			}
+            #goback a:link {
+				color: #3B3B3B;
+				text-decoration: none;
+			}
+			#goback a:hover {
+				color: #171717;
+				text-decoration: none;
+                border-bottom: 2px solid #3B3B3B;
+			}
+			#goback a:visited {
+				color: #3B3B3B;
+				text-decoration: none;
+			}
+			#goback a:active {
+				color: #3B3B3B;
 				text-decoration: none;
 			}
         </style>
@@ -162,7 +176,7 @@
         <div id="headercontainer2">
 			<div id="header">
                 {% if data.listing %}
-            	    <div id="links"><p><a href=""><span class="pagesectionbold">{{ data.listing.apartment_name | upper }} [{{ data.poster.net_id | upper }}]</span></a> · <a href="/user/{{ data.poster.net_id }}"><span class="pagesection">POSTED BY {{ data.poster.name | upper }}</span></a></div>
+            	    <div id="links"><p><a href=""><span class="pagesectionbold">{{ data.listing.apartment_name | upper }}</span></a> · <a href="https://www.google.com/maps?q={{ data.listing.address_line_1 }}+{{ data.listing.address_line_2 }}"><span class="pagesection">{{ data.listing.address_line_1 | upper }}, {{ data.listing.address_line_2 | upper }}</span></a> · <a href="/user/{{ data.poster.net_id }}"><span class="pagesection">POSTED BY {{ data.poster.name | upper }} [{{ data.poster.net_id | upper }}]</span></a></div>
                 {% else %}
                     <div id="links"><p><a href=""><span class="pagesectionbold">LISTING ID {{ data.id }}</span></a></div>
                 {% endif %}
@@ -170,6 +184,10 @@
 		</div>
 
         <div id="content">
+            <div id="goback">
+                <p class="goback"><a href="/search">« GO BACK TO ALL LISTINGS</a></p>
+            </div>
+            <br/>
             {% if data.listing %}
                 <p class="heading">{{ data.listing.apartment_name }}</p>
                 <p class="subheading">POSTED BY {{ data.poster.name | upper }} ON {{ data.listing.timestamp }}</p>
@@ -177,13 +195,15 @@
                 <table>
                     <tr>
                         <td width="1px" valign="top">
-                            {% if data.listing.photo != None %}
-                                <a class="fancybox" rel="group" href="/photos/listings/{{ data.listing.photo }}"><img
-                                        class="photo" src="/photos/listings/{{ data.listing.photo }}" alt=""/></a>
+                            {% if data.photos != None %}
+                                {% for photo in data.photos %}
+                                    <a class="fancybox" rel="group" href="/photos/listings/{{ photo }}"><img class="photo" src="/photos/listings/{{ photo }}" alt=""/></a>
+                                    <br/><br/>
+                                {% endfor %}
                             {% endif %}
                         </td>
                         <!--Padding between photo and content, if photo exists.-->
-                        {% if data.listing.photo != None %}
+                        {% if data.photos != None %}
                             <td width="70px"></td>
                         {% endif %}
                         <td width="300px" valign="top">
@@ -201,27 +221,36 @@
                             </iframe>
                             <br/>
                             <br/>
-
                             <p class="fieldtitle">RENT</p>
-
                             <p class="text">${{ data.listing.rent }}/month</p>
                             <p class="text">{{ data.listing.rent_details }}</p>
                             <br/>
-
-                            <p class="fieldtitle">{{ data.poster.name.split(" ")[0] | upper }}'S BIO</p>
-
-                            <p class="text">{{ data.poster.bio }}</p>
+                            <p class="fieldtitle">AMENITIES</p>
+                            <p class="text">{% if data.listing.amenities_gym == "true" %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-times"></i>{% endif %} Has gym</p>
+                            <p class="text">{% if data.listing.amenities_pool == "true" %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-times"></i>{% endif %} Has pool</p>
+                            <p class="text">{% if data.listing.amenities_pet_friendly == "true" %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-times"></i>{% endif %} Pet friendly</p>
+                            <p class="text">{% if data.listing.amenities_computer_room == "true" %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-times"></i>{% endif %} Computer room(s)</p>
+                            <p class="text">{% if data.listing.amenities_trash_pickup_services == "true" %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-times"></i>{% endif %} Trash pickup services</p>
                         </td>
                         <td width="70px"></td>
                         <td width="400px" valign="top">
                             <p class="subheading">ADDITIONAL INFORMATION</p>
+                            <p class="fieldtitle">{{ data.poster.name.split(" ")[0] | upper }}'S BIO</p>
+                            <p class="text">{{ data.poster.bio }}</p>
+                            <br/>
+                            <p class="fieldtitle">LISTING INFORMATION</p>
                             <p class="text">{{ data.listing.description }}</p>
+                            <br/>
+                            <p class="fieldtitle">YELP REVIEWS</p>
+                            <img src="{{ data.listing.review_rating }}" />
+                            <p class="text">{{ data.listing.review_snippet }}</p>
+                            <p class="text"><a target="_blank" href="{{  data.listing.review_url }}">View more reviews on Yelp</a></p>
                         </td>
                         <td width="70px"></td>
                         <td width="400px" valign="top">
                             <p class="subheading">NEXT STEPS</p>
 
-                            <div id="connect">
+                            <div id="darklink">
                                 <p class="text"><a target="_blank" href="/user/{{ data.listing.poster_netid }}">View {{ data.listing.poster_name.split(" ")[0] }}'s profile</a></p>
                                 <p class="text"><a href="/notification_email?joiner={{ data.net_id }}&poster={{ data.listing.poster_netid }}&listing={{ data.listing.id }}">Send {{ data.listing.poster_name.split(" ")[0] }} a notification that you're interested</a></p>
                                 <p class="text"><a href="mailto:{{ data.listing.poster_netid }}@rice.edu">Email {{ data.listing.poster_name }} directly</a></p>

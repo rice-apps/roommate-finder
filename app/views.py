@@ -1,15 +1,14 @@
 # views.py
 # This file contains all methods related to routing, and directing the user to the correct location.
-
+import json
 
 import urllib2
 import time
-import reviews
 
-from flask import render_template, session, send_from_directory
+from flask import render_template, session, send_from_directory, request
 from werkzeug.utils import redirect
 
-from app import app, lm, db
+from app import app, lm, db, universal
 from app.models import Profile, Listing, Preferences
 
 
@@ -21,8 +20,9 @@ UPLOAD_FOLDER = "D:/GitHub/roommate-finder/app/photos"
 app.config['CAS_SERVER'] = 'https://netid.rice.edu'
 app.config['CAS_AFTER_LOGIN'] = 'after_login'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['APP_FOLDER'] = "D:/GitHub/roommate-finder"  # directory of application on the server - do not change
-app.config['APP_URL'] = 'http://roommatefinder.kevinlin.info'
+# app.config['APP_FOLDER'] = "Z:/RoommateFinder/roommate-finder"  # directory of application on the server - do not change
+app.config['APP_FOLDER'] = "D:/GitHub/roommate-finder"  # local directory
+app.config['APP_URL'] = 'http://roommatefinder.riceapps.org'
 app.config.setdefault('CAS_USERNAME_SESSION_KEY', 'CAS_USERNAME')
 
 
@@ -57,6 +57,7 @@ def about():
     """
     About page. Code below checks if user is logged in and exists in DB.
     """
+    print universal.timestamp()
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
     user = Profile.query.filter_by(net_id=net_id).first()
     if net_id and user:
@@ -74,6 +75,25 @@ def photos(filename):
     Proper routing of /photos, the uploaded profile pictures directory.
     """
     return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
+
+
+@app.route('/directions_api', methods=['POST'])
+def directions_api():
+    """
+    Returns the distance to a destination from Rice, via the Google Maps Directions API.
+    The API is not called directly in Javascript because of cross-origin request security issues.
+    """
+    destination = request.args.get("destination", None)
+    if destination:
+        try:
+            destination = destination.replace(" ", "+")
+            directions_data = urllib2.urlopen("https://maps.googleapis.com/maps/api/directions/json?origin=6100+Main+St+Houston+TX+77005&destination=" + destination + "&key=AIzaSyChrd2_zI_bHbhUnyw1P7-e8wf2Rq9uiiQ").read()
+            directions_data_json = json.loads(directions_data)
+            return directions_data_json["routes"][0]["legs"][0]["distance"]["text"].split(" ")[0]  # dear god
+        except:
+            return "Error"
+    else:
+        return "Error"
 
 
 @app.route('/app.db')
@@ -125,7 +145,7 @@ def after_login():
     else:
         # User does exist in DB
         # Redirect user to main page
-        return redirect('/my_profile')
+        return redirect('/')
 
 
 def get_user_details(net_id):
@@ -197,11 +217,10 @@ def create_listing():
     if net_id and user:
         if user.account_type == "joiner":
             return render_template("create_new_listing_error.html", data={"profile": user})
-        # do something useful here
-        pass
+        data = {"net_id": net_id, "profile": user}
+        return render_template("listing_creation.html", data = data)
     else:
-        # error out
-        pass
+        return redirect('/login')
 
 
 @app.route('/action')
@@ -215,7 +234,7 @@ def action():
         data = {"net_id": net_id, "profile": user}
         return render_template('action.html', data=data)
     else:
-        index()
+        return redirect('/login')
 
 
 @app.route('/users')
@@ -229,7 +248,7 @@ def users():
         data = {"net_id": net_id, "profile": user}
         return render_template('users_list.html', data=data)
     else:
-        index()
+        return redirect('/login')
 
 
 @app.route('/search')
@@ -239,28 +258,15 @@ def search():
     """
     # User Net ID
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    user = Profile.query.filter_by(net_id=net_id).first()
 
-    if net_id is not None:
+    if net_id and user:
         user = Profile.query.filter_by(net_id=net_id).first()
         preferences = Preferences.query.filter_by(net_id=net_id).first()
         data = {"net_id": net_id, "profile": user, "preferences": preferences}
         return render_template('search.html', data=data)
     else:
-        index()
-
-
-def get_yelp_reviews(address):
-    """
-    Gets the Yelp rating and review for the business located at the passed address.
-    Returns a 3-length tuple of (business url, rating image url, review snippet)
-
-    Example input: "6100 Main St, Houston, TX, 77005"
-    Example output: ("http://www.yelp.com/biz/rice-university", "http://yelp.com/image/for/5/star.png", "Fantastic school!")
-    """
-    url = str(reviews.search("", address)["businesses"][0]["url"])
-    rating = str(reviews.search("", address)["businesses"][0]["rating_img_url"])
-    review_snippet = str(reviews.search("", address)["businesses"][0]["snippet_text"])
-    return (url, rating, review_snippet)
+        return redirect('/login')
 
 
 @app.route('/new_account')
@@ -295,7 +301,7 @@ def my_profile():
         data = {"net_id": net_id, "profile": user, "preferences": prefs}
         return render_template('my_profile.html', data=data)
     else:
-        index()
+        return redirect('/login')
 
 
 @app.route('/delete_account')
@@ -309,23 +315,23 @@ def delete_account():
         return render_template('delete_account.html', data=data)
     else:
         # Redirect user to intro
-        index()
+        return redirect('/')
 
 
 @app.route('/my_postings')
 def my_postings():
     """
     Page showing the user's postings.
-
-    Yet to be implemented.
     """
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
     if net_id is not None:
         user = Profile.query.filter_by(net_id=net_id).first()
-        data = {"net_id": net_id, "profile": user}
+        listings = Listing.query.filter_by(poster_netid=net_id).all()
+        print(listings)
+        data = {"net_id": net_id, "profile": user, "listings": listings}
         return render_template('my_postings.html', data=data)
     else:
-        index()
+        return redirect('/login')
 
 
 @app.route('/privacy_policy')
@@ -342,29 +348,6 @@ def privacy_policy():
     else:
         # Return the same page, but with null data
         return render_template('privacy_policy.html', data={"net_id": None, "profile": None})
-
-
-@app.route('/listing/<path:ID>')
-def listing_details(ID):
-    """
-    Handles routing of /listing/ID (returns that listing's full detail page)
-    """
-    # Initialize a null error and listing poster
-    error = None
-    poster = None
-    # Get the currently logged in user
-    login = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
-    user = Profile.query.filter_by(net_id=login).first()
-    if login is None:
-        return redirect("/login", code=302)
-    # Get the requested listing from the database
-    listing = Listing.query.filter_by(id=ID).first()
-    if not listing:
-        error = "This listing doesn't exist!"
-    else:
-        poster = Profile.query.filter_by(net_id=listing.poster_netid).first()
-    data = {"net_id": login, "profile": user, "id": ID, "listing": listing, "error": error, "poster": poster, "address": listing.address_line_1 + ", " + listing.address_line_2}
-    return render_template('listing_detail.html', data=data)
 
 
 @app.route('/user/<path:path>')

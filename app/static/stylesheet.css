@@ -51,7 +51,7 @@
     height: 60px;
     position: fixed;
     top: 60px;
-    background: #17657A;
+    background: #00AEEF;
     z-index: 5;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
 }
@@ -234,6 +234,27 @@ body {
 
 #footer a:active {
     color: #171717;
+    text-decoration: none;
+}
+
+#darklink a:link {
+    color: #00AEEF;
+    text-decoration: none;
+}
+
+#darklink a:hover {
+    color: #00AEEF;
+    text-decoration: none;
+    border-bottom: 2px solid #5ED3FF;
+}
+
+#darklink a:visited {
+    color: #00AEEF;
+    text-decoration: none;
+}
+
+#darklink a:active {
+    color: #00AEEF;
     text-decoration: none;
 }
 
