@@ -13,15 +13,15 @@ from app.models import Profile, Listing, Preferences
 
 
 # Server upload folder - do not change
-# UPLOAD_FOLDER = "Z:/RoommateFinder/roommate-finder/app/photos"
+UPLOAD_FOLDER = "Z:/RoommateFinder/roommate-finder/app/photos"
 # Local dev environment upload folder - change as necessary
-UPLOAD_FOLDER = "D:/GitHub/roommate-finder/app/photos"
+# UPLOAD_FOLDER = "D:/GitHub/roommate-finder/app/photos"
 
 app.config['CAS_SERVER'] = 'https://netid.rice.edu'
 app.config['CAS_AFTER_LOGIN'] = 'after_login'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-# app.config['APP_FOLDER'] = "Z:/RoommateFinder/roommate-finder"  # directory of application on the server - do not change
-app.config['APP_FOLDER'] = "D:/GitHub/roommate-finder"  # local directory
+app.config['APP_FOLDER'] = "Z:/RoommateFinder/roommate-finder"  # directory of application on the server - do not change
+# app.config['APP_FOLDER'] = "D:/GitHub/roommate-finder"  # local directory
 app.config['APP_URL'] = 'http://roommatefinder.riceapps.org'
 app.config.setdefault('CAS_USERNAME_SESSION_KEY', 'CAS_USERNAME')
 
