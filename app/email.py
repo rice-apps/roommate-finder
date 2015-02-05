@@ -13,8 +13,8 @@ def email_password():
     Reads the password from the file on the server to authenticate the SMTP request.
     I'm not going to publicly have the password posted on GitHub obviously
     """
-    with open("Z:/RoommateFinder/email_password.txt") as f:
-        password = eval(f.read())
+    with open("Z:/RoommateFinder/email_password.repr") as f:
+        password = str(eval(f.read()))
     return password
 
 

@@ -8,7 +8,7 @@ import time
 from flask import render_template, session, send_from_directory, request
 from werkzeug.utils import redirect
 
-from app import app, lm, db, universal, email
+from app import app, lm, db, email
 from app.models import Profile, Listing, Preferences
 
 
@@ -57,7 +57,6 @@ def about():
     """
     About page. Code below checks if user is logged in and exists in DB.
     """
-    print universal.timestamp()
     net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
     user = Profile.query.filter_by(net_id=net_id).first()
     if net_id and user:
