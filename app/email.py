@@ -4,23 +4,37 @@ from flask import request
 
 from flask.ext.mail import Message
 from app import app, mail
+from werkzeug.utils import redirect
 from app.models import Profile, Listing
+
+
+def email_password():
+    """
+    Reads the password from the file on the server to authenticate the SMTP request.
+    I'm not going to publicly have the password posted on GitHub obviously
+    """
+    with open("Z:/RoommateFinder/email_password.txt") as f:
+        password = eval(f.read())
+    return password
 
 
 app.config["MAIL_SERVER"] = "localhost"
 app.config["MAIL_PORT"] = 465
 app.config["MAIL_USE_TLS"] = True
 app.config["MAIL_USERNAME"] = "roommatefinder@kevinlin.info"
-app.config["MAIL_PASSWORD"] = "riceapps"
+app.config["MAIL_PASSWORD"] = email_password()
 
 
 @app.route('/notification_email')
 def notification_email():
+    """
+    Notification email from joiner to poster.
+    """
     joiner_netid = request.args.get("joiner", None)
     poster_netid = request.args.get("poster", None)
     listing_id = request.args.get("listing", None)
     interest_notification(joiner_netid, poster_netid, listing_id)
-    return "success"
+    return redirect('/listing/' + str(request.args.get("listing")))
 
 
 def welcome_email(net_id):
@@ -29,7 +43,6 @@ def welcome_email(net_id):
 
     Parameters:
     net_id: Net ID of the recipient
-    recipient: Email address of the recipient
     """
     user = Profile.query.filter_by(net_id=net_id).first()
     msg = Message("Welcome to Roommate Finder.", sender=("Rice Roommate Finder", "roommatefinder@rice.edu"))

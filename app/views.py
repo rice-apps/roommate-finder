@@ -8,7 +8,7 @@ import time
 from flask import render_template, session, send_from_directory, request
 from werkzeug.utils import redirect
 
-from app import app, lm, db, universal
+from app import app, lm, db, universal, email
 from app.models import Profile, Listing, Preferences
 
 
@@ -201,6 +201,8 @@ def get_started():
         db.session.add(user)
         db.session.add(prefs)
         db.session.commit()
+        # Send a lovely welcome email
+        email.welcome_email(net_id)
 
     # Do this again since a user might have been just added
     user = Profile.query.filter_by(net_id=net_id).first()

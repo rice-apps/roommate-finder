@@ -179,6 +179,12 @@
 				color: #171717;
             }
         </style>
+
+        <script type="text/javascript">
+            function confirmAction(){
+                return confirm("If you click OK, an interest notification email will be automatically sent to this poster.");
+            }
+        </script>
 	</head>
 
 	<body>
@@ -298,7 +304,7 @@
                             <p class="detailssection">NEXT STEPS</p>
                             <p class="detailstext"><a target="_blank" href="/listing/{[ listing.id ]}">View full listing details</a></p>
                             <p class="detailstext"><a target="_blank" href="/user/{[ listing.poster_netid ]}">View {[ listing.poster_name.split(" ")[0] ]}'s profile</a></p>
-                            <p class="detailstext"><a href="#">Send {[ listing.poster_name.split(" ")[0] ]} a notification that you're interested</a></p>
+                            <p class="detailstext"><a onclick="return confirmAction()" href="/notification_email?joiner={{ data.profile.net_id }}&poster={[ listing.poster_netid ]}&listing={[ listing.id ]}">Send {[ listing.poster_name.split(" ")[0] ]} a notification that you're interested</a></p>
                             <p class="detailstext"><a href="mailto:{[ listing.poster_netid ]}@rice.edu">Email {[ listing.poster_name.split(" ")[0] ]} directly</a></p>
                         </div>
                     </td>

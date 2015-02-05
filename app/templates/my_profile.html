@@ -525,7 +525,7 @@
                             <p class="fieldname">Bio (optional)</p>
                         </td>
                         <td>
-                            <textarea class="form-control" name="bio" {% if not data.error %}placeholder="Write a short description of yourself. What's your major? How late do you sleep? Do you like quiet or noise?"{% endif %} rows="3">{% if data.error %}{{ data.profile.bio }}{% endif %}</textarea>
+                            <textarea class="form-control" name="bio" {% if not data.error %}placeholder="Write a short description of yourself. What's your major? How late do you sleep? Do you like quiet or noise?"{% endif %} rows="3">{{ data.profile.bio }}</textarea>
                         </td>
                     </tr>
                     <tr height="20px"></tr>
@@ -548,7 +548,7 @@
                     <tr>
                         <td>
                             <div id="darklink">
-                                <p class="text">You can set default sorting and filtering preferences here if you like. These options only affect the default display of information in the <a href="/">main search interface</a>.</p>
+                                <p class="text">You can set default sorting and filtering preferences here if you like. These options only affect the default display of information in the <a href="/search">main search interface</a>.</p>
                             </div>
                         </td>
                     </tr>

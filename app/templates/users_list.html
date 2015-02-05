@@ -132,7 +132,7 @@
                     <td class="bio"><p class="sectionheading">BIO</p></td>
                 </tr>
                 <tr ng-repeat="user in users">
-                    <td><p class="text">{[ user.name ]}</p></td>
+                    <td><p class="text"><a href="/user/{[ user.net_id ]}">{[ user.name ]}</a></p></td>
                     <td><p class="text">{[ user.gender ]}</p></td>
                     <td>
                         <p class="text"><a href="mailto:{[ user.net_id ]}@rice.edu">Email</a> / <a href="https://facebook.com/{[ user.facebook ]}">Facebook</a></p>
