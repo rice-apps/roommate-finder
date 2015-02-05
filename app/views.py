@@ -362,10 +362,8 @@ def user_profile(path):
         return redirect("/login", code=302)
     # Check if such a net ID even exists
     user = Profile.query.filter_by(net_id=path).first()
-    # Stylistic typographic choices: uppercase and lowercase versions
-    # I'm sure there's an easier way to do this
-    data = {"profile": user, "net_id": path, "net_id_uppercase": path.upper(), "net_id_lowercase": path.lower(),
-            "logged_in_net_id": login}
+    logged_in_user = Profile.query.filter_by(net_id=login).first()
+    data = {"profile": user, "logged_in_profile": logged_in_user, "net_id": path, "net_id_uppercase": path.upper(), "net_id_lowercase": path.lower(), "logged_in_net_id": login}
     # Meh; too many net ID's to keep track of...
     if user:
         data["name_uppercase"] = user.name.upper()
