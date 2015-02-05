@@ -108,7 +108,7 @@ def new_listing():
     db.session.add_all(new_photos)
     db.session.commit()
 
-    return redirect('/listing/' + listing.id)
+    return redirect('/listing/' + str(listing.id))
 
 
 @app.route('/delete_listing', methods=['GET', 'POST'])
