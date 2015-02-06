@@ -16,6 +16,9 @@ class Profile(db.Model):
     facebook = db.Column(db.String(255))
     photo = db.Column(db.String(255))
     account_type = db.Column(db.String(255))
+    listings = db.relationship('Listing', backref='author', lazy='dynamic')
+    listing_photos = db.relationship('Photo', backref='author', lazy='dynamic')
+    preferences = db.relationship('Preferences', backref='author', lazy='dynamic')
 
     def __init__(self, net_id, account_type, name, year, dob, college, gender, bio, facebook=None, photo=None):
         self.net_id = net_id  # User's Net ID
@@ -40,7 +43,6 @@ class Listing(db.Model):
     # Columns for listings table
     id = db.Column(db.Integer, primary_key=True, unique=True, index=True, autoincrement=True)
     poster_netid = db.Column(db.String(64), db.ForeignKey('profile.net_id'))
-    poster_name = db.Column(db.String(64), db.ForeignKey('profile.name'))
     apartment_name = db.Column(db.String(255))
     description = db.Column(db.String(255))
     address_line_1 = db.Column(db.String(255))
@@ -60,11 +62,13 @@ class Listing(db.Model):
     amenities_pet_friendly = db.Column(db.String(64))
     amenities_computer_room = db.Column(db.String(64))
     amenities_trash_pickup_services = db.Column(db.String(64))
+    photos = db.relationship('Photo', backref='listing', lazy='dynamic')
 
-    def __init__(self, apartment_name, poster_netid, poster_name, description, address_line_1, address_line_2, distance, rent, rent_details, property_size, number_roommates_needed, timestamp, review_url, review_rating, review_snippet, has_gym, has_pool, is_pet_friendly, has_computer_room, has_trash_pickup_services):
-        self.apartment_name = apartment_name  # Name of the apartment
+    def __init__(self, poster_netid, apartment_name, description, address_line_1, address_line_2, distance, rent,
+                 rent_details, property_size, number_roommates_needed, timestamp, review_url, review_rating,
+                 review_snippet, has_gym, has_pool, is_pet_friendly, has_computer_room, has_trash_pickup_services):
         self.poster_netid = poster_netid  # Net ID of the listing poster
-        self.poster_name = poster_name  # Name of the poster
+        self.apartment_name = apartment_name  # Name of the apartment
         self.description = description  # Description of the listing
         self.address_line_1 = address_line_1  # Address lines
         self.address_line_2 = address_line_2
