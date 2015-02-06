@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
+        <link rel="icon" type="image/png" href="../static/graphics/favicon.ico">
+
     	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     	<!--Fonts-->
@@ -43,7 +45,7 @@
             }
             #titlecontainer {
                 position: fixed;
-                background-color: #17657A;
+                background-color: #00AEEF;
                 width: 30%;
                 height: 100%;
             }
@@ -67,6 +69,7 @@
                 line-height: 50px;
 				font-size: 70px;
 				color: #EDEDED;
+				text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3)
             }
             p.subheading {
                 font-family: 'Oswald', sans-serif;
@@ -74,6 +77,7 @@
 				letter-spacing: 1px;
 				font-size: 20px;
 				color: #EDEDED;
+				text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4)
             }
             p.text {
                 font-family: 'Oxygen', sans-serif;
@@ -91,28 +95,11 @@
             }
             p.smalltext {
                 font-family: 'Oxygen', sans-serif;
-				font-weight: 300;
-				letter-spacing: 1px;
-				font-size: 10px;
-				color: #171717;
+                font-weight: 300;
+                letter-spacing: 1px;
+                font-size: 10px;
+                color: #171717;
             }
-            #darklink a:link {
-				color: #17657A;
-				text-decoration: none;
-			}
-			#darklink a:hover {
-				color: #318FA8;
-				text-decoration: none;
-				border-bottom: 2px solid #318FA8;
-			}
-			#darklink a:visited {
-				color: #17657A;
-				text-decoration: none;
-			}
-			#darklink a:active {
-				color: #17657A;
-				text-decoration: none;
-			}
         </style>
 	</head>
 
@@ -132,7 +119,7 @@
                     </td>
                     <td width="40%" valign="bottom">
                         {% if data.net_id and data.profile %}
-                            <div id="links"><p align="right">WELCOME, {{ data.net_id }} | <a href="/search">FIND ROOMMATES</a> | <a href="/create_listing">CREATE A NEW LISTING</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p></div>
+                            <div id="links"><p align="right">WELCOME, {{ data.profile.name.split(" ")[0] | upper }} | <a href="/search">FIND ROOMMATES</a> | <a href="/create_listing">CREATE A NEW LISTING</a> | <a href="/my_profile">MY ACCOUNT</a> | <a href="/logout">LOGOUT</a></p></div>
                         {% else %}
                             <div id="links"><p align="right"><a href="../">HOME</a> | <a href="about">ABOUT</a> | <a href="login">LOGIN WITH RICE NETID</a></p></div>
                         {% endif %}

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
+        <link rel="icon" type="image/png" href="../static/graphics/favicon.ico">
+
     	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     	<!--Fonts-->
@@ -136,6 +138,7 @@
 				letter-spacing: 1px;
 				font-size: 13px;
 				color: #EDEDED;
+                text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4)
 			}
             span.pagesectionbold {
 				font-family: 'Oxygen', sans-serif;
@@ -143,23 +146,7 @@
 				letter-spacing: 1px;
 				font-size: 13px;
 				color: #EDEDED;
-			}
-            #darklink a:link {
-				color: #17657A;
-				text-decoration: none;
-			}
-			#darklink a:hover {
-				color: #318FA8;
-				text-decoration: none;
-				border-bottom: 2px solid #318FA8;
-			}
-			#darklink a:visited {
-				color: #17657A;
-				text-decoration: none;
-			}
-			#darklink a:active {
-				color: #17657A;
-				text-decoration: none;
+                text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4)
 			}
             #delete a:link {
 				color: #CC2323;
@@ -405,7 +392,7 @@
 
         <div id="content">
             <p class="heading">my profile</p>
-            <div id="darklink"><p class="subheading">Edit your profile (<a href="/user/{{ data.profile.net_id }}">View your public profile</a>)</p></div>
+            <div id="darklink"><p class="subheading">Edit your profile | <a href="/user/{{ data.profile.net_id }}">View your public profile</a></p></div>
             <br/><br/><br/>
             {% if data.error %}
                 <p class="error">{{ data.error }}</p><br/><br/>
@@ -538,7 +525,7 @@
                             <p class="fieldname">Bio (optional)</p>
                         </td>
                         <td>
-                            <textarea class="form-control" name="bio" {% if not data.error %}placeholder="Write a short description of yourself. What's your major? How late do you sleep? Do you like quiet or noise?"{% endif %} rows="3">{% if data.error %}{{ data.profile.bio }}{% endif %}</textarea>
+                            <textarea class="form-control" name="bio" {% if not data.error %}placeholder="Write a short description of yourself. What's your major? How late do you sleep? Do you like quiet or noise?"{% endif %} rows="3">{{ data.profile.bio }}</textarea>
                         </td>
                     </tr>
                     <tr height="20px"></tr>
@@ -561,7 +548,7 @@
                     <tr>
                         <td>
                             <div id="darklink">
-                                <p class="text">You can set default sorting and filtering preferences here if you like. These options only affect the default display of information in the <a href="/">main search interface</a>.</p>
+                                <p class="text">You can set default sorting and filtering preferences here if you like. These options only affect the default display of information in the <a href="/search">main search interface</a>.</p>
                             </div>
                         </td>
                     </tr>
@@ -606,7 +593,7 @@
                         	<p class="footer">A PROJECT OF RICE APPS, 2014</p>
                         </td>
                         <td>
-                        	<p class="footer" align="right"><a href="/about">ABOUT ROOMMATE FINDER</a> | <a href="https://github.com/rice-apps/roommate-finder">GITHUB SOURCE</a> | <a href="http://riceapps.org">RICE APPS</a> | <a href="http://www.rice.edu">RICE UNIVERSITY</a></p>
+                        	<p class="footer" align="right"><a href="/about">ABOUT ROOMMATE FINDER</a> | <a href="/privacy_policy">PRIVACY POLICY</a> | <a href="https://github.com/rice-apps/roommate-finder">GITHUB SOURCE</a> | <a href="http://riceapps.org">RICE APPS</a> | <a href="http://www.rice.edu">RICE UNIVERSITY</a></p>
                         </td>
                     </tr>
                 </table>

@@ -3,6 +3,8 @@
 	<head>
         <link rel="icon" type="image/png" href="../static/graphics/favicon.ico">
 
+        <link rel="icon" type="image/png" href="../static/graphics/favicon.ico">
+
     	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     	<!--Fonts-->
@@ -22,10 +24,15 @@
         <link rel="stylesheet" href="../static/css/pace.css">
         <script src="../static/js/splash-fade.js"></script>
 
+        <!--Date Time Picker-->
+        <link rel="stylesheet" href="../static/css/bootstrap-datetimepicker.css">
+        <script type="text/javascript" src="http://momentjs.com/downloads/moment.js"></script>
+        <script type="text/javascript" src="static/js/bootstrap-datetimepicker.min.js"></script>
+
 		<!--Roommate Finder stylesheet-->
 		<link type="text/css" rel="stylesheet" href="../static/stylesheet.css">
 
-        <title>create a listing | roommate finder | rice university</title>
+        <title>edit listing | roommate finder | rice university</title>
 
         <!--Override some CSS properties-->
 		<style type="text/css">
@@ -140,23 +147,6 @@
 				font-size: 13px;
 				color: #EDEDED;
 			}
-            #darklink a:link {
-				color: #17657A;
-				text-decoration: none;
-			}
-			#darklink a:hover {
-				color: #318FA8;
-				text-decoration: none;
-				border-bottom: 2px solid #318FA8;
-			}
-			#darklink a:visited {
-				color: #17657A;
-				text-decoration: none;
-			}
-			#darklink a:active {
-				color: #17657A;
-				text-decoration: none;
-			}
             #delete a:link {
 				color: #CC2323;
 				text-decoration: none;
@@ -203,6 +193,8 @@
         <script type="text/javascript">
             $(function(ready) {
                 $(document).ready(function () {
+                    // Since this is the edit listing, immediately run the function
+                    queryDirectionsAPI();
                     // Detect when a user clicks out of an input box
                     $("#address_line_1").focus(function () {
                         // Do nothing
@@ -295,8 +287,8 @@
 		</div>
 
         <div id="content">
-            <p class="heading">create a listing</p>
-            <p class="subheading">Create a new apartment listing</p>
+            <p class="heading">edit listing</p>
+            <p class="subheading">Update your existing listing</p>
             <br/><br/><br/>
             <div id="map" class="absolute">
                 <iframe width="100%" height="400px" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyChrd2_zI_bHbhUnyw1P7-e8wf2Rq9uiiQ&zoom=16&q=6100+Main+St+Houston+TX+77005"></iframe>
@@ -309,9 +301,19 @@
                     </td>
                 </tr>
             </table>
-            <form action="/new_listing" method="POST" enctype="multipart/form-data" autocomplete="off">
+            <form action="/update_listing" method="POST" enctype="multipart/form-data" autocomplete="off">
 
                 <table width="60%">
+
+                    <tr height="20px"></tr>
+                    <tr>
+                        <td width="150px" valign="middle">
+                            <p class="fieldname">Listing ID*</p>
+                        </td>
+                        <td>
+                            <input class="form-control" type="text" id="listing_id" name="listing_id" value="{{ data.listing.id }}" readonly>
+                        </td>
+                    </tr>
 
                     <tr height="20px"></tr>
                     <tr>
@@ -319,27 +321,27 @@
                             <p class="fieldname">Apartment name*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="text" id="apartment_name" name="apartment_name" required>
+                            <input class="form-control" type="text" id="apartment_name" name="apartment_name" value="{{ data.listing.apartment_name }}" required>
                         </td>
                     </tr>
 
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">Street address*</p>
+                            <p class="fieldname">Address line 1*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="text" id="address_line_1" name="address_line_1" required>
+                            <input class="form-control" type="text" id="address_line_1" name="address_line_1" value="{{ data.listing.address_line_1 }}" required>
                         </td>
                     </tr>
 
                     <tr height="20px"></tr>
                     <tr>
                         <td width="150px" valign="middle">
-                            <p class="fieldname">City, state, zip*</p>
+                            <p class="fieldname">Address line 2*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="text" id="address_line_2" name="address_line_2" required>
+                            <input class="form-control" type="text" id="address_line_2" name="address_line_2" value="{{ data.listing.address_line_2 }}" required>
                         </td>
                     </tr>
 
@@ -359,7 +361,7 @@
                             <p class="fieldname">Rent ($/month)*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="number" id="rent" name="rent" required>
+                            <input class="form-control" type="number" id="rent" name="rent" value="{{ data.listing.rent }}" required>
                         </td>
                     </tr>
 
@@ -369,7 +371,7 @@
                             <p class="fieldname">Rent details</p>
                         </td>
                         <td>
-                            <textarea class="form-control" id="rent_details" name="rent_details" rows="3" placeholder="Enter in any clarification you feel is necessary on the monthly rent price you put above."></textarea>
+                            <textarea class="form-control" id="rent_details" name="rent_details" rows="3" placeholder="Enter in any clarification you feel is necessary on the monthly rent price you put above.">{{ data.listing.rent_details }}</textarea>
                         </td>
                     </tr>
 
@@ -379,7 +381,7 @@
                             <p class="fieldname">Property size (sq ft)*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="number" id="property_size" name="property_size" required>
+                            <input class="form-control" type="number" id="property_size" name="property_size" value="{{ data.listing.property_size }}" required>
                         </td>
                     </tr>
 
@@ -389,7 +391,7 @@
                             <p class="fieldname">Number of roommates seeking*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="number" id="number_roommates_needed" name="number_roommates_needed" required>
+                            <input class="form-control" type="number" id="number_roommates_needed" name="number_roommates_needed" value="{{ data.listing.number_roommates_needed }}" required>
                         </td>
                     </tr>
                 </table>
@@ -411,7 +413,7 @@
                             <p class="fieldname">Has gym*</p>
                         </td>
                         <td>
-                            <input type="checkbox" value ="on" id="amenities_gym" name="amenities_gym">
+                            <input type="checkbox" value="on" id="amenities_gym" name="amenities_gym" {% if data.listing.amenities_gym == "true" %}checked{% endif %}>
                             <input type="hidden" value="off" name="amenities_gym">
                         </td>
                     </tr>
@@ -422,7 +424,7 @@
                             <p class="fieldname">Has pool*</p>
                         </td>
                         <td>
-                            <input type="checkbox" value ="on" id="amenities_pool" name="amenities_pool">
+                            <input type="checkbox" value ="on" id="amenities_pool" name="amenities_pool" {% if data.listing.amenities_pool == "true" %}checked{% endif %}>
                             <input type="hidden" value="off" name="amenities_pool">
                         </td>
                     </tr>
@@ -433,7 +435,7 @@
                             <p class="fieldname">Pet friendly*</p>
                         </td>
                         <td>
-                            <input type="checkbox" value ="on" id="amenities_pet_friendly" name="amenities_pet_friendly">
+                            <input type="checkbox" value ="on" id="amenities_pet_friendly" name="amenities_pet_friendly" {% if data.listing.amenities_pet_friendly == "true" %}checked{% endif %}>
                             <input type="hidden" value="off" name="amenities_pet_friendly">
                         </td>
                     </tr>
@@ -444,7 +446,7 @@
                             <p class="fieldname">Has computer room(s)*</p>
                         </td>
                         <td>
-                            <input type="checkbox" value ="on" id="amenities_computer_room" name="amenities_computer_room">
+                            <input type="checkbox" value ="on" id="amenities_computer_room" name="amenities_computer_room" {% if data.listing.amenities_computer_room == "true" %}checked{% endif %}>
                             <input type="hidden" value="off" name="amenities_computer_room">
                         </td>
                     </tr>
@@ -455,7 +457,7 @@
                             <p class="fieldname">Has trash pickup services*</p>
                         </td>
                         <td>
-                            <input type="checkbox" value ="on" id="amenities_trash_pickup_services" name="amenities_trash_pickup_services">
+                            <input type="checkbox" value ="on" id="amenities_trash_pickup_services" name="amenities_trash_pickup_services" {% if data.listing.amenities_trash_pickup_services == "true" %}checked{% endif %}>
                             <input type="hidden" value="off" name="amenities_trash_pickup_services">
                         </td>
                     </tr>
@@ -481,6 +483,8 @@
                             <div id="preview"></div>
                             <br/>
                             <input type="file" name="photos[]" onchange="handleFiles(this.files)" multiple>
+                            <br/>
+                            <p class="text">Any photos you select will be added to those already existing for this listing.</p>
                         </td>
                     </tr>
 
@@ -490,14 +494,14 @@
                             <p class="fieldname">Additional information</p>
                         </td>
                         <td>
-                            <textarea class="form-control" name="description" rows="7" placeholder="This is where the bulk of your information should be. It's strongly recommended that you fill this out as thoroughly as possible. Because after all, you're looking for people to live with for at least half a year, right?"></textarea>
+                            <textarea class="form-control" name="description" rows="7" placeholder="This is where the bulk of your information should be. It's strongly recommended that you fill this out as thoroughly as possible. Because after all, you're looking for people to live with for at least half a year, right?">{{ data.listing.description }}</textarea>
                         </td>
                     </tr>
 
                 </table>
 
                 <br/><br/>
-                <button type="submit" class="btn btn-primary btn-lg" name="my-form"><p class="button">post listing</p></button>
+                <button type="submit" class="btn btn-primary btn-lg" name="my-form"><p class="button">update listing</p></button>
             </form>
         </div>
 

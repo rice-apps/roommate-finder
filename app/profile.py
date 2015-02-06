@@ -10,7 +10,7 @@ import requests
 from werkzeug.utils import secure_filename, redirect
 
 from app import app, db, email
-from app.models import Profile, Preferences
+from app.models import Profile, Preferences, Listing, Photo
 
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'tiff'])
@@ -168,6 +168,12 @@ def delete_user():
     if session.get(app.config['CAS_USERNAME_SESSION_KEY'], None) == net_id:
         user = Profile.query.filter_by(net_id=net_id).first()
         prefs = Preferences.query.filter_by(net_id=net_id).first()
+        listings = Listing.query.filter_by(poster_netid=net_id).all()
+        photos = Photo.query.filter_by(net_id=net_id).all()
+        for photo in photos:
+            db.session.delete(photo)
+        for listing in listings:
+            db.session.delete(listing)
         db.session.delete(user)
         db.session.delete(prefs)
         db.session.commit()

@@ -2,3 +2,8 @@
 Deny from all
 Allow from 127.0.0.1
 </Files>
+
+AuthUserFile G:/.htpasswd
+AuthName "Roommate Finder is currently in development. Please log in to access the site."
+AuthType Basic
+require user roommatefinder

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" ng-app="roommateFinder">
 	<head>
+        <link rel="icon" type="image/png" href="../static/graphics/favicon.ico">
+
     	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     	<!--Fonts-->
@@ -125,7 +127,7 @@
                 font-family: 'Oxygen', sans-serif;
 				font-weight: 300;
 				letter-spacing: 1px;
-                line-height: 10px;
+                line-height: 12px;
 				font-size: 12px;
 				color: #171717;
             }
@@ -177,6 +179,12 @@
 				color: #171717;
             }
         </style>
+
+        <script type="text/javascript">
+            function confirmAction(){
+                return confirm("If you click OK, an interest notification email will be automatically sent to this poster.");
+            }
+        </script>
 	</head>
 
 	<body>
@@ -268,7 +276,6 @@
                         <p class="sectionheading">LISTING DETAILS</p>
                         <div ng-repeat="listing in listings" ng-show="showListing(listing)">
                             <p class="text"><a href="/listing/{[ listing.id ]}">See full listing details</a></p>
-                            <!--TODO: Figure out horizontally scrolling images-->
                             <div style="height:25px;"></div>
                             <a class="fancybox" rel="group" href="../photos/listings/{[ listing.photo ]}"><img class="preview" ng-src="../photos/listings/{[ listing.photo ]}" /></a>
                             <div style="height:25px;"></div>
@@ -276,12 +283,12 @@
                             <p class="detailssubheading">Posted by <a href="/user/{[ listing.poster_netid ]}">{[ listing.poster_name ]} [{[ listing.poster_netid ]}]</a> on {[ listing.timestamp ]}</p>
                             <br/>
                             <br/>
-                            <!--TODO: Google Maps API-->
                             <p class="detailssection">LOCATION</p>
                             <p class="detailstext">{[ listing.address_line_1 ]}</p>
                             <p class="detailstext">{[ listing.address_line_2 ]}</p>
                             <p class="detailstext">{[ listing.distance ]} mi from Rice</p>
-                            <br/>
+                            <iframe width="100%" height="400px" frameborder="0" style="border:0" ng-src="{[ getMapUrl(listing.address_line_1 + listing.address_line_2) ]}"></iframe>
+                            <br/><br/>
                             <p class="detailssection">RENT</p>
                             <p class="detailstext">${[ listing.rent ]}/month</p>
                             <p class="detailstext2">{[ listing.rent_details ]}</p>
@@ -289,10 +296,15 @@
                             <p class="detailssection">ADDITIONAL INFORMATION</p>
                             <p class="detailstext2">{[ listing.description ]}</p>
                             <br/>
+                            <p class="detailssection">YELP REVIEWS</p>
+                            <img ng-src="{[ listing.review_rating ]}" />
+                            <p class="detailstext2">{[ listing.review_snippet ]}</p>
+                            <p class="detailstext2"><a target="_blank" href="{[ listing.review_url ]}">View more reviews on Yelp</a></p>
+                            <br/>
                             <p class="detailssection">NEXT STEPS</p>
                             <p class="detailstext"><a target="_blank" href="/listing/{[ listing.id ]}">View full listing details</a></p>
                             <p class="detailstext"><a target="_blank" href="/user/{[ listing.poster_netid ]}">View {[ listing.poster_name.split(" ")[0] ]}'s profile</a></p>
-                            <p class="detailstext"><a href="#">Send {[ listing.poster_name.split(" ")[0] ]} a notification that you're interested</a></p>
+                            <p class="detailstext"><a onclick="return confirmAction()" href="/notification_email?joiner={{ data.profile.net_id }}&poster={[ listing.poster_netid ]}&listing={[ listing.id ]}">Send {[ listing.poster_name.split(" ")[0] ]} a notification that you're interested</a></p>
                             <p class="detailstext"><a href="mailto:{[ listing.poster_netid ]}@rice.edu">Email {[ listing.poster_name.split(" ")[0] ]} directly</a></p>
                         </div>
                     </td>

@@ -1,11 +1,13 @@
 var roommateFinder = angular.module("roommateFinder", []);
 
-// Angular uses {{ }} by default to denote variables in HTML, but so does Flask/Jinja.
-// This changes Angular to use {[ ]} instead.
-roommateFinder.config(['$interpolateProvider', function ($interpolateProvider) {
+roommateFinder.config(function ($interpolateProvider, $sceProvider) {
+    // Angular uses {{ }} by default to denote variables in HTML, but so does Flask/Jinja.
+    // This changes Angular to use {[ ]} instead.
     $interpolateProvider.startSymbol('{[');
     $interpolateProvider.endSymbol(']}');
-}]);
+    // Disable this really annoying security shit
+    $sceProvider.enabled(false);
+});
 
 
 // Listings controller
@@ -14,9 +16,19 @@ roommateFinder.controller("listingsControl", function($scope, $http) {
     $http.get("/app.db", {"responseType": "arraybuffer"}).success(function(data) {
         var db = new SQL.Database(new Uint8Array(data));
         var listings_data = db.exec("SELECT * FROM listing")[0];
+        var photos_data = db.exec("SELECT * from photo")[0];
         var preferences_data = db.exec("SELECT * FROM preferences")[0];
         $scope.listings = SQLiteToJSON(listings_data);
         $scope.preferences = SQLiteToJSON(preferences_data)[0];
+        var photos = SQLiteToJSON(photos_data);
+
+        // Manually insert a preview photo into the JSON object from the photo table
+        //
+        for (var i = 0; i < $scope.listings.length; i++)
+            for (var j = 0; j < photos.length; j++) {
+                if (photos[j].listing_id == $scope.listings[i].id)
+                    $scope.listings[i]["photo"] = photos[j].hash;
+            }
 
         // Sorting order
         if ($scope.preferences.sorting_preference != "null") {  // Even null is a string
@@ -54,6 +66,11 @@ roommateFinder.controller("listingsControl", function($scope, $http) {
     };
     $scope.showListing = function(listing) {
         return listing.id == $scope.selectedID;
+    };
+
+    // Google Maps API
+    $scope.getMapUrl = function (address) {
+        return "https://www.google.com/maps/embed/v1/place?key=AIzaSyChrd2_zI_bHbhUnyw1P7-e8wf2Rq9uiiQ&zoom=16&q=" + address;
     };
 });
 
