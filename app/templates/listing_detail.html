@@ -257,9 +257,9 @@
                             <p class="subheading">NEXT STEPS</p>
 
                             <div id="darklink">
-                                <p class="text"><a target="_blank" href="/user/{{ data.listing.poster_netid }}">View {{ data.listing.poster_name.split(" ")[0] }}'s profile</a></p>
-                                <p class="text"><a onclick="return confirmAction()" href="/notification_email?joiner={{ data.net_id }}&poster={{ data.listing.poster_netid }}&listing={{ data.listing.id }}">Send {{ data.listing.poster_name.split(" ")[0] }} a notification that you're interested</a></p>
-                                <p class="text"><a href="mailto:{{ data.listing.poster_netid }}@rice.edu">Email {{ data.listing.poster_name.split(" ")[0] }} directly</a></p>
+                                <p class="text"><a target="_blank" href="/user/{{ data.listing.poster_netid }}">View {{ data.listing.author.name.split(" ")[0] }}'s profile</a></p>
+                                <p class="text"><a onclick="return confirmAction()" href="/notification_email?joiner={{ data.net_id }}&poster={{ data.listing.poster_netid }}&listing={{ data.listing.id }}">Send {{ data.listing.author.name.split(" ")[0] }} a notification that you're interested</a></p>
+                                <p class="text"><a href="mailto:{{ data.listing.poster_netid }}@rice.edu">Email {{ data.listing.author.name.split(" ")[0] }} directly</a></p>
                             </div
                         </td>
                     </tr>

@@ -90,7 +90,7 @@ def new_listing():
     review_snippet = review_snippet.replace('\n', ' ').replace('\r', '')
 
     # Create a new listing from the Listing model
-    listing = Listing(values["apartment_name"], net_id, user.name, values["description"], values["address_line_1"],
+    listing = Listing(net_id, values["apartment_name"], values["description"], values["address_line_1"],
                       values["address_line_2"],
                       values["distance"], values["rent"], values["rent_details"], values["property_size"],
                       values["number_roommates_needed"], universal.timestamp().split(" ")[0], review_url, review_rating,
