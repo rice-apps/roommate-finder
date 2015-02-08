@@ -1,4 +1,4 @@
-#!flask/bin/python
+#!/Library/Frameworks/EPD64.framework/Versions/Current/bin/python
 
 import types
 from migrate.versioning import api

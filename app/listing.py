@@ -72,7 +72,7 @@ def new_listing():
     print("netid = " + net_id)
 
     # Convert unicodes corresponding to numbers into floats or integers
-    values["distance"] = float(str(values["distance"].replace(",", "").split(" ")[0]))
+    values["distance"] = 10#float(str(values["distance"].replace(",", "").split(" ")[0]))
     values["rent"] = float(str(values["rent"]))
     values["property_size"] = int(str(values["property_size"]))
     values["number_roommates_needed"] = int(str(values["number_roommates_needed"]))
