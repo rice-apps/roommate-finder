@@ -42,7 +42,6 @@ class Listing(db.Model):
     """
     # Columns for listings table
     id = db.Column(db.Integer, primary_key=True, unique=True, index=True, autoincrement=True)
-    num = db.Column(db.Integer)
     poster_netid = db.Column(db.String(64), db.ForeignKey('profile.net_id'))
     apartment_name = db.Column(db.String(255))
     description = db.Column(db.String(255))
@@ -68,7 +67,6 @@ class Listing(db.Model):
     def __init__(self, poster_netid, apartment_name, description, address_line_1, address_line_2, distance, rent,
                  rent_details, property_size, number_roommates_needed, timestamp, review_url, review_rating,
                  review_snippet, has_gym, has_pool, is_pet_friendly, has_computer_room, has_trash_pickup_services):
-        self.num = 2
         self.poster_netid = poster_netid  # Net ID of the listing poster
         self.apartment_name = apartment_name  # Name of the apartment
         self.description = description  # Description of the listing
