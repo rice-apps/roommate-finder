@@ -257,7 +257,7 @@
                                         <td width="10px"></td>
                                         <td valign="top">
                                             <p class="apartmenttitle">{[ listing.apartment_name | uppercase ]}</p>
-                                            <p class="apartmentdetails">Posted by <a href="/user/{[ listing.poster_netid ]}">{[ listing.author.name ]} [{[ listing.poster_netid ]}]</a></p>
+                                            <p class="apartmentdetails">Posted by <a href="/user/{[ listing.poster_netid ]}">{[ listing.name ]} [{[ listing.poster_netid ]}]</a></p>
                                             <p class="apartmentdetails">Distance from Rice: <span class="boldapartmentdetails">{[ listing.distance ]} mi</span></p>
                                             <p class="apartmentdetails">Property size: <span class="boldapartmentdetails">{[ listing.property_size ]} sq ft</span></p>
                                             <p class="apartmentdetails">Rent: <span class="boldapartmentdetails">${[ listing.rent ]}/month</span></p>
@@ -280,7 +280,7 @@
                             <a class="fancybox" rel="group" href="../photos/listings/{[ listing.photo ]}"><img class="preview" ng-src="../photos/listings/{[ listing.photo ]}" /></a>
                             <div style="height:25px;"></div>
                             <p class="detailsheading">{[ listing.apartment_name | uppercase ]}</p>
-                            <p class="detailssubheading">Posted by <a href="/user/{[ listing.poster_netid ]}">{[ listing.author.name ]} [{[ listing.poster_netid ]}]</a> on {[ listing.timestamp ]}</p>
+                            <p class="detailssubheading">Posted by <a href="/user/{[ listing.poster_netid ]}">{[ listing.name ]} [{[ listing.poster_netid ]}]</a> on {[ listing.timestamp ]}</p>
                             <br/>
                             <br/>
                             <p class="detailssection">LOCATION</p>
@@ -303,9 +303,9 @@
                             <br/>
                             <p class="detailssection">NEXT STEPS</p>
                             <p class="detailstext"><a target="_blank" href="/listing/{[ listing.id ]}">View full listing details</a></p>
-                            <p class="detailstext"><a target="_blank" href="/user/{[ listing.poster_netid ]}">View {[ listing.author.name.split(" ")[0] ]}'s profile</a></p>
-                            <p class="detailstext"><a onclick="return confirmAction()" href="/notification_email?joiner={{ data.profile.net_id }}&poster={[ listing.poster_netid ]}&listing={[ listing.id ]}">Send {[ listing.author.name.split(" ")[0] ]} a notification that you're interested</a></p>
-                            <p class="detailstext"><a href="mailto:{[ listing.poster_netid ]}@rice.edu">Email {[ listing.author.name.split(" ")[0] ]} directly</a></p>
+                            <p class="detailstext"><a target="_blank" href="/user/{[ listing.poster_netid ]}">View {[ listing.name.split(" ")[0] ]}'s profile</a></p>
+                            <p class="detailstext"><a onclick="return confirmAction()" href="/notification_email?joiner={{ data.profile.net_id }}&poster={[ listing.poster_netid ]}&listing={[ listing.id ]}">Send {[ listing.name.split(" ")[0] ]} a notification that you're interested</a></p>
+                            <p class="detailstext"><a href="mailto:{[ listing.poster_netid ]}@rice.edu">Email {[ listing.name.split(" ")[0] ]} directly</a></p>
                         </div>
                     </td>
                 </tr>

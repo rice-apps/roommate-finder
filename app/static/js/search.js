@@ -15,7 +15,7 @@ roommateFinder.controller("listingsControl", function($scope, $http) {
     // Retrieve listings data from database
     $http.get("/app.db", {"responseType": "arraybuffer"}).success(function(data) {
         var db = new SQL.Database(new Uint8Array(data));
-        var listings_data = db.exec("SELECT * FROM listing INNER JOIN profile")[0];
+        var listings_data = db.exec("SELECT * FROM listing INNER JOIN profile ON listing.poster_netid=profile.net_id")[0];
         var photos_data = db.exec("SELECT * from photo")[0];
         var preferences_data = db.exec("SELECT * FROM preferences")[0];
         $scope.listings = SQLiteToJSON(listings_data);
