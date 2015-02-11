@@ -349,7 +349,7 @@
                             <p class="fieldname">Distance from Rice*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="text" id="distance" name="distance" readonly>
+                            <input class="form-control" type="text" id="distance" name="distance" value="Enter in a valid address above to automatically populate this field." readonly>
                         </td>
                     </tr>
 
@@ -359,7 +359,7 @@
                             <p class="fieldname">Rent ($/month)*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="number" id="rent" name="rent" required>
+                            <input class="form-control" type="number" min="0" id="rent" name="rent" required>
                         </td>
                     </tr>
 
@@ -379,7 +379,7 @@
                             <p class="fieldname">Property size (sq ft)*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="number" id="property_size" name="property_size" required>
+                            <input class="form-control" type="number" min="0" id="property_size" name="property_size" required>
                         </td>
                     </tr>
 
@@ -389,7 +389,7 @@
                             <p class="fieldname">Number of roommates seeking*</p>
                         </td>
                         <td>
-                            <input class="form-control" type="number" id="number_roommates_needed" name="number_roommates_needed" required>
+                            <input class="form-control" type="number" min="0" id="number_roommates_needed" name="number_roommates_needed" required>
                         </td>
                     </tr>
                 </table>
