@@ -65,8 +65,8 @@
                     // Condition if scrollbar is not at top of page
                     // Header and footer should be opaque
                     // "Scroll to learn more" should not be displayed
-                    $("#headercontainer").css({"background": "#303030", "box-shadow": "0px 0px 10px rgba(0, 0, 0, 0.8)"});
-                    $("#footercontainer").css({"background": "#171717", "box-shadow": "0px 0px 13px rgba(0, 0, 0, 0.65)"});
+                    $("#headercontainer").css({"background": "#171717", "box-shadow": "0px 0px 10px rgba(0, 0, 0, 0.7)"});
+                    $("#footercontainer").css({"background": "#171717", "box-shadow": "0px 0px 15px rgba(0, 0, 0, 0.5)"});
                     $(".scroll").css({"color": "rgba(0, 0, 0, 0)", "text-shadow": "0px 0px 7px rgba(0, 0, 0, 0)"});
                     $(".scrollarrow").css({"color": "rgba(0, 0, 0, 0)", "text-shadow": "0px 0px 7px rgba(0, 0, 0, 0)"});
                 }
@@ -84,8 +84,16 @@
 
         <style type="text/css">
             body {
-                background: url("http://i.imgur.com/HMWwnO0.jpg") no-repeat center bottom fixed;
+                background: url("http://i.imgur.com/K1h9Hot.jpg") no-repeat center bottom fixed;
                 background-size: cover;
+            }
+
+            .verticalcenter {
+                position: relative;
+                margin-left: 10%;
+                margin-right: 10%;
+                top: 50%;
+                transform: translateY(-60%);
             }
             #splash {
                 height: 100%;
@@ -152,7 +160,7 @@
                 line-height: 35px;
                 font-size: 30px;
                 color: #EDEDED;
-                text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+                text-shadow: 0px 0px 6px rgba(0, 0, 0, 1);
             }
             p.scroll {
                 font-family: 'Oxygen', sans-serif;
@@ -199,23 +207,23 @@
             #links a:link {
                 color: #EDEDED;
                 text-decoration: none;
-                text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+                text-shadow: 0px 0px 3px rgba(0, 0, 0, 1);
             }
             #links a:hover {
                 color: #EDEDED;
                 text-decoration: none;
                 border-bottom: 2px solid #EDEDED;
-                text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+                text-shadow: 0px 0px 3px rgba(0, 0, 0, 1);
             }
             #links a:visited {
                 color: #EDEDED;
                 text-decoration: none;
-                text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+                text-shadow: 0px 0px 3px rgba(0, 0, 0, 1);
             }
             #links a:active {
                 color: #EDEDED;
                 text-decoration: none;
-                text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+                text-shadow: 0px 0px 3px rgba(0, 0, 0, 1);
             }
 
 
@@ -320,7 +328,7 @@
 		</div>
 
         <div id="titlecontainer">
-            <div id="title" class="hidden">
+            <div class="verticalcenter" class="hidden">
                 <table width="100%">
                     <tr>
                         <td width="50%" valign="middle">
