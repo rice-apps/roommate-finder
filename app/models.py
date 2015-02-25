@@ -35,6 +35,20 @@ class Profile(db.Model):
     def __repr__(self):
         return '<User %r>' % self.net_id
 
+    def to_json(self):
+        return {
+            "net_id" : self.net_id,
+            "name" : self.name,
+            "year" : self.year,
+            "dob" :  self.dob,
+            "college" : self.college,
+            "gender" : self.gender,
+            "bio" : self.bio,
+            "facebook" : self.facebook,
+            "photo" : self.photo,
+            "account_type" : self.account_type
+        }
+
 
 class Listing(db.Model):
     """

@@ -5,7 +5,7 @@ import json
 import urllib2
 import time
 
-from flask import render_template, session, send_from_directory, request
+from flask import render_template, session, send_from_directory, request, jsonify
 from werkzeug.utils import redirect
 
 from app import app, lm, db, email
@@ -250,6 +250,16 @@ def users():
         return render_template('users_list.html', data=data)
     else:
         return redirect('/login')
+
+@app.route('/get_users', methods=['GET'])
+def get_users():
+    """
+    Returns all the users data in JSON format. It gets called by frontend users.js.
+    """
+    users = Profile.query.all()
+    users_list = map(Profile.to_json, users)
+    result = { "users": users_list }
+    return jsonify(result)
 
 
 @app.route('/search')
