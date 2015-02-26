@@ -13,21 +13,22 @@ roommateFinder.config(function ($interpolateProvider, $sceProvider) {
 // Listings controller
 roommateFinder.controller("listingsControl", function($scope, $http) {
     // Retrieve listings data from database
-    $http.get("/app.db", {"responseType": "arraybuffer"}).success(function(data) {
-        var db = new SQL.Database(new Uint8Array(data));
-        var listings_data = db.exec("SELECT * FROM listing INNER JOIN profile ON listing.poster_netid=profile.net_id")[0];
-        var photos_data = db.exec("SELECT * from photo")[0];
-        var preferences_data = db.exec("SELECT * FROM preferences")[0];
-        $scope.listings = SQLiteToJSON(listings_data);
-        $scope.preferences = SQLiteToJSON(preferences_data)[0];
-        var photos = SQLiteToJSON(photos_data);
+    $http.get("/get_search_data").success(function(data) {
+
+        var listings_data = data.listings;
+        var photos_data = data.photos;
+        var preferences_data = data.preferences[0];
+
+        $scope.listings = listings_data;
+        $scope.preferences = preferences_data;
+        var photos = photos_data;
 
         // Manually insert a preview photo into the JSON object from the photo table
-        //
         for (var i = 0; i < $scope.listings.length; i++)
             for (var j = 0; j < photos.length; j++) {
-                if (photos[j].listing_id == $scope.listings[i].id)
+                if (photos[j].listing_id == $scope.listings[i].id) {
                     $scope.listings[i]["photo"] = photos[j].hash;
+                }
             }
 
         // Sorting order
@@ -41,7 +42,12 @@ roommateFinder.controller("listingsControl", function($scope, $http) {
 
         // Filtering logic
         // Entries here must match with those in listing.amenities_[amenity], where each column amenities_[amenity] in the database is true or false
-        $scope.filterByAmenities = {"gym": $scope.preferences.amenities_gym == "true", "pool": $scope.preferences.amenities_pool == "true", "pet_friendly": $scope.preferences.amenities_pet_friendly == "true", "computer_room": $scope.preferences.amenities_computer_room == "true", "trash_pickup_services": $scope.preferences.amenities_trash_pickup_services == "true"};
+        $scope.filterByAmenities = {"gym": $scope.preferences.amenities_gym.toString() == "true",
+            "pool": $scope.preferences.amenities_pool.toString() == "true",
+            "pet_friendly": $scope.preferences.amenities_pet_friendly.toString() == "true",
+            "computer_room": $scope.preferences.amenities_computer_room.toString() == "true",
+            "trash_pickup_services": $scope.preferences.amenities_trash_pickup_services.toString() == "true"};
+
         $scope.amenitiesFilter = function () {
         return function (listing) {
             if ($scope.filterByAmenities["gym"] && $scope.filterByAmenities["gym"].toString() != listing.amenities_gym)
