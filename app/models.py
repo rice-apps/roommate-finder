@@ -61,7 +61,6 @@ class Listing(db.Model):
     description = db.Column(db.String(255))
     address_line_1 = db.Column(db.String(255))
     address_line_2 = db.Column(db.String(255))
-    photos = db.relationship('Photo', backref='listing', lazy='dynamic')
     distance = db.Column(db.Float)
     rent = db.Column(db.Float)
     rent_details = db.Column(db.String(255))
@@ -105,6 +104,30 @@ class Listing(db.Model):
     def __repr__(self):
         return '<Listing %r>' % self.id
 
+    def to_json(self):
+        return {
+            "id" : self.id,
+            "poster_netid" : self.poster_netid,
+            "apartment_name" : self.apartment_name,
+            "description" : self.description,
+            "address_line_1" : self.address_line_1,
+            "address_line_2" : self.address_line_2,
+            "distance" : self.distance,
+            "rent" : self.rent,
+            "rent_details" : self.rent_details,
+            "property_size" : self.property_size,
+            "number_roommates_needed" : self.number_roommates_needed,
+            "timestamp" : self.timestamp,
+            "review_url" : self.review_url,
+            "review_rating" : self.review_rating,
+            "review_snippet" : self.review_snippet,
+            "amenities_gym" : self.amenities_gym,
+            "amenities_pool" : self.amenities_pool,
+            "amenities_pet_friendly" : self.amenities_pet_friendly,
+            "amenities_computer_room" : self.amenities_computer_room,
+            "amenities_trash_pickup_services" : self.amenities_trash_pickup_services
+        }
+
 
 class Preferences(db.Model):
     """
@@ -133,6 +156,17 @@ class Preferences(db.Model):
     def __repr__(self):
         return '<Preferences %r>' % self.net_id
 
+    def to_json(self):
+        return {
+            "net_id" : self.net_id,
+            "sorting_preference" : self.sorting_preference,
+            "amenities_gym" : self.amenities_gym,
+            "amenities_pool" : self.amenities_pool,
+            "amenities_pet_friendly" : self.amenities_pet_friendly,
+            "amenities_computer_room" : self.amenities_computer_room,
+            "amenities_trash_pickup_services" : self.amenities_trash_pickup_services
+        }
+
 
 class Photo(db.Model):
     """
@@ -151,3 +185,10 @@ class Photo(db.Model):
 
     def __repr__(self):
         return '<Photo %r>' % self.id
+
+    def to_json(self):
+        return {
+            "hash" : self.hash,
+            "net_id" : self.net_id,
+            "listing_id" : self.listing_id
+        }

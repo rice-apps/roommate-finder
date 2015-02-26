@@ -9,7 +9,7 @@ from flask import render_template, session, send_from_directory, request, jsonif
 from werkzeug.utils import redirect
 
 from app import app, lm, db, email
-from app.models import Profile, Listing, Preferences
+from app.models import Profile, Listing, Preferences, Photo
 
 
 # Server upload folder - do not change
@@ -278,6 +278,32 @@ def search():
         return render_template('search.html', data=data)
     else:
         return redirect('/login')
+
+@app.route('/get_search_data')
+def get_search_data():
+    """
+    Returns all the data required for search: listings, search preferences, and photos.
+    The data is in JSON format. It gets called by frontend search.js.
+    """
+    result = {}
+
+    listings = db.session.query(Listing).join(Profile).filter(Listing.poster_netid==Profile.net_id).all()
+    listings_list = map(Listing.to_json, listings)
+    result["listings"] = listings_list
+    # Add author name to each JSON listing (author name originally from Profile table).
+    for num in range(len(listings_list)):
+        listings_list[num]["author_name"] = listings[num].author.name
+
+    net_id = session.get(app.config['CAS_USERNAME_SESSION_KEY'], None)
+    preferences = Preferences.query.filter_by(net_id=net_id).all()
+    preferences_list = map(Preferences.to_json, preferences)
+    result["preferences"] = preferences_list
+
+    photos = Photo.query.all()
+    photos_list = map(Photo.to_json, photos)
+    result["photos"] = photos_list
+
+    return jsonify(result)
 
 
 @app.route('/new_account')
