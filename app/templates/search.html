@@ -258,7 +258,13 @@
                                 <table class="listing">
                                     <tr>
                                         <td valign="top">
-                                            <img class="thumbnail" ng-src="../photos/listings/{[ listing.photo ]}" />
+                                            <span ng-if="!listing.photo">
+                                                <img class="thumbnail" ng-src="../static/graphics/no_image.jpg" />
+                                            </span>
+                                            <span ng-if="listing.photo">
+                                                <img class="thumbnail" ng-src="../photos/listings/{[ listing.photo ]}" />
+                                            </span>
+
                                         </td>
                                         <td width="10px"></td>
                                         <td valign="top">
