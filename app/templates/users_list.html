@@ -137,7 +137,7 @@
                     <td><p class="sectionheading">CONTACT</p></td>
                     <td class="bio"><p class="sectionheading">BIO</p></td>
                 </tr>
-                <tr ng-repeat="user in users">
+                <tr ng-repeat="user in users" ng-if="user.name">
                     <td><p class="text"><a href="/user/{[ user.net_id ]}">{[ user.name ]}</a></p></td>
                     <td><p class="text">{[ user.gender ]}</p></td>
                     <td>
