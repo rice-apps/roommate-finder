@@ -8,7 +8,7 @@ import os
 from flask import render_template, session, request
 from werkzeug.utils import secure_filename, redirect
 
-from app import app, db, reviews, universal
+from app import app, db, reviews, universal, email
 from app.models import Profile, Listing, Photo
 from app.profile import file_extension, allowed_file
 
@@ -107,6 +107,9 @@ def new_listing():
     new_photos = [Photo(photo_hash, net_id, listing.id) for photo_hash in photo_hashes]
     db.session.add_all(new_photos)
     db.session.commit()
+
+    # Send an email notification to all the users except the poster
+    email.new_listing_notification(listing, net_id)
 
     return redirect('/listing/' + str(listing.id))
 

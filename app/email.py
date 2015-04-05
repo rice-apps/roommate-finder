@@ -169,6 +169,135 @@ def welcome_email(net_id):
     """
     mail.send(msg)
 
+def new_listing_notification(listing, poster_netid):
+    """
+    Sends an email notification to all the users (except the poster) containing URL to the new listing.
+
+    Parameters:
+    listing: listing database object of the new listing
+    """
+
+    users = Profile.query.all()
+    msg = Message("Welcome to Roommate Finder.", sender=("Rice Roommate Finder", "roommatefinder@rice.edu"))
+    for user in users:
+        # Send a notification to everyone except the poster
+        if user.net_id != poster_netid:
+            msg.add_recipient((user.name, "" + user.net_id + "@rice.edu"))
+            msg.html = """
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="roommateFinder">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+        <!--Fonts-->
+        <link href='http://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+
+        <style type="text/css">
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                background-color: #1F2021;
+            }
+            p.heading {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 700;
+                letter-spacing: 1px;
+                font-size: 26px;
+                color: #E0E0E0;
+            }
+            p.subheading {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 300;
+                letter-spacing: 1px;
+                font-size: 20px;
+                color: #E0E0E0;
+            }
+            p.text {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 300;
+                letter-spacing: 1px;
+                font-size: 16px;
+                color: #E0E0E0;
+            }
+            p.footer {
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 300;
+                letter-spacing: 1px;
+                font-size: 10px;
+                color: #B3B3B3;
+            }
+            .link a:link {
+				color: #409AB3;
+				text-decoration: none;
+			}
+			.link a:hover {
+				color: #409AB3;
+				text-decoration: none;
+				border-bottom: 2px solid #409AB3;
+			}
+			.link a:visited {
+				color: #409AB3;
+				text-decoration: none;
+			}
+			.link a:active {
+				color: #409AB3;
+				text-decoration: none;
+			}
+            .footerlink a:link {
+				color: #B3B3B3;
+				text-decoration: none;
+			}
+			.footerlink a:hover {
+				color: #B3B3B3;
+				text-decoration: none;
+				border-bottom: 1px solid #B3B3B3;
+			}
+			.footerlink a:visited {
+				color: #B3B3B3;
+				text-decoration: none;
+			}
+			.footerlink a:active {
+				color: #B3B3B3;
+				text-decoration: none;
+			}
+        </style>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <td width="25%"></td>
+                <td width="60%">
+                    <br/><br/>
+                    <img src="http://roommatefinder.riceapps.org/static/graphics/logo_email.png" width="375px" height="75px" style="height: 75px; width: 375px;" />
+                    <br/><br/><br/>
+                    <p class="subheading">Hey """ + user.name.split(" ")[0] + """!</p>
+                    <br/><br/>
+                    <div class="link">
+                        <p class="text">We are writing to inform you that a new listing was posted. Go check it out! <br /> Here it is: <a href="http://roommatefinder.riceapps.org/listing/""" + str(listing.id) + """">""" + listing.apartment_name + """</a> </p>
+                    </div>
+
+                    <br/><br/>
+                    <p class="text">Sincerely,</p>
+                    <p class="text">The Roommate Finder team, Rice Apps</p>
+                    <br/><br/><br/>
+                    <p class="footer">ROOMMATE FINDER, A PROJECT OF RICE APPS, 2015</p>
+                    <div class="footerlink">
+                        <p class="footer"><a href="http://roommatefinder.riceapps.org/about">ABOUT</a> | <a href="http://roommatefinder.riceapps.org/privacy_policy">PRIVACY POLICY</a> | <a href="mailto:kevinlin@rice.edu">CONTACT</a></p>
+                    </div>
+                    <br/><br/><br/><br/><br/>
+                </td>
+                <td width="20%"></td>
+            </tr>
+        </table>
+    </body>
+</html>
+"""
+            mail.send(msg)
+
+
 
 def interest_notification(joiner_netid, poster_netid, listing_id):
     """
