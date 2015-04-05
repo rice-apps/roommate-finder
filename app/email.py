@@ -45,7 +45,7 @@ def welcome_email(net_id):
     net_id: Net ID of the recipient
     """
     user = Profile.query.filter_by(net_id=net_id).first()
-    msg = Message("Welcome to Roommate Finder.", sender=("Rice Roommate Finder", "roommatefinder@rice.edu"))
+    msg = Message("New listing added on Roommate Finder.", sender=("Rice Roommate Finder", "roommatefinder@rice.edu"))
     msg.add_recipient((user.name, "" + net_id + "@rice.edu"))
     msg.html = """
 <!DOCTYPE html>
